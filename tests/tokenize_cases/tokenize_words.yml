@@ -1,0 +1,19 @@
+---
+- name: "basic"
+  input: "mi mu mute tawa sina."
+  should_be_equal: true
+- name: "spoilers"
+  input: "||ni li toki len.||"
+  should_be_equal: true
+  xfail: true # lookbehind for . breaks it
+- name: "quotes"
+  input: "toki li tan kulupu Kuko li ni: 'o ike ala!'"
+  should_be_equal: true
+  xfail: true
+- name: periods every word
+  input: "mi.unpa.e.mama.sina"
+  xfail: true # lookbehind for . breaks it
+- name: "url"
+  input: "https://mun.la/sona/"
+  should_be_equal: true
+  xfail: true # i have no idea how to emulate the : behavior

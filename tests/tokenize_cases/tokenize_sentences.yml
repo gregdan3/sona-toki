@@ -1,0 +1,7 @@
+---
+- name: "basic"
+  input: "mi mu. mi wawa."
+  should_be_equal: true
+- name: "dash"
+  input: "mi sona ala e ni- sina seme a"
+  should_be_equal: true
