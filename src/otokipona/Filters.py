@@ -1,6 +1,5 @@
 # STL
 from abc import ABC, abstractmethod
-from typing import Callable
 
 # PDM
 import regex as re
@@ -9,7 +8,7 @@ from typing_extensions import override
 # LOCAL
 from otokipona.utils import InputType
 
-Processor = Callable[[str], str]
+re.DEFAULT_VERSION = re.VERSION1
 
 
 class Filter(ABC):
@@ -17,7 +16,12 @@ class Filter(ABC):
 
     @classmethod  # order matters
     @abstractmethod
-    def process(cls, msg: str) -> str:
+    def filter(cls, msg: str) -> str:
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def __call__(cls, msg: str) -> str:
         raise NotImplementedError
 
 
@@ -27,7 +31,7 @@ class RegexFilter(Filter):
 
     @classmethod
     @override
-    def process(cls, msg: str) -> str:
+    def filter(cls, msg: str) -> str:
         return re.sub(cls.pattern, cls.replace, msg)
 
 
@@ -100,23 +104,46 @@ class ArrowQuote(RegexFilter):
     pattern = re.compile(r"^>\ .+$", re.MULTILINE)
 
 
-class NonAlphabetic(Filter):
+"""
+The following classes are token-specific ignorables.
+
+It is unreasonable to strip these directly from the input, as they may change 
+how the input is analyzed at a later step.
+"""
+
+
+class Numerics(Filter):
+    """Remove a token (returning "") if the token is entirely numeric.
+    This is inclusive of all numeric symbols in Unicode.
+
+    Normally this would fail to find numeric tokens such as "1.111" or "-42",
+    but if used with the aggressive tokenizer designed for `tok`, these will be
+    split into `["1", ".", "111"]` and `["-", "42"]` respectively- so, the
+    numeric tokens will be split from their punctuation.
+    """
+
     input = InputType.Token
 
     @classmethod
     @override
-    def process(cls, msg: str) -> str:
-        return msg if msg.isalpha() else ""
+    def filter(cls, msg: str) -> str:
+        return msg if not msg.isnumeric() else ""
+
+
+class Punctuations(RegexFilter):
+    input = InputType.Token
+    pattern = re.compile(r"[\p{Punctuation}\p{posix_punct}]+")
+    replace = ""
 
 
 __all__ = [
-    "URLs",
     "DiscordEmotes",
     "SingleQuotes",
     "DoubleQuotes",
+    "Punctuations",
+    "ArrowQuote",
     "Backticks",
     "Spoilers",
-    "ArrowQuote",
-    "NonAlphabetic",
-    # "Name",
+    "Numerics",
+    "URLs",
 ]
