@@ -22,7 +22,7 @@ build-backend = "pdm.backend"
 [tool.pdm.dev-dependencies]
 test = [
     "pytest-asyncio>=0.21.1",
-    "pytest-cov",
+    "pytest-cov>=5.0.0",
     "pytest>=7.4.2",
     "hypothesis>=6.86.2",
     "line-profiler>=4.1.1",
@@ -67,3 +67,24 @@ executionEnvironments = [{ root = "." }]
 [tool.ruff]
 line-length = 88
 src = ["src"]
+
+[tool.coverage.run]
+branch = true
+source = ["src/otokipona/"]
+omit = [
+    "src/otokipona/__main__.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self.debug",
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+    # Don't complain if non-runnable code isn't run:
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]

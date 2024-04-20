@@ -8,75 +8,80 @@ from hypothesis import HealthCheck, given, assume, example, settings
 
 # LOCAL
 from otokipona.Filters import (
-    URLs,
+    NimiPu,
     Numerics,
-    Spoilers,
-    Backticks,
-    ArrowQuote,
-    DoubleQuotes,
+    Syllabic,
+    NimiLinku,
+    Alphabetic,
+    ProperName,
+    Phonotactic,
     Punctuations,
-    SingleQuotes,
-    DiscordEmotes,
 )
+from otokipona.Cleaners import ConsecutiveDuplicates
+from otokipona.constants import NIMI_PU, ALPHABET, NIMI_LINKU
 
 
-@given(st.from_regex(URLs.pattern.pattern, fullmatch=True))
-@example("https://google.com")
-@example("https://mun.la")
-@example("https://discord.gg/")
-@example("http://example.com")
-@example("http://localhost:80")
-def test_URLs(s: str):
-    assert URLs.filter(s).strip() == ""
+@given(st.sampled_from(NIMI_PU))
+@example("lukin")
+@example("selo")
+@example("li")
+def test_NimiPu(s: str):
+    res = NimiPu.filter(s)
+    assert res, repr(s)
 
 
-@given(st.from_regex(r"\d+", fullmatch=True))
-@example("124125")
-@example("99990000")
-def test_Numeric(s: str):
-    res = Numerics.filter(s)
-    for c in res:
-        assert not c.isdigit()
-    # assert res == "", (repr(s), repr(res))
+@given(st.sampled_from(NIMI_LINKU))
+@example("pona")
+@example("tonsi")
+@example("kipisi")
+@example("n")
+def test_NimiLinku(s: str):
+    res = NimiLinku.filter(s)
+    assert res, repr(s)
 
 
-@given(st.from_regex(Spoilers.pattern.pattern, fullmatch=True))
-@example("|| | ||")
-@example("|| content\n\n\ncontent ||")
-@example("||\n||")
-@example("|| \n|\n\n || || ||")
-def test_Spoilers(s: str):
-    res = Spoilers.filter(s).strip()
-    assert res == "", (repr(s), repr(res))
+@given(st.sampled_from(NIMI_LINKU))
+def test_nimi_linku_properties(s: str):
+    assert ConsecutiveDuplicates.clean(s) == s, repr(s)
+    assert Alphabetic.filter(s), repr(s)
+    assert Syllabic.filter(s), repr(s)
+    assert Phonotactic.filter(s), repr(s)
+    # Passing phonotactic implies all of the above
 
 
-@given(st.from_regex(Backticks.pattern.pattern, fullmatch=True))
-@example("` ` ` `")
-def test_Backticks(s: str):
-    res = Backticks.filter(s).strip()
-    assert res == "", (repr(s), repr(res))
+@given(st.from_regex(Phonotactic.pattern.pattern, fullmatch=True))
+@example("kijetesantakalu")
+@example("n")
+def test_Phonotactic(s: str):
+    res = Phonotactic.filter(s)
+    assert res, repr(s)
 
 
-@given(st.from_regex(ArrowQuote.pattern.pattern, fullmatch=True))
-@example("> base")
-@example("> newline\n> newline")
-def test_ArrowQuote(s: str):
-    res = ArrowQuote.filter(s).strip()
-    assert res == "", (repr(s), repr(res))
+@given(st.from_regex(Syllabic.pattern.pattern, fullmatch=True))
+@example("wuwojitiwunwonjintinmanna")
+def test_Syllabic(s: str):
+    res = Syllabic.filter(s)
+    assert res, repr(s)
 
 
-@given(st.from_regex(DoubleQuotes.pattern.pattern, fullmatch=True))
-@example('" "" "')
-@example('" "\n" "')
-@example('" \n "')
-def test_DoubleQuotes(s: str):
-    res = DoubleQuotes.filter(s).strip()
-    assert res == "", (repr(s), repr(res))
+@given(st.from_regex(rf"[{ALPHABET}{ALPHABET.upper()}]+", fullmatch=True))
+@example("muems")
+@example("mpptp")
+@example("tptpt")
+def test_Alphabetic(s: str):
+    res = Alphabetic.filter(s)
+    assert res, repr(s)
+
+
+@given(st.from_regex(r"[A-Z][a-z]*", fullmatch=True))
+def test_ProperName(s: str):
+    res = ProperName.filter(s)
+    assert res, repr(s)
 
 
 # I use `regex`'s Unicode property feature, which Hypothesis doesn't understand
 # So I have to provide a different regex tha doesn't technically match
-@given(st.from_regex(rf"[^\w\s]+", fullmatch=True))
+@given(st.from_regex(r"[^\w\s]+", fullmatch=True))
 @example("⟨·⟩")
 @example("…")
 @example("「　」")
@@ -84,22 +89,13 @@ def test_DoubleQuotes(s: str):
 @settings(suppress_health_check=[HealthCheck.filter_too_much])  # FIXME
 def test_Punctuations(s: str):
     _ = assume(re.fullmatch(Punctuations.pattern.pattern, s))
-    res = Punctuations.filter(s).strip()
-    assert res == "", (repr(s), repr(res))
+    res = Punctuations.filter(s)
+    assert res, repr(s)
 
 
-@given(st.from_regex(SingleQuotes.pattern.pattern, fullmatch=True))
-@example("' '' '")
-@example("' '\n' '")
-@example("' \n '")
-def test_SingleQuotes(s: str):
-    res = SingleQuotes.filter(s).strip()
-    assert res == "", (repr(s), repr(res))
-
-
-@given(st.from_regex(DiscordEmotes.pattern.pattern, fullmatch=True))
-@example("<a:example:123123>")
-@example("<:example:123123>")
-def test_DiscordEmotes(s: str):
-    res = DiscordEmotes.filter(s).strip()
-    assert res == "", (repr(s), repr(res))
+@given(st.from_regex(r"\d+", fullmatch=True))
+@example("124125")
+@example("99990000")
+def test_Numeric(s: str):
+    res = Numerics.filter(s)
+    assert res, repr(s)

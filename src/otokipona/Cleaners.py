@@ -10,7 +10,7 @@ class Cleaner(ABC):
     @classmethod
     @abstractmethod
     def clean(cls, token: str) -> str:
-        pass
+        raise NotImplementedError
 
 
 class RegexCleaner(Cleaner):
@@ -37,3 +37,6 @@ class ConsecutiveDuplicates(RegexCleaner):
 
     pattern = re.compile(r"(.)\1+", flags=re.IGNORECASE)
     replace = r"\1"
+
+
+__all__ = ["ConsecutiveDuplicates"]

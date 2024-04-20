@@ -1,149 +1,159 @@
 # STL
 from abc import ABC, abstractmethod
+from typing import Set
+from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
 import regex as re
 from typing_extensions import override
 
 # LOCAL
-from otokipona.utils import InputType
+from otokipona.constants import (
+    VOWELS,
+    CONSONANTS,
+    NIMI_PU_SET,
+    ALPHABET_SET,
+    ALLOWABLES_SET,
+    NIMI_LINKU_SET,
+    NIMI_PU_ALE_SET,
+    NIMI_LINKU_ALE_SET,
+)
 
 re.DEFAULT_VERSION = re.VERSION1
 
 
 class Filter(ABC):
-    input: InputType
-
-    @classmethod  # order matters
-    @abstractmethod
-    def filter(cls, msg: str) -> str:
-        raise NotImplementedError
-
     @classmethod
     @abstractmethod
-    def __call__(cls, msg: str) -> str:
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
         raise NotImplementedError
 
 
 class RegexFilter(Filter):
     pattern: "re.Pattern[str]"
-    replace: str = " "
 
     @classmethod
     @override
-    def filter(cls, msg: str) -> str:
-        return re.sub(cls.pattern, cls.replace, msg)
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        return not not re.fullmatch(cls.pattern, token)
 
 
-"""
-The following classes are Ignorables.
+class SetFilter(Filter):
+    tokens: Set[str]
 
-Ignorables are tokens which do not count toward the accepted number of tokens
-or the total number of tokens.
-This is generally because they are considered external to Toki Pona.
-
-It is likely that every user will want to use these. 
-Not having them will cause many false negatives, such as when a URL is divided
-into its parts and checked as a token.
-"""
+    @classmethod
+    @override
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        return token.lower() in cls.tokens
 
 
-class URLs(RegexFilter):
-    """Remove http(s) protocol URLs"""
-
-    input = InputType.Message
-    pattern = re.compile(r"https?:\/\/\S+")
+class Miscellaneous(SetFilter):
+    tokens = ALLOWABLES_SET
 
 
-class DiscordEmotes(RegexFilter):
-    """Remove text-formatted Discord emotes `<flags:name:id>`"""
+class ProperName(Filter):
+    """Determines if a given token is a valid name (also called a loan word).
+    When Toki Pona is written with the Latin alphabet, names are generally
+    capitalized at their start. This filter identifies those tokens.
 
-    input = InputType.Message
-    pattern = re.compile(r"<a?:[a-zA-Z0-9_]{2,}:[0-9]{2,}>")
+    Note that this alone cannot determine if a token is a valid name, because
+    a standalone name is considered invalid in Toki Pona- names generally have head nouns.
+    This tool only examines one token at a time, so cannot detect names any better than identifying their capital letter.
+    """
 
-
-"""
-The following classes are Containers.
-
-Containers are a special case of Ignorables, where an entire segment of an input
-may be removed and not counted toward the accepted or total number of tokens.
-
-Some users may prefer to use these so that they may quote third parties who 
-would likely be using a language other than Toki Pona.
-"""
-
-
-class SingleQuotes(RegexFilter):
-    input = InputType.Message
-    pattern = re.compile(r"'[^']+'")
+    @classmethod
+    @override
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        return token == token.capitalize()
 
 
-class DoubleQuotes(RegexFilter):
-    input = InputType.Message
-    pattern = re.compile(r'"[^"]+"')
+class NimiPu(SetFilter):
+    tokens = NIMI_PU_SET
 
 
-class Backticks(RegexFilter):
-    """Remove paired backticks and their contents `like this`"""
-
-    input = InputType.Message
-    pattern = re.compile(r"`[^`]+`")
+class NimiPuAle(SetFilter):
+    tokens = NIMI_PU_ALE_SET
 
 
-class Spoilers(RegexFilter):
-    """Remove paired double bars and their contents `||like this||`"""
-
-    input = InputType.Message
-    pattern = re.compile(r"\|\|(?:(?!\|\|).)+\|\|", flags=re.S)  # . matches newline
+class NimiLinku(SetFilter):
+    tokens = NIMI_LINKU_SET
 
 
-class ArrowQuote(RegexFilter):
-    """Remove lines beginning with `> `"""
-
-    input = InputType.Message
-    pattern = re.compile(r"^>\ .+$", re.MULTILINE)
+class NimiLinkuAle(SetFilter):
+    tokens = NIMI_LINKU_ALE_SET
 
 
-"""
-The following classes are token-specific ignorables.
+class Phonotactic(RegexFilter):
+    """Determines if a given token is phonotactically valid Toki Pona (or `n`).
+    Excludes both consecutive nasals and the illegal syllables:
+    - "nm", "nn"
+    - "wu", "wo", "ji", "ti"
 
-It is unreasonable to strip these directly from the input, as they may change 
-how the input is analyzed at a later step.
-"""
+    Note that if this validator is used after `Cleaners.ConsecutiveDuplicates`,
+    "nn" cannot be found."""
+
+    pattern = re.compile(
+        rf"^((^[{VOWELS}]|[klmnps][{VOWELS}]|[jt][aeou]|[w][aei])(n(?![mn]))?)+$|^n$",
+        # Can't split initial vowel group off like in Syllabics because of
+        # consecutive nasal detection; it is costly to duplicate
+        flags=re.IGNORECASE,
+    )
+
+
+class Syllabic(RegexFilter):
+    """Determines if a given token is syllabically valid Toki Pona (or `n`).
+    Words must have correctly ordered vowels and consonants, but the phonotactic
+    exceptions are not considered."""
+
+    # rf"^((^[{VOWELS}]|[{CONSONANTS}][{VOWELS}])n?)+$|^n$"
+    # Alterative I was exploring takes ~15% more steps
+    pattern = re.compile(
+        rf"^(?:^[{VOWELS}]n?)?(?:[{CONSONANTS}][{VOWELS}]n?)*$|^n$",
+        flags=re.IGNORECASE,
+    )
+
+
+class Alphabetic(Filter):
+    @classmethod
+    @override
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        # Faster than regex version
+        return set(token.lower()).issubset(ALPHABET_SET)
 
 
 class Numerics(Filter):
-    """Remove a token (returning "") if the token is entirely numeric.
-    This is inclusive of all numeric symbols in Unicode.
+    """Determine if a given token is entirely numeric.
+    Covers all numeric symbols in Unicode.
 
-    Normally this would fail to find numeric tokens such as "1.111" or "-42",
+    This will fail to find numeric tokens such as "1.111" or "-42",
     but if used with the aggressive tokenizer designed for `tok`, these will be
-    split into `["1", ".", "111"]` and `["-", "42"]` respectively- so, the
-    numeric tokens will be split from their punctuation.
-    """
-
-    input = InputType.Token
+    split into `["1", ".", "111"]` and `["-", "42"]` respectively. As such, the
+    numeric tokens will be split from their punctuation."""
 
     @classmethod
     @override
-    def filter(cls, msg: str) -> str:
-        return msg if not msg.isnumeric() else ""
+    @cache(maxsize=None)
+    def filter(cls, msg: str) -> bool:
+        return msg.isnumeric()
 
 
 class Punctuations(RegexFilter):
-    input = InputType.Token
     pattern = re.compile(r"[\p{Punctuation}\p{posix_punct}]+")
-    replace = ""
 
 
 __all__ = [
-    "DiscordEmotes",
-    "SingleQuotes",
-    "DoubleQuotes",
+    "NimiPu",
+    "NimiLinku",
+    "NimiLinkuAle",
+    "Phonotactic",
+    "Syllabic",
+    "Alphabetic",
+    "ProperName",
     "Punctuations",
-    "ArrowQuote",
-    "Backticks",
-    "Spoilers",
     "Numerics",
-    "URLs",
 ]
