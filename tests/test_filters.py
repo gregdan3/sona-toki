@@ -18,7 +18,10 @@ from otokipona.Filters import (
     Punctuations,
 )
 from otokipona.Cleaners import ConsecutiveDuplicates
-from otokipona.constants import NIMI_PU, ALPHABET, NIMI_LINKU
+from otokipona.constants import NIMI_PU, NIMI_LINKU
+
+# FILESYSTEM
+from .test_utils import ALPHABETIC_RE, PROPER_NAME_RE
 
 
 @given(st.sampled_from(NIMI_PU))
@@ -64,7 +67,7 @@ def test_Syllabic(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(rf"[{ALPHABET}{ALPHABET.upper()}]+", fullmatch=True))
+@given(st.from_regex(ALPHABETIC_RE, fullmatch=True))
 @example("muems")
 @example("mpptp")
 @example("tptpt")
@@ -73,7 +76,7 @@ def test_Alphabetic(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(r"[A-Z][a-z]*", fullmatch=True))
+@given(st.from_regex(PROPER_NAME_RE, fullmatch=True))
 def test_ProperName(s: str):
     res = ProperName.filter(s)
     assert res, repr(s)
