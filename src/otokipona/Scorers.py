@@ -69,11 +69,10 @@ class Scaling(Scorer):
     @override
     def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
         total_score = 0
-        len_tokens = len(tokens)
-        max_scale = len_tokens - 1
-        max_score = max_scale * len_tokens
+        len_filters = len(filters)
+        max_score = len(tokens) * len_filters
         for token in tokens:
-            total_score += cls.__score(token, filters, max_scale)
+            total_score += cls.__score(token, filters, len_filters)
         return total_score / max_score if max_score else 0
 
 
