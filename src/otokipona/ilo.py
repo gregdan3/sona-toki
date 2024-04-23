@@ -49,8 +49,9 @@ class Ilo:
             cleaned_token = token
             for c in self.__cleaners:
                 cleaned_token = c.clean(cleaned_token)
-            if cleaned_token == "":
-                raise ValueError("Cleaned token %s and it became empty!" % token)
+            if not cleaned_token:
+                # TODO: warn user?
+                continue
             cleaned_tokens.append(cleaned_token)
         return cleaned_tokens
 
