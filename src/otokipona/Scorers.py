@@ -45,6 +45,9 @@ class PassFail(Scorer):
     @classmethod
     @override
     def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
+        if not tokens:
+            return 1
+
         total_score = 0
         len_tokens = len(tokens)
         for token in tokens:
@@ -68,6 +71,9 @@ class Scaling(Scorer):
     @classmethod
     @override
     def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
+        if not tokens:
+            return 1
+
         total_score = 0
         len_filters = len(filters)
         max_score = len(tokens) * len_filters
