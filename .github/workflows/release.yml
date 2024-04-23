@@ -1,0 +1,48 @@
+---
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  release-pypi:
+    name: release-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-pdm@v4
+        with:
+          python-version: "3.11"
+
+      - name: Check prerelease
+        id: check_version
+        run: |
+          if [[ "${{ github.ref }}" =~ ^refs/tags/[0-9.]+$ ]]; then
+            echo "PRERELEASE=false" >> $GITHUB_OUTPUT
+          else
+            echo "PRERELEASE=true" >> $GITHUB_OUTPUT
+          fi
+
+      # NOTE: pdm build does not require dependencies
+      - name: Build artifacts
+        run: pdm build
+      - name: Publish package distributions to PyPI
+        run: pdm publish --no-build
+
+      - name: Create release
+        uses: comnoco/create-release-action@v2.0.5
+        # github's actions/create-release is archived
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: v${{ github.ref }}
+          draft: false
+          prerelease: ${{ steps.check_version.outputs.PRERELEASE }}

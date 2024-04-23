@@ -1,0 +1,67 @@
+---
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+      - working
+      - "feature/*"
+    paths-ignore:
+      - "docs/**"
+      - "news/**"
+      - "*.md"
+      - Dockerfile
+  push:
+    branches:
+      - main
+      - dev
+      - working
+      - "feature/*"
+    paths-ignore:
+      - "docs/**"
+      - "news/**"
+      - "*.md"
+      - Dockerfile
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.event.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  Testing:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [x64]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.arch }}
+          allow-prereleases: true
+      - name: Set Variables
+        id: set_variables
+        shell: bash
+        run: |
+          echo "PY=$(python -c 'import hashlib, sys;print(hashlib.sha256(sys.version.encode()+sys.executable.encode()).hexdigest())')" >> $GITHUB_OUTPUT
+      - name: Cache venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
+          restore-keys: |
+            venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-
+      - name: Install Dev Dependencies
+        run: |
+          pdm install --verbose --dev --group :all --without nltk
+          pdm info
+      - name: Run Tests
+        run: pdm run pytest --cov=otokipona --cov-config=pyproject.toml tests
