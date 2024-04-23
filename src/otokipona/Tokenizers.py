@@ -25,8 +25,7 @@ SENT_DELIMS_TOK = re.compile(SENT_DELIMS_TOK)
 WORD_DELIMS_RE = r"""\s+|(?=[.?!;:'"-])"""
 WORD_DELIMS_RE = re.compile(WORD_DELIMS_RE)
 
-WORD_DELIMS_TOK = r"""(\b\w+\b|[.,!?:;\"'\(\)\[\]{}<>|/])"""
-WORD_DELIMS_TOK = r"""(\b\w+\b|[.,!?:;\"'\(\)\[\]{}<>|/])"""
+WORD_DELIMS_TOK = r"([\p{Punctuation}\p{posix_punct}]+|\s+)"
 WORD_DELIMS_TOK = re.compile(WORD_DELIMS_TOK)
 
 Tokenizer = Callable[[str], List[str]]
