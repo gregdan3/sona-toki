@@ -1,5 +1,5 @@
 # STL
-from typing import Dict, List, TypedDict
+from typing import List, TypedDict
 
 # PDM
 import yaml
@@ -11,9 +11,18 @@ from otokipona.Tokenizers import (
     word_tokenize_re,
     sent_tokenize_tok,
     word_tokenize_tok,
-    sent_tokenize_nltk,
-    word_tokenize_nltk,
 )
+
+try:
+    # PDM
+    import nltk
+
+    # LOCAL
+    from otokipona.Tokenizers import sent_tokenize_nltk, word_tokenize_nltk
+
+except ImportError as e:
+    nltk = e
+    # TODO: warn user
 
 
 class TokenizerTest(TypedDict):
@@ -24,7 +33,7 @@ class TokenizerTest(TypedDict):
     xfail: bool
 
 
-def load_params_from_yaml(json_path: str) -> List[Dict]:
+def load_params_from_yaml(json_path: str) -> List[TokenizerTest]:
     with open(json_path) as f:
         return yaml.safe_load(f)
 
@@ -50,6 +59,8 @@ def load_tokenizer_tests(json_path: str) -> List[TokenizerTest]:
     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences.yml")
 )
 def test_sentences_re(test: TokenizerTest):
+    if isinstance(nltk, ImportError):
+        pytest.skip("nltk not installed")
     if test["xfail"]:
         pytest.xfail()
 
@@ -62,6 +73,8 @@ def test_sentences_re(test: TokenizerTest):
     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words.yml")
 )
 def test_word_tokenize_re(test: TokenizerTest):
+    if isinstance(nltk, ImportError):
+        pytest.skip("nltk not installed")
     if test["xfail"]:
         pytest.xfail()
 
