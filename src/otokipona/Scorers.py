@@ -58,6 +58,24 @@ class Scaling(Scorer):
     In other words, filter order matters, weighing earlier listed filters higher than later ones.
     """
 
+    @classmethod
+    def __score(cls, token: str, filters: List[Type[Filter]], scale: int):
+        for i, f in enumerate(filters):
+            if f.filter(token):
+                return scale - i
+        return 0
+
+    @classmethod
+    @override
+    def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
+        total_score = 0
+        len_tokens = len(tokens)
+        max_scale = len_tokens - 1
+        max_score = max_scale * len_tokens
+        for token in tokens:
+            total_score += cls.__score(token, filters, max_scale)
+        return total_score / max_score if max_score else 0
+
 
 class Logarithmic(Scorer): ...
 
