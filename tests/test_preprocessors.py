@@ -11,6 +11,9 @@ from otokipona.Preprocessors import (
     DoubleQuotes,
     SingleQuotes,
     DiscordEmotes,
+    DiscordSpecial,
+    DiscordChannels,
+    DiscordMentions,
 )
 
 
@@ -72,4 +75,29 @@ def test_SingleQuotes(s: str):
 @example("<:example:123123>")
 def test_DiscordEmotes(s: str):
     res = DiscordEmotes.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(st.from_regex(DiscordMentions.pattern.pattern, fullmatch=True))
+@example("<@497549183847497739>")
+@example("<@!457890000>")
+@example("<@&18398198981985>")
+def test_DiscordMentions(s: str):
+    res = DiscordMentions.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(st.from_regex(DiscordChannels.pattern.pattern, fullmatch=True))
+@example("<#19858915>")
+@example("<#18591912589812985>")
+def test_DiscordChannels(s: str):
+    res = DiscordChannels.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(st.from_regex(DiscordSpecial.pattern.pattern, fullmatch=True))
+@example("<id:guide>")
+@example("<id:browse>")
+def test_DiscordSpecial(s: str):
+    res = DiscordSpecial.process(s).strip()
     assert res == "", (repr(s), repr(res))
