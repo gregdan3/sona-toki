@@ -18,7 +18,7 @@ from otokipona.Filters import (
     Phonotactic,
     Punctuations,
 )
-from otokipona.Scorers import Scorer, Scaling, PassFail
+from otokipona.Scorers import Scorer, Scaling, PassFail, SoftScaling
 
 # FILESYSTEM
 from .test_utils import token_strategy
@@ -37,6 +37,7 @@ FILTERS = [
 SCORERS = [
     PassFail,
     Scaling,
+    SoftScaling,
 ]
 
 
@@ -47,9 +48,4 @@ SCORERS = [
 )
 def test_score_bounds(scorer: Scorer, filters: List[Type[Filter]], text: List[str]):
     score = scorer.score(text, filters)
-    # print(
-    #     score,
-    #     filters,
-    #     text,
-    # )
     assert 0 <= score <= 1, (score, filters, text)
