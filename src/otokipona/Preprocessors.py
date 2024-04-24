@@ -70,6 +70,18 @@ class DiscordEmotes(RegexPreprocessor):
     pattern = re.compile(r"<a?:[a-zA-Z0-9_]{2,}:[0-9]{2,}>")
 
 
+class DiscordMentions(RegexPreprocessor):
+    pattern = re.compile(r"<@!?[0-9]{2,}>")
+
+
+class DiscordChannels(RegexPreprocessor):
+    pattern = re.compile(r"<#[0-9]{2,}>")
+
+
+class DiscordSpecial(RegexPreprocessor):
+    pattern = re.compile(r"<id:[a-zA-Z0-9_]{4,}>")
+
+
 """
 The following classes are Containers.
 
