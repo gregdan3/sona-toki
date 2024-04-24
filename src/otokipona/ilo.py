@@ -1,5 +1,5 @@
 # STL
-from typing import List, Type, Tuple
+from typing import List, Type
 
 # LOCAL
 from otokipona.Filters import Filter
@@ -75,18 +75,13 @@ class Ilo:
         return filtered_tokens
 
     def __score_tokens(self, tokens: List[str]) -> float:
-        # TODO: assert 0 <= score <= 1
         return self.__scorer.score(tokens, self.__scoring_filters)
 
     def is_toki_pona(self, message: str) -> bool:
         message = self.__preprocess(message)
-        tokens = self.__tokenize(message)
-        # TODO: find falsifying case or prove assumption:
-        # order of filter and clean doesn't matter.
-        # doing filter first is more efficient if this is true
-        tokens = self.__filter_tokens(tokens)
-        tokens = self.__clean_tokens(tokens)
-        score = self.__score_tokens(tokens)
-        return score > 0.8
-        # return False
+        tokenized = self.__tokenize(message)
+        filtered = self.__filter_tokens(tokenized)
+        cleaned = self.__clean_tokens(filtered)
+        score = self.__score_tokens(cleaned)
+
         return score >= self.__passing_score
