@@ -36,6 +36,7 @@ def test_constructor():
         tokenizer=word_tokenize_tok,
         passing_score=0.8,
     )
+    ilo.debug = True
     assert not ilo.is_toki_pona("super bruh moment 64")
     assert ilo.is_toki_pona("mi unpa e mama sina")
     assert ilo.is_toki_pona("mama sina li mu tan mi")

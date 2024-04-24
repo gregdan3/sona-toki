@@ -17,6 +17,7 @@ class Ilo:
     __scorer: Type[Scorer]
     __tokenize: Tokenizer
     __passing_score: Number
+    debug: bool = False
 
     def __init__(
         self,
@@ -49,6 +50,11 @@ class Ilo:
         return token
 
     def __clean_tokens(self, tokens: List[str]) -> List[str]:
+        # NOTE: tested, making a new list with a for loop *is* faster than
+        # - list comps
+        # - generator comps
+        # - in-place replacement/removal
+        # - in place replacement with result of generator comp
         cleaned_tokens: List[str] = list()
         for token in tokens:
             cleaned_token = self.__clean_token(token)
@@ -78,10 +84,19 @@ class Ilo:
         return self.__scorer.score(tokens, self.__scoring_filters)
 
     def is_toki_pona(self, message: str) -> bool:
-        message = self.__preprocess(message)
-        tokenized = self.__tokenize(message)
+        preprocessed = self.__preprocess(message)
+        tokenized = self.__tokenize(preprocessed)
         filtered = self.__filter_tokens(tokenized)
         cleaned = self.__clean_tokens(filtered)
         score = self.__score_tokens(cleaned)
+
+        if self.debug:
+            print("msg: %.2f  %s" % (score, repr(message)))
+            print("Preproc:   %s" % repr(preprocessed))
+            print("Tokenized: %s" % tokenized)
+            print("Filtered:  %s" % filtered)
+            print("Cleaned:   %s" % cleaned)
+            print()
+
 
         return score >= self.__passing_score
