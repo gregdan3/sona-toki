@@ -3,7 +3,7 @@ from typing import List, Type, Tuple
 
 # LOCAL
 from otokipona.Filters import Filter
-from otokipona.Scorers import Scorer
+from otokipona.Scorers import Number, Scorer
 from otokipona.Cleaners import Cleaner
 from otokipona.Tokenizers import Tokenizer
 from otokipona.Preprocessors import Preprocessor
@@ -16,6 +16,7 @@ class Ilo:
     __scoring_filters: List[Type[Filter]]
     __scorer: Type[Scorer]
     __tokenize: Tokenizer
+    __passing_score: Number
 
     def __init__(
         self,
@@ -25,6 +26,7 @@ class Ilo:
         scoring_filters: List[Type[Filter]],
         scorer: Type[Scorer],
         tokenizer: Tokenizer,  # NOTE: no wrapper needed?
+        passing_score: Number,
     ):
         super().__init__()
         # avoid keeping a ref to user's list just in case
@@ -34,6 +36,7 @@ class Ilo:
         self.__scoring_filters = [*scoring_filters]
         self.__scorer = scorer
         self.__tokenize = tokenizer
+        self.__passing_score = passing_score
 
     def __preprocess(self, msg: str) -> str:
         for p in self.__preprocessors:
@@ -86,3 +89,4 @@ class Ilo:
         score = self.__score_tokens(tokens)
         return score > 0.8
         # return False
+        return score >= self.__passing_score
