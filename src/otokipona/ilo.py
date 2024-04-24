@@ -43,15 +43,15 @@ class Ilo:
             msg = p.process(msg)
         return msg
 
-    # def __tokenize(self, msg: str) -> List[str]:
-    #     return self.__tokenizer(msg)
+    def __clean_token(self, token: str) -> str:
+        for c in self.__cleaners:
+            token = c.clean(token)
+        return token
 
     def __clean_tokens(self, tokens: List[str]) -> List[str]:
         cleaned_tokens: List[str] = list()
         for token in tokens:
-            cleaned_token = token
-            for c in self.__cleaners:
-                cleaned_token = c.clean(cleaned_token)
+            cleaned_token = self.__clean_token(token)
             if not cleaned_token:
                 # TODO: warn user?
                 continue
