@@ -47,9 +47,9 @@ SCORERS = [
 )
 def test_score_bounds(scorer: Scorer, filters: List[Type[Filter]], text: List[str]):
     score = scorer.score(text, filters)
-    print(
-        score,
-        filters,
-        text,
-    )
+    # print(
+    #     score,
+    #     filters,
+    #     text,
+    # )
     assert 0 <= score <= 1, (score, filters, text)
