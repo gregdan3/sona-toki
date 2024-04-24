@@ -71,7 +71,7 @@ class DiscordEmotes(RegexPreprocessor):
 
 
 class DiscordMentions(RegexPreprocessor):
-    pattern = re.compile(r"<@!?[0-9]{2,}>")
+    pattern = re.compile(r"<@[\!\&]?[0-9]{2,}>")
 
 
 class DiscordChannels(RegexPreprocessor):
