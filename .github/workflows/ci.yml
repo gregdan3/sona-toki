@@ -64,4 +64,4 @@ jobs:
           pdm install --verbose --dev --group :all --without nltk
           pdm info
       - name: Run Tests
-        run: pdm run pytest --cov=otokipona --cov-config=pyproject.toml tests
+        run: pdm run pytest --cov=sonatoki --cov-config=pyproject.toml tests
