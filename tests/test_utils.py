@@ -5,8 +5,8 @@ import itertools
 import hypothesis.strategies as st
 
 # LOCAL
-from otokipona.Filters import Syllabic, Phonotactic
-from otokipona.constants import ALPHABET, NIMI_LINKU_ALE
+from sonatoki.Filters import Syllabic, Phonotactic
+from sonatoki.constants import ALPHABET, NIMI_LINKU_ALE
 
 PROPER_NAME_RE = r"[A-Z][a-z]*"
 ALPHABETIC_RE = rf"[{ALPHABET}{ALPHABET.upper()}]+"

@@ -1,6 +1,6 @@
 # LOCAL
-from otokipona.ilo import Ilo
-from otokipona.Filters import (
+from sonatoki.ilo import Ilo
+from sonatoki.Filters import (
     Numerics,
     Syllabic,
     NimiLinku,
@@ -8,10 +8,10 @@ from otokipona.Filters import (
     ProperName,
     Punctuations,
 )
-from otokipona.Scorers import Scaling, SoftScaling
-from otokipona.Cleaners import ConsecutiveDuplicates
-from otokipona.Tokenizers import word_tokenize_tok
-from otokipona.Preprocessors import (
+from sonatoki.Scorers import Scaling, SoftScaling
+from sonatoki.Cleaners import ConsecutiveDuplicates
+from sonatoki.Tokenizers import word_tokenize_tok
+from sonatoki.Preprocessors import (
     URLs,
     DiscordEmotes,
     DiscordSpecial,
@@ -47,5 +47,7 @@ def test_constructor():
     assert ilo.is_toki_pona("ni li tptpt")
 
     assert not ilo.is_toki_pona("I'm Trying To Evade The Filter")
-    assert not ilo.is_toki_pona("""aaa i non-saw usa's most multiple element-set
-it's as asinine as in `e`-less speak""")
+    assert not ilo.is_toki_pona(
+        """aaa i non-saw usa's most multiple element-set
+it's as asinine as in `e`-less speak"""
+    )

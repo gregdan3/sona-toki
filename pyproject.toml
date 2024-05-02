@@ -1,5 +1,5 @@
 [project]
-name = "otokipona"
+name = "sonatoki"
 version = "0.1.0"
 description = "ilo li moku e toki li pana e sona ni: ni li toki ala toki pona?"
 authors = [
@@ -76,9 +76,9 @@ src = ["src"]
 
 [tool.coverage.run]
 branch = true
-source = ["src/otokipona/"]
+source = ["src/sonatoki/"]
 omit = [
-    "src/otokipona/__main__.py"
+    "src/sonatoki/__main__.py"
 ]
 
 [tool.coverage.report]

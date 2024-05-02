@@ -7,7 +7,7 @@ from typing import Dict, List, Type, Union
 from typing_extensions import override
 
 # LOCAL
-from otokipona.Filters import Filter
+from sonatoki.Filters import Filter
 
 Number = Union[int, float]
 Weights = Dict[str, Number]
@@ -83,6 +83,7 @@ class Scaling(Scorer):
             total_score += cls.score_token(token, filters, len_filters)
         return total_score / max_score if max_score else 0
 
+
 class SoftScaling(Scaling):
     """Shorter messages are subject to less harsh scoring
     by mapping the token count to [0.5, 1.0] via the sigmoid function,
@@ -92,7 +93,7 @@ class SoftScaling(Scaling):
 
     @staticmethod
     def sigmoid(n: int) -> Number:
-        return (1 / (1 + math.exp(-(0.30 * (n-1)) )))
+        return 1 / (1 + math.exp(-(0.30 * (n - 1))))
         # n-1 makes sigmoid(1) == 0.5
         # 0.30 softens scaling against input
         # return n / (1+abs(n))   # too weak in 0.7+
@@ -112,9 +113,8 @@ class SoftScaling(Scaling):
             total_score += cls.score_token(token, filters, len_filters)
 
         percentage = total_score / max_score if max_score else 0
-        percentage **= cls.sigmoid(len_tokens) 
+        percentage **= cls.sigmoid(len_tokens)
         return percentage
-
 
 
 class Logarithmic(Scorer): ...

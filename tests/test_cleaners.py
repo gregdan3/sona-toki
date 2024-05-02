@@ -5,7 +5,7 @@ import hypothesis.strategies as st
 from hypothesis import assume, given, example, reproduce_failure
 
 # LOCAL
-from otokipona.Cleaners import ConsecutiveDuplicates
+from sonatoki.Cleaners import ConsecutiveDuplicates
 
 # FILESYSTEM
 from .test_utils import overlapping_pairs
@@ -16,7 +16,9 @@ from .test_utils import overlapping_pairs
 @example("muuuuuu")
 @example("nnn")
 @example("")
-@example("manna")  # syllabically valid, but not phonotactically valid; errantly matches phonotactic filter after this cleaner
+@example(
+    "manna"
+)  # syllabically valid, but not phonotactically valid; errantly matches phonotactic filter after this cleaner
 def test_ConsecutiveDuplicates(s: str):
     _ = assume("\n" not in s)
     res = ConsecutiveDuplicates.clean(s)

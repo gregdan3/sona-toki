@@ -1,8 +1,8 @@
-# o toki pona
+# sona toki
 
-## What is __o toki pona__?
+## What is **sona toki**?
 
-This library, "Speak Toki Pona," helps you identify whether a message is in Toki Pona. No grammar checking, yet, which means this more checks whether a given message has enough Toki Pona words.
+This library, "Language Knowledge," helps you identify whether a message is in Toki Pona. No grammar checking, yet, which means this more checks whether a given message has enough Toki Pona words.
 
 I wrote it with a variety of scraps and lessons learned from a prior project, [ilo pi toki pona taso, "toki-pona-only tool"](https://github.com/gregdan3/ilo-pi-toki-pona-taso). That tool will be rewritten to use this library shortly.
 
@@ -16,13 +16,13 @@ Install with your preferred Python package manager. Example:
 
 ```sh
 pdm init  # if your pyproject.toml doesn't exist yet
-pdm add otokipona
+pdm add sonatoki
 ```
 
 Then get started with a script along these lines:
 
 ```py
-from otokipona.Filters import (
+from sonatoki.Filters import (
     Numerics,
     Syllabic,
     NimiLinku,
@@ -30,10 +30,10 @@ from otokipona.Filters import (
     ProperName,
     Punctuations,
 )
-from otokipona.Scorers import Scaling
-from otokipona.Cleaners import ConsecutiveDuplicates
-from otokipona.Tokenizers import word_tokenize_tok
-from otokipona.Preprocessors import URLs, DiscordEmotes
+from sonatoki.Scorers import Scaling
+from sonatoki.Cleaners import ConsecutiveDuplicates
+from sonatoki.Tokenizers import word_tokenize_tok
+from sonatoki.Preprocessors import URLs, DiscordEmotes
 
 def main():
     ilo = Ilo(
@@ -67,4 +67,4 @@ The intent is to show our methodology to the Unicode Consortium, particularly to
 
 After our proposal has been examined and a result given by the committee, I will translate this file and library into Toki Pona, with a note left behind for those who do not understand it.
 
-### Why aren't any of the specific 
+### Why aren't any of the specific

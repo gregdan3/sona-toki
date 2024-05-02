@@ -6,7 +6,7 @@ import yaml
 import pytest
 
 # LOCAL
-from otokipona.Tokenizers import (
+from sonatoki.Tokenizers import (
     sent_tokenize_re,
     word_tokenize_re,
     sent_tokenize_tok,
@@ -18,7 +18,7 @@ try:
     import nltk
 
     # LOCAL
-    from otokipona.Tokenizers import sent_tokenize_nltk, word_tokenize_nltk
+    from sonatoki.Tokenizers import sent_tokenize_nltk, word_tokenize_nltk
 
 except ImportError as e:
     nltk = e

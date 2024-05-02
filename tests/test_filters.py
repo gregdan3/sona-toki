@@ -7,7 +7,7 @@ import hypothesis.strategies as st
 from hypothesis import HealthCheck, given, assume, example, settings
 
 # LOCAL
-from otokipona.Filters import (
+from sonatoki.Filters import (
     NimiPu,
     Numerics,
     Syllabic,
@@ -17,8 +17,8 @@ from otokipona.Filters import (
     Phonotactic,
     Punctuations,
 )
-from otokipona.Cleaners import ConsecutiveDuplicates
-from otokipona.constants import NIMI_PU, NIMI_LINKU
+from sonatoki.Cleaners import ConsecutiveDuplicates
+from sonatoki.constants import NIMI_PU, NIMI_LINKU
 
 # FILESYSTEM
 from .test_utils import ALPHABETIC_RE, PROPER_NAME_RE

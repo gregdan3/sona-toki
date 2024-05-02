@@ -3,7 +3,7 @@ import hypothesis.strategies as st
 from hypothesis import given, example
 
 # LOCAL
-from otokipona.Preprocessors import (
+from sonatoki.Preprocessors import (
     URLs,
     Spoilers,
     Backticks,

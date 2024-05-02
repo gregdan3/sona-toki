@@ -8,7 +8,7 @@ import regex as re
 from typing_extensions import override
 
 # LOCAL
-from otokipona.constants import (
+from sonatoki.constants import (
     VOWELS,
     CONSONANTS,
     NIMI_PU_SET,

@@ -7,7 +7,7 @@ import hypothesis.strategies as st
 from hypothesis import given
 
 # LOCAL
-from otokipona.Filters import (
+from sonatoki.Filters import (
     Filter,
     NimiPu,
     Numerics,
@@ -18,7 +18,7 @@ from otokipona.Filters import (
     Phonotactic,
     Punctuations,
 )
-from otokipona.Scorers import Scorer, Scaling, PassFail, SoftScaling
+from sonatoki.Scorers import Scorer, Scaling, PassFail, SoftScaling
 
 # FILESYSTEM
 from .test_utils import token_strategy

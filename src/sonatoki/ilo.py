@@ -2,11 +2,11 @@
 from typing import List, Type
 
 # LOCAL
-from otokipona.Filters import Filter
-from otokipona.Scorers import Number, Scorer
-from otokipona.Cleaners import Cleaner
-from otokipona.Tokenizers import Tokenizer
-from otokipona.Preprocessors import Preprocessor
+from sonatoki.Filters import Filter
+from sonatoki.Scorers import Number, Scorer
+from sonatoki.Cleaners import Cleaner
+from sonatoki.Tokenizers import Tokenizer
+from sonatoki.Preprocessors import Preprocessor
 
 
 class Ilo:
@@ -97,6 +97,5 @@ class Ilo:
             print("Filtered:  %s" % filtered)
             print("Cleaned:   %s" % cleaned)
             print()
-
 
         return score >= self.__passing_score
