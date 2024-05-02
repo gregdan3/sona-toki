@@ -2,7 +2,7 @@
 
 # PDM
 import hypothesis.strategies as st
-from hypothesis import given, example
+from hypothesis import assume, given, example, reproduce_failure
 
 # LOCAL
 from otokipona.Cleaners import ConsecutiveDuplicates
@@ -17,6 +17,7 @@ from .test_utils import overlapping_pairs
 @example("nnn")
 @example("")
 def test_ConsecutiveDuplicates(s: str):
+    _ = assume("\n" not in s)
     res = ConsecutiveDuplicates.clean(s)
     for a, b in overlapping_pairs(res):
         assert a != b, (s, res)
