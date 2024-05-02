@@ -16,6 +16,7 @@ from .test_utils import overlapping_pairs
 @example("muuuuuu")
 @example("nnn")
 @example("")
+@example("manna")  # syllabically valid, but not phonotactically valid; errantly matches phonotactic filter after this cleaner
 def test_ConsecutiveDuplicates(s: str):
     _ = assume("\n" not in s)
     res = ConsecutiveDuplicates.clean(s)
