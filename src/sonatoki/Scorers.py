@@ -14,19 +14,6 @@ Weights = Dict[str, Number]
 
 
 class Scorer(ABC):
-    weights: Weights
-
-    # @classmethod
-    # def __score(cls, token: str, filters: List[Type[Filter]]) -> Tuple[int, Number]:
-    #     for filter in filters:
-    #         if not filter.filter(token):
-    #             continue
-    #         # NOTE: We assume the filters are ordered by their score
-    #         # Thus the first match is also the highest scoring
-    #         return filter.counts, cls.weights[filter.__name__]
-    #         # TODO: override weight if count is 0?
-    #     return 1, 0
-
     @classmethod
     @abstractmethod
     def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
