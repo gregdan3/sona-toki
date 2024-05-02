@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pdm-project/setup-pdm@v4
         with:
-          python-version: "3.11"
+          python-version: "3.11" # semi-arbitrary
 
       - name: Check prerelease
         id: check_version
