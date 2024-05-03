@@ -30,7 +30,7 @@ from sonatoki.Filters import (
     ProperName,
     Punctuations,
 )
-from sonatoki.Scorers import Scaling
+from sonatoki.Scorers import SoftScaling
 from sonatoki.Cleaners import ConsecutiveDuplicates
 from sonatoki.Tokenizers import word_tokenize_tok
 from sonatoki.Preprocessors import URLs, DiscordEmotes
@@ -41,11 +41,12 @@ def main():
         ignoring_filters=[Numerics, Punctuations],
         scoring_filters=[NimiLinku, Syllabic, ProperName, Alphabetic],
         cleaners=[ConsecutiveDuplicates],
-        scorer=Scaling,
+        scorer=SoftScaling,
         tokenizer=word_tokenize_tok,
     )
     ilo.is_toki_pona("imagine how is touch the sky")  # False
     ilo.is_toki_pona("o pilin insa e ni: sina pilin e sewi")  # True
+    ilo.is_toki_pona("I Think I Can Evade Detection")  # False
 
 if __name__ == "__main__":
     main()
