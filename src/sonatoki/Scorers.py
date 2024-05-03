@@ -1,5 +1,6 @@
 # STL
 import math
+import logging
 from abc import ABC, abstractmethod
 from typing import Dict, List, Type, Union
 
@@ -8,6 +9,8 @@ from typing_extensions import override
 
 # LOCAL
 from sonatoki.Filters import Filter
+
+LOG = logging.getLogger(__name__)
 
 Number = Union[int, float]
 Weights = Dict[str, Number]
@@ -27,7 +30,12 @@ class PassFail(Scorer):
     def __score(cls, token: str, filters: List[Type[Filter]]) -> Number:
         for f in filters:
             if f.filter(token):
-                return 1
+                score = 1
+                LOG.debug(
+                    "%12s.%s('%s') = %.2f", cls.__name__, f.__name__, token, score
+                )
+                return score
+        LOG.debug("%12s('%s') = 0.00", cls.__name__, token)
         return 0
 
     @classmethod
@@ -54,7 +62,12 @@ class Scaling(Scorer):
     def score_token(cls, token: str, filters: List[Type[Filter]], scale: int):
         for i, f in enumerate(filters):
             if f.filter(token):
-                return scale - i
+                score = scale - i
+                LOG.debug(
+                    "%12s.%s('%s') = %.2f", cls.__name__, f.__name__, token, score
+                )
+                return score
+        LOG.debug("%12s('%s') = 0.00", cls.__name__, token)
         return 0
 
     @classmethod
@@ -82,7 +95,7 @@ class SoftScaling(Scaling):
     def sigmoid(n: int) -> Number:
         return 1 / (1 + math.exp(-(0.30 * (n - 1))))
         # n-1 makes sigmoid(1) == 0.5
-        # 0.30 softens scaling against input
+        # 0.30 softens scaling in favor of short input
         # return n / (1+abs(n))   # too weak in 0.7+
 
     @classmethod

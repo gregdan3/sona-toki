@@ -1,5 +1,6 @@
 # STL
-from typing import List, Type
+import logging
+from typing import List, Type, Tuple
 
 # LOCAL
 from sonatoki.Filters import Filter
@@ -7,6 +8,8 @@ from sonatoki.Scorers import Number, Scorer
 from sonatoki.Cleaners import Cleaner
 from sonatoki.Tokenizers import Tokenizer
 from sonatoki.Preprocessors import Preprocessor
+
+LOG = logging.getLogger(__name__)
 
 
 class Ilo:
@@ -17,7 +20,7 @@ class Ilo:
     __scorer: Type[Scorer]
     __tokenize: Tokenizer
     __passing_score: Number
-    debug: bool = False
+    logging_threshold: Number = 1.0
 
     def __init__(
         self,
@@ -83,19 +86,35 @@ class Ilo:
     def __score_tokens(self, tokens: List[str]) -> float:
         return self.__scorer.score(tokens, self.__scoring_filters)
 
-    def is_toki_pona(self, message: str) -> bool:
+    def _is_toki_pona(
+        self, message: str
+    ) -> Tuple[str, List[str], List[str], List[str], Number, bool]:
+        """Returns all components of the processing algorithm:
+        - Preprocessed message (str)
+        - Tokenized message (list[str])
+        - Filtered message (list[str])
+        - Cleaned message (list[str])
+        - Score (float)
+        - Result (bool)
+        """
         preprocessed = self.__preprocess(message)
         tokenized = self.__tokenize(preprocessed)
         filtered = self.__filter_tokens(tokenized)
         cleaned = self.__clean_tokens(filtered)
         score = self.__score_tokens(cleaned)
+        result = score >= self.__passing_score
 
-        if self.debug:
-            print("msg: %.2f  %s" % (score, repr(message)))
-            print("Preproc:   %s" % repr(preprocessed))
-            print("Tokenized: %s" % tokenized)
-            print("Filtered:  %s" % filtered)
-            print("Cleaned:   %s" % cleaned)
-            print()
+        # NOTE: this method may break if above funcs start sharing a list
+        if score <= self.logging_threshold:
+            LOG.debug("Msg: %.2f  %s", score, repr(message))
+            LOG.debug("Preproc:   %s", repr(preprocessed))
+            LOG.debug("Tokenized: %s", tokenized)
+            LOG.debug("Filtered:  %s", filtered)
+            LOG.debug("Cleaned:   %s", cleaned)
+        # TODO: Move to each function? Loses ability to control when logging occurs by threshold
 
-        return score >= self.__passing_score
+        return preprocessed, tokenized, filtered, cleaned, score, result
+
+    def is_toki_pona(self, message: str) -> bool:
+        *_, result = self._is_toki_pona(message)
+        return result
