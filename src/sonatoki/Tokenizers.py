@@ -18,7 +18,7 @@ except ImportError as e:
 LANGUAGE = "english"  # for NLTK
 
 SENT_DELIMS_RE = re.compile(r"""(.*?[.?!;:])|(.+?$)""")
-SENT_DELIMS_TOK = re.compile(r"""(?<=[.?!:;·…“”"'()[\]\-]|$)""")
+SENT_DELIMS_TOK = re.compile(r"""(?<=[.?!:;·…“”"'()\[\]\-]|$)""")
 # TODO: are <> or {} that common as *sentence* delims? [] are already a stretch
 # TODO: do the typography characters matter?
 # NOTE: | / and , are *not* sentence delimiters for my purpose
