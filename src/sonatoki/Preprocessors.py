@@ -121,6 +121,9 @@ class ArrowQuote(RegexPreprocessor):
 
 
 __all__ = [
+    "DiscordChannels",
+    "DiscordMentions",
+    "DiscordSpecial",
     "DiscordEmotes",
     "SingleQuotes",
     "DoubleQuotes",
