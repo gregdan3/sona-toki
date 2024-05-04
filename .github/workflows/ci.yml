@@ -56,9 +56,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
-          restore-keys: |
-            venv-${{ runner.os }}-${{ matrix.arch }}-${{ matrix.python-version }}-
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
+          restore-keys: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
       - name: Install Dev Dependencies
         run: |
           pdm install --verbose --dev --group :all --without nltk
