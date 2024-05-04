@@ -16,6 +16,13 @@ Number = Union[int, float]
 Weights = Dict[str, Number]
 
 
+def sigmoid(n: int) -> Number:
+    return 1 / (1 + math.exp(-(0.30 * (n - 1))))
+    # n-1 makes sigmoid(1) == 0.5
+    # 0.30 softens scaling in favor of short input
+    # return n / (1+abs(n))   # too weak in 0.7+
+
+
 class Scorer(ABC):
     @classmethod
     @abstractmethod
@@ -27,7 +34,7 @@ class PassFail(Scorer):
     """The token passes any filter or fails all of them, scoring 1 or 0 respectively."""
 
     @classmethod
-    def __score(cls, token: str, filters: List[Type[Filter]]) -> Number:
+    def score_token(cls, token: str, filters: List[Type[Filter]]) -> Number:
         for f in filters:
             if f.filter(token):
                 score = 1
@@ -47,8 +54,25 @@ class PassFail(Scorer):
         total_score = 0
         len_tokens = len(tokens)
         for token in tokens:
-            total_score += cls.__score(token, filters)
+            total_score += cls.score_token(token, filters)
         return total_score / len_tokens if len_tokens else 0
+
+
+class SoftPassFail(PassFail):
+    @classmethod
+    @override
+    def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
+        if not tokens:
+            return 1
+
+        total_score = 0
+        len_tokens = len(tokens)
+        for token in tokens:
+            total_score += cls.score_token(token, filters)
+
+        percentage = total_score / len_tokens if len_tokens else 0
+        percentage **= sigmoid(len_tokens)
+        return percentage
 
 
 class Scaling(Scorer):
@@ -91,13 +115,6 @@ class SoftScaling(Scaling):
     For example, a single token scoring 0.64 will now score 0.8.
     """
 
-    @staticmethod
-    def sigmoid(n: int) -> Number:
-        return 1 / (1 + math.exp(-(0.30 * (n - 1))))
-        # n-1 makes sigmoid(1) == 0.5
-        # 0.30 softens scaling in favor of short input
-        # return n / (1+abs(n))   # too weak in 0.7+
-
     @classmethod
     @override
     def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
@@ -113,11 +130,11 @@ class SoftScaling(Scaling):
             total_score += cls.score_token(token, filters, len_filters)
 
         percentage = total_score / max_score if max_score else 0
-        percentage **= cls.sigmoid(len_tokens)
+        percentage **= sigmoid(len_tokens)
         return percentage
 
 
 class Logarithmic(Scorer): ...
 
 
-__all__ = ["PassFail", "Scaling", "SoftScaling"]
+__all__ = ["PassFail", "SoftPassFail", "Scaling", "SoftScaling"]
