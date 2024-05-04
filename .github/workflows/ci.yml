@@ -8,6 +8,7 @@ on:
       - dev
       - working
       - "feature/*"
+      - "bug/*"
     paths-ignore:
       - "docs/**"
       - "news/**"
@@ -19,6 +20,7 @@ on:
       - dev
       - working
       - "feature/*"
+      - "bug/*"
     paths-ignore:
       - "docs/**"
       - "news/**"
@@ -63,4 +65,4 @@ jobs:
           pdm install --verbose --dev --group :all --without nltk
           pdm info
       - name: Run Tests
-        run: pdm run pytest --cov=sonatoki --cov-config=pyproject.toml tests
+        run: pdm run pytest --verbose --cov=sonatoki --cov-config=pyproject.toml tests
