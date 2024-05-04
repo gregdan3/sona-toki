@@ -73,6 +73,18 @@
     - "are"
     - "boring"
     - "'"
+- name: periods every word
+  input: "mi.unpa.e.mama.sina"
+  output:
+    - "mi"
+    - "."
+    - "unpa"
+    - "."
+    - "e"
+    - "."
+    - "mama"
+    - "."
+    - "sina"
 - name: "discovered case 1"
   input: "***__U T A L A__   __M U N__***"
   output:

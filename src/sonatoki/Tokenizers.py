@@ -4,6 +4,8 @@ from typing import List, Callable
 # PDM
 import regex as re
 
+# TODO: Entire module should be reworked to match the class scheme of the rest of the module, imo
+
 try:
     # PDM
     import nltk
@@ -15,18 +17,14 @@ except ImportError as e:
 
 LANGUAGE = "english"  # for NLTK
 
-SENT_DELIMS_RE = r"""(.*?[.?!;:])|(.+?$)"""
-SENT_DELIMS_RE = re.compile(SENT_DELIMS_RE)
+SENT_DELIMS_RE = re.compile(r"""(.*?[.?!;:])|(.+?$)""")
+SENT_DELIMS_TOK = re.compile(r"""(?<=[.?!:;·…“”"'()[\]\-]|$)""")
+# TODO: are <> or {} that common as *sentence* delims? [] are already a stretch
+# TODO: do the typography characters matter?
+# NOTE: | / and , are *not* sentence delimiters for my purpose
 
-SENT_DELIMS_TOK = r"""(.*?[.?!;:-])|(.+?$)"""
-SENT_DELIMS_TOK = re.compile(SENT_DELIMS_TOK)
-
-
-WORD_DELIMS_RE = r"""\s+|(?=[.?!;:'"-])"""
-WORD_DELIMS_RE = re.compile(WORD_DELIMS_RE)
-
-WORD_DELIMS_TOK = r"([\p{Punctuation}\p{posix_punct}]+|\s+)"
-WORD_DELIMS_TOK = re.compile(WORD_DELIMS_TOK)
+WORD_DELIMS_RE = re.compile(r"""\s+|(?=[.?!;:'"-])""")
+WORD_DELIMS_TOK = re.compile(r"([\p{Punctuation}\p{posix_punct}]+|\s+)")
 
 Tokenizer = Callable[[str], List[str]]
 
@@ -53,11 +51,7 @@ def word_tokenize_re(s: str) -> List[str]:
 
 
 def sent_tokenize_tok(s: str) -> List[str]:
-    return [
-        clean
-        for sent in re.findall(SENT_DELIMS_TOK, s)
-        if (clean := sent[0].strip() or sent[1].strip())
-    ]
+    return [clean for sent in re.split(SENT_DELIMS_TOK, s) if (clean := sent.strip())]
 
 
 def word_tokenize_tok(s: str) -> List[str]:
