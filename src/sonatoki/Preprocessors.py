@@ -13,7 +13,7 @@ There are currently two distinct types of Preprocessor:
   - ArrowQuote
 
 Order does not generally matter, but if there were two overlapping containers such as in the string "|| spoiler ` monospace || `", order would matter.
-As such, each Preprocessor exposes a .precedence attribute which is optionally usable for ordering them. Lower precedence means it should be applied first.
+It is up to the user to order them appropriately.
 """
 
 # STL
@@ -27,8 +27,6 @@ re.DEFAULT_VERSION = re.VERSION1
 
 
 class Preprocessor(ABC):
-    precedence: int = 0
-
     @classmethod  # order matters
     @abstractmethod
     def process(cls, msg: str) -> str:
@@ -104,7 +102,6 @@ class DoubleQuotes(RegexPreprocessor):
 class Backticks(RegexPreprocessor):
     """Remove paired backticks and their contents `like this`"""
 
-    precedence = -10
     pattern = re.compile(r"`[^`]+`", flags=re.S)
 
 
