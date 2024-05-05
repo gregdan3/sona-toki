@@ -3,46 +3,19 @@ import pytest
 
 # LOCAL
 from sonatoki.ilo import Ilo
-from sonatoki.Filters import (
-    Numerics,
-    Syllabic,
-    NimiLinku,
-    Alphabetic,
-    ProperName,
-    Punctuations,
-)
-from sonatoki.Scorers import SoftScaling, SoftPassFail
-from sonatoki.Cleaners import ConsecutiveDuplicates
-from sonatoki.Tokenizers import word_tokenize_tok
-from sonatoki.Preprocessors import URLs
+from sonatoki.Configs import LazyConfig, PrefConfig
 
 
 @pytest.fixture
 def ilo():
-    ilo = Ilo(
-        preprocessors=[URLs],
-        ignoring_filters=[Numerics, Punctuations],
-        scoring_filters=[NimiLinku, Syllabic, ProperName, Alphabetic],
-        cleaners=[ConsecutiveDuplicates],
-        scorer=SoftScaling,
-        tokenizer=word_tokenize_tok,
-        passing_score=0.8,
-    )
+    ilo = Ilo(**PrefConfig)
     # ilo.logging_threshold = 0.8
     return ilo
 
 
 @pytest.fixture()
 def lazy_ilo():
-    ilo = Ilo(
-        preprocessors=[URLs],
-        ignoring_filters=[Numerics, Punctuations],
-        scoring_filters=[Alphabetic, ProperName],
-        cleaners=[ConsecutiveDuplicates],
-        scorer=SoftPassFail,
-        tokenizer=word_tokenize_tok,
-        passing_score=0.8,
-    )
+    ilo = Ilo(**LazyConfig)
     # ilo.logging_threshold = 0.8
     return ilo
 
