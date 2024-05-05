@@ -20,7 +20,7 @@ class Ilo:
     __scoring_filters: List[Type[Filter]]
     __scorer: Type[Scorer]
     __passing_score: Number
-    logging_threshold: Number = 1.0
+    logging_threshold: Number = -1
 
     def __init__(
         self,
@@ -104,13 +104,12 @@ class Ilo:
         score = self.score_tokens(cleaned)
         result = score >= self.__passing_score
 
-        # NOTE: this method may break if above funcs start sharing a list
         if score <= self.logging_threshold:
-            LOG.debug("Msg: %.2f  %s", score, repr(message))
-            LOG.debug("Preproc:   %s", repr(preprocessed))
-            LOG.debug("Tokenized: %s", tokenized)
-            LOG.debug("Filtered:  %s", filtered)
-            LOG.debug("Cleaned:   %s", cleaned)
+            LOG.debug("msg: %.2f  %s", score, repr(message))
+            LOG.debug("preproc:   %s", repr(preprocessed))
+            LOG.debug("tokenized: %s", tokenized)
+            LOG.debug("filtered:  %s", filtered)
+            LOG.debug("cleaned:   %s", cleaned)
         # TODO: Move to each function? Loses ability to control when logging occurs by threshold
 
         return preprocessed, tokenized, filtered, cleaned, score, result
