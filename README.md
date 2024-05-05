@@ -6,9 +6,9 @@ This library, "Language Knowledge," helps you identify whether a message is in T
 
 I wrote it with a variety of scraps and lessons learned from a prior project, [ilo pi toki pona taso, "toki-pona-only tool"](https://github.com/gregdan3/ilo-pi-toki-pona-taso). That tool will be rewritten to use this library shortly.
 
-If you've ever worked on a similar project, you know the question "is this message in [language]" is not a consistent one- the environment, time, preferences of the speaker, and much more, can all alter whether a given message is "in toki pona," and this applies to essentially any language.
+If you've ever worked on a similar project, you know the question "is this message in [language]" is not a consistent one- the environment, time, preferences of the speaker, and much more, can all alter whether a given message is "in" any specific language, and this question applies to Toki Pona too.
 
-This project "solves" that complex problem by offering a highly configurable and incredibly lazy parser
+This project "solves" that complex problem by offering a highly configurable parser, so you can tune it to your preferences and goals.
 
 ## Quick Start
 
@@ -22,28 +22,11 @@ pdm add sonatoki
 Then get started with a script along these lines:
 
 ```py
-from sonatoki.Filters import (
-    Numerics,
-    Syllabic,
-    NimiLinku,
-    Alphabetic,
-    ProperName,
-    Punctuations,
-)
-from sonatoki.Scorers import SoftScaling
-from sonatoki.Cleaners import ConsecutiveDuplicates
-from sonatoki.Tokenizers import word_tokenize_tok
-from sonatoki.Preprocessors import URLs, DiscordEmotes
+from sonatoki.ilo import Ilo
+from sonatoki.Configs import PrefConfig
 
 def main():
-    ilo = Ilo(
-        preprocessors=[URLs, DiscordEmotes],
-        ignoring_filters=[Numerics, Punctuations],
-        scoring_filters=[NimiLinku, Syllabic, ProperName, Alphabetic],
-        cleaners=[ConsecutiveDuplicates],
-        scorer=SoftScaling,
-        tokenizer=word_tokenize_tok,
-    )
+    ilo = Ilo(**PrefConfig)
     ilo.is_toki_pona("imagine how is touch the sky")  # False
     ilo.is_toki_pona("o pilin insa e ni: sina pilin e sewi")  # True
     ilo.is_toki_pona("I Think I Can Evade Detection")  # False
@@ -52,7 +35,30 @@ if __name__ == "__main__":
     main()
 ```
 
-`Ilo` is highly configurable by design, so I recommend exploring the `Preprocessors`, `Filters`, and `Scorers` modules. The `Cleaners` module only contains one cleaner, which I recommend using. The `Tokenizers` module contains several other word tokenizers, but their performance will be worse than the dedicated Toki Pona tokenizer `word_tokenize_tok`.
+Or if you'd prefer to configure on your own:
+
+```py
+from copy import deepcopy
+from sonatoki.ilo import Ilo
+from sonatoki.Configs import BaseConfig
+from sonatoki.Filters import NimiPuAle, Phonotactic, ProperName
+from sonatoki.Scorers import SoftPassFail
+
+def main():
+    config = deepcopy(BaseConfig)
+    config["scoring_filters"].extend([NimiPuAle, Phonotactic, ProperName])
+    config["scorer"] = SoftPassFail
+
+    ilo = Ilo(**config)
+    ilo.is_toki_pona("mu mu!")  # True
+    ilo.is_toki_pona("mi namako e moku mi")  # True
+    ilo.is_toki_pona("ma wulin")  # False
+
+if __name__ == "__main__":
+    main()
+```
+
+`Ilo` is highly configurable by necessity, so I recommend looking through the premade configs in `Configs` as well as the individual `Preprocessors`, `Filters`, and `Scorers`. The `Cleaners` module only contains one cleaner, which I recommend always using. Similarly, the `Tokenizers` module contains several other word tokenizers, but their performance will be worse than the dedicated Toki Pona tokenizer `WordTokenizerTok`.
 
 ## Development
 
