@@ -14,11 +14,11 @@ LOG = logging.getLogger(__name__)
 
 class Ilo:
     __preprocessors: List[Type[Preprocessor]]
+    __word_tokenizer: Type[Tokenizer]
     __cleaners: List[Type[Cleaner]]
     __ignoring_filters: List[Type[Filter]]
     __scoring_filters: List[Type[Filter]]
     __scorer: Type[Scorer]
-    __tokenize: Tokenizer
     __passing_score: Number
     logging_threshold: Number = 1.0
 
@@ -29,17 +29,17 @@ class Ilo:
         ignoring_filters: List[Type[Filter]],
         scoring_filters: List[Type[Filter]],
         scorer: Type[Scorer],
-        tokenizer: Tokenizer,  # NOTE: no wrapper needed?
         passing_score: Number,
+        word_tokenizer: Type[Tokenizer],
     ):
         super().__init__()
         # avoid keeping a ref to user's list just in case
         self.__preprocessors = [*preprocessors]
+        self.__word_tokenizer = word_tokenizer
         self.__cleaners = [*cleaners]
         self.__ignoring_filters = [*ignoring_filters]
         self.__scoring_filters = [*scoring_filters]
         self.__scorer = scorer
-        self.__tokenize = tokenizer
         self.__passing_score = passing_score
 
     def __preprocess(self, msg: str) -> str:
@@ -48,6 +48,10 @@ class Ilo:
         return msg
 
     def __clean_token(self, token: str) -> str:
+    def word_tokenize(self, msg: str) -> List[str]:
+        """It is *highly* recommended that you run `ilo.preprocess` first."""
+        return self.__word_tokenizer.tokenize(msg)
+
         for c in self.__cleaners:
             token = c.clean(token)
         return token
@@ -95,13 +99,12 @@ class Ilo:
         - Filtered message (list[str])
         - Cleaned message (list[str])
         - Score (float)
-        - Result (bool)
-        """
-        preprocessed = self.__preprocess(message)
-        tokenized = self.__tokenize(preprocessed)
-        filtered = self.__filter_tokens(tokenized)
-        cleaned = self.__clean_tokens(filtered)
-        score = self.__score_tokens(cleaned)
+        - Result (bool)"""
+        preprocessed = self.preprocess(message)
+        tokenized = self.word_tokenize(preprocessed)
+        filtered = self.filter_tokens(tokenized)
+        cleaned = self.clean_tokens(filtered)
+        score = self.score_tokens(cleaned)
         result = score >= self.__passing_score
 
         # NOTE: this method may break if above funcs start sharing a list
@@ -116,5 +119,6 @@ class Ilo:
         return preprocessed, tokenized, filtered, cleaned, score, result
 
     def is_toki_pona(self, message: str) -> bool:
+        """Determines whether a single statement is or is not Toki Pona."""
         *_, result = self._is_toki_pona(message)
         return result
