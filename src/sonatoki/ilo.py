@@ -42,52 +42,49 @@ class Ilo:
         self.__scorer = scorer
         self.__passing_score = passing_score
 
-    def __preprocess(self, msg: str) -> str:
+    def preprocess(self, msg: str) -> str:
         for p in self.__preprocessors:
             msg = p.process(msg)
         return msg
 
-    def __clean_token(self, token: str) -> str:
     def word_tokenize(self, msg: str) -> List[str]:
         """It is *highly* recommended that you run `ilo.preprocess` first."""
         return self.__word_tokenizer.tokenize(msg)
 
+    def clean_token(self, token: str) -> str:
         for c in self.__cleaners:
             token = c.clean(token)
         return token
 
-    def __clean_tokens(self, tokens: List[str]) -> List[str]:
-        # NOTE: tested, making a new list with a for loop *is* faster than
-        # - list comps
-        # - generator comps
-        # - in-place replacement/removal
-        # - in place replacement with result of generator comp
+    def clean_tokens(self, tokens: List[str]) -> List[str]:
+        # NOTE: tested, making a new list with a for loop *is* faster than:
+        # list comp, generator comp, in-place replacement
         cleaned_tokens: List[str] = list()
         for token in tokens:
-            cleaned_token = self.__clean_token(token)
+            cleaned_token = self.clean_token(token)
             if not cleaned_token:
                 # TODO: warn user?
                 continue
             cleaned_tokens.append(cleaned_token)
         return cleaned_tokens
 
-    def __filter_token(self, token: str) -> bool:
+    def _filter_token(self, token: str) -> bool:
         for f in self.__ignoring_filters:
             if f.filter(token):
                 return True
         return False
 
-    def __filter_tokens(self, tokens: List[str]) -> List[str]:
+    def filter_tokens(self, tokens: List[str]) -> List[str]:
         filtered_tokens: List[str] = []
         for token in tokens:
-            if self.__filter_token(token):
+            if self._filter_token(token):
                 continue
             # the ignoring filter is true if the token matches
             # the user wants to ignore these so keep non-matching tokens
             filtered_tokens.append(token)
         return filtered_tokens
 
-    def __score_tokens(self, tokens: List[str]) -> float:
+    def score_tokens(self, tokens: List[str]) -> float:
         return self.__scorer.score(tokens, self.__scoring_filters)
 
     def _is_toki_pona(
