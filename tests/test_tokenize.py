@@ -7,10 +7,10 @@ import pytest
 
 # LOCAL
 from sonatoki.Tokenizers import (
-    sent_tokenize_re,
-    word_tokenize_re,
-    sent_tokenize_tok,
-    word_tokenize_tok,
+    SentTokenizerRe,
+    WordTokenizerRe,
+    SentTokenizerTok,
+    WordTokenizerTok,
 )
 
 try:
@@ -18,7 +18,7 @@ try:
     import nltk
 
     # LOCAL
-    from sonatoki.Tokenizers import sent_tokenize_nltk, word_tokenize_nltk
+    from sonatoki.Tokenizers import SentTokenizerNLTK, WordTokenizerNLTK
 
 except ImportError as e:
     nltk = e
@@ -64,8 +64,8 @@ def test_sentences_re(test: TokenizerTest):
     if test["xfail"]:
         pytest.xfail()
 
-    transformed_re = sent_tokenize_re(test["input"])
-    transformed_nltk = sent_tokenize_nltk(test["input"])
+    transformed_re = SentTokenizerRe.tokenize(test["input"])
+    transformed_nltk = SentTokenizerNLTK.tokenize(test["input"])
     assert (transformed_re == transformed_nltk) == test["should_be_equal"], test["name"]
 
 
@@ -78,8 +78,8 @@ def test_word_tokenize_re(test: TokenizerTest):
     if test["xfail"]:
         pytest.xfail()
 
-    transformed_re = word_tokenize_re(test["input"])
-    transformed_nltk = word_tokenize_nltk(test["input"])
+    transformed_re = WordTokenizerRe.tokenize(test["input"])
+    transformed_nltk = WordTokenizerNLTK.tokenize(test["input"])
     assert (transformed_re == transformed_nltk) == test["should_be_equal"], test["name"]
 
 
@@ -90,7 +90,7 @@ def test_sentences_tok(test: TokenizerTest):
     if test["xfail"]:
         pytest.xfail()
 
-    transformed_tok = sent_tokenize_tok(test["input"])
+    transformed_tok = SentTokenizerTok.tokenize(test["input"])
     if test["should_be_equal"]:
         assert transformed_tok == test["output"], test["name"]
     else:
@@ -104,7 +104,7 @@ def test_word_tokenize_tok(test: TokenizerTest):
     if test["xfail"]:
         pytest.xfail()
 
-    transformed_tok = word_tokenize_tok(test["input"])
+    transformed_tok = WordTokenizerTok.tokenize(test["input"])
     if test["should_be_equal"]:
         assert transformed_tok == test["output"], test["name"]
     else:
