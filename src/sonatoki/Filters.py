@@ -17,6 +17,7 @@ from sonatoki.constants import (
     NIMI_LINKU_SET,
     NIMI_PU_ALE_SET,
     NIMI_LINKU_ALE_SET,
+    NIMI_LINKU_SANDBOX_SET,
 )
 
 re.DEFAULT_VERSION = re.VERSION1
@@ -85,6 +86,10 @@ class NimiLinku(SetFilter):
 
 class NimiLinkuAle(SetFilter):
     tokens = NIMI_LINKU_ALE_SET
+
+
+class NimiLinkuSandbox(SetFilter):
+    tokens = NIMI_LINKU_SANDBOX_SET
 
 
 class Phonotactic(RegexFilter):

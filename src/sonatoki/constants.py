@@ -4,6 +4,7 @@ from typing import Dict, List
 from pathlib import Path
 
 LINKU = Path(__file__).resolve().parent / Path("linku.json")
+SANDBOX = Path(__file__).resolve().parent / Path("sandbox.json")
 
 VOWELS = "aeiou"
 CONSONANTS = "jklmnpstw"
@@ -29,10 +30,16 @@ with open(LINKU) as f:
     ]
     NIMI_LINKU_ALE: List[str] = [d["word"] for d in r.values()]
 
+with open(SANDBOX) as f:
+    r: Dict[str, Dict[str, str]] = json.loads(f.read())
+    NIMI_LINKU_SANDBOX: List[str] = [d["word"] for d in r.values()]
+
+
 NIMI_PU_SET = set(NIMI_PU)
 NIMI_PU_ALE_SET = set(NIMI_PU_ALE)
 NIMI_LINKU_SET = set(NIMI_LINKU)
 NIMI_LINKU_ALE_SET = set(NIMI_LINKU_ALE)
+NIMI_LINKU_SANDBOX_SET = set(NIMI_LINKU_SANDBOX)
 ALLOWABLES_SET = set(ALLOWABLES)
 
 __all__ = [
@@ -54,4 +61,7 @@ __all__ = [
     #
     "NIMI_LINKU_ALE",
     "NIMI_LINKU_ALE_SET",
+    #
+    "NIMI_LINKU_SANDBOX",
+    "NIMI_LINKU_SANDBOX_SET",
 ]
