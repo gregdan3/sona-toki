@@ -131,7 +131,7 @@ class Alphabetic(Filter):
         return set(token.lower()).issubset(ALPHABET_SET)
 
 
-class Numerics(Filter):
+class Numeric(Filter):
     """Determine if a given token is entirely numeric.
     Covers all numeric symbols in Unicode.
 
@@ -147,7 +147,7 @@ class Numerics(Filter):
         return msg.isnumeric()
 
 
-class Punctuations(RegexFilter):
+class Punctuation(RegexFilter):
     pattern = re.compile(r"[\p{Punctuation}\p{posix_punct}]+")
 
 
@@ -159,6 +159,6 @@ __all__ = [
     "Syllabic",
     "Alphabetic",
     "ProperName",
-    "Punctuations",
-    "Numerics",
+    "Punctuation",
+    "Numeric",
 ]

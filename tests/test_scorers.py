@@ -10,13 +10,13 @@ from hypothesis import given
 from sonatoki.Filters import (
     Filter,
     NimiPu,
-    Numerics,
+    Numeric,
     Syllabic,
     NimiLinku,
     Alphabetic,
     ProperName,
     Phonotactic,
-    Punctuations,
+    Punctuation,
 )
 from sonatoki.Scorers import Scorer, Scaling, PassFail, SoftScaling
 
@@ -25,13 +25,13 @@ from .test_utils import token_strategy
 
 FILTERS = [
     NimiPu,
-    Numerics,
+    Numeric,
     Syllabic,
     NimiLinku,
     Alphabetic,
     ProperName,
     Phonotactic,
-    Punctuations,
+    Punctuation,
 ]
 
 SCORERS = [

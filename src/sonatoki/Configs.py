@@ -9,15 +9,15 @@ from typing_extensions import NotRequired
 from sonatoki.Filters import (
     Filter,
     NimiPu,
-    Numerics,
+    Numeric,
     Syllabic,
     NimiLinku,
     NimiPuAle,
     Alphabetic,
     ProperName,
     Phonotactic,
+    Punctuation,
     NimiLinkuAle,
-    Punctuations,
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
@@ -45,7 +45,7 @@ class IloConfig(TypedDict):
 BaseConfig: IloConfig = {
     "preprocessors": [URLs],
     "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numerics, Punctuations],
+    "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [],
     "scorer": PassFail,
     "passing_score": 0.8,

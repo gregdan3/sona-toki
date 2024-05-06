@@ -9,13 +9,13 @@ from hypothesis import HealthCheck, given, assume, example, settings
 # LOCAL
 from sonatoki.Filters import (
     NimiPu,
-    Numerics,
+    Numeric,
     Syllabic,
     NimiLinku,
     Alphabetic,
     ProperName,
     Phonotactic,
-    Punctuations,
+    Punctuation,
 )
 from sonatoki.Cleaners import ConsecutiveDuplicates
 from sonatoki.constants import NIMI_PU, NIMI_LINKU
@@ -90,9 +90,9 @@ def test_ProperName(s: str):
 @example("「　」")
 @example(string.punctuation)
 @settings(suppress_health_check=[HealthCheck.filter_too_much])  # FIXME
-def test_Punctuations(s: str):
-    _ = assume(re.fullmatch(Punctuations.pattern.pattern, s))
-    res = Punctuations.filter(s)
+def test_Punctuation(s: str):
+    _ = assume(re.fullmatch(Punctuation.pattern.pattern, s))
+    res = Punctuation.filter(s)
     assert res, repr(s)
 
 
@@ -100,5 +100,5 @@ def test_Punctuations(s: str):
 @example("124125")
 @example("99990000")
 def test_Numeric(s: str):
-    res = Numerics.filter(s)
+    res = Numeric.filter(s)
     assert res, repr(s)
