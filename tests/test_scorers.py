@@ -4,7 +4,7 @@ from typing import List, Type
 # PDM
 import pytest
 import hypothesis.strategies as st
-from hypothesis import given
+from hypothesis import given, example
 
 # LOCAL
 from sonatoki.Filters import (
@@ -18,7 +18,7 @@ from sonatoki.Filters import (
     Phonotactic,
     Punctuation,
 )
-from sonatoki.Scorers import Scorer, Scaling, PassFail, SoftScaling
+from sonatoki.Scorers import Scorer, Scaling, PassFail, SoftScaling, SoftPassFail
 
 # FILESYSTEM
 from .test_utils import token_strategy
@@ -36,6 +36,7 @@ FILTERS = [
 
 SCORERS = [
     PassFail,
+    SoftPassFail,
     Scaling,
     SoftScaling,
 ]
@@ -46,6 +47,7 @@ SCORERS = [
     st.lists(st.sampled_from(FILTERS), min_size=1, unique=True),
     st.lists(token_strategy, min_size=0, max_size=10),
 )
+@example(st.sampled_from(FILTERS), [])
 def test_score_bounds(scorer: Scorer, filters: List[Type[Filter]], text: List[str]):
     score = scorer.score(text, filters)
     assert 0 <= score <= 1, (score, filters, text)
