@@ -106,23 +106,23 @@ would likely be using a language other than Toki Pona.
 
 
 class SingleQuotes(RegexPreprocessor):
-    pattern = re.compile(r"'[^']+'", flags=re.S)  # . matches newline
+    pattern = re.compile(r"'[^']+'", flags=re.DOTALL)
 
 
 class DoubleQuotes(RegexPreprocessor):
-    pattern = re.compile(r'"[^"]+"', flags=re.S)
+    pattern = re.compile(r'"[^"]+"', flags=re.DOTALL)
 
 
 class Backticks(RegexPreprocessor):
     """Remove paired backticks and their contents `like this`"""
 
-    pattern = re.compile(r"`[^`]+`", flags=re.S)
+    pattern = re.compile(r"`[^`]+`", flags=re.DOTALL)
 
 
 class Spoilers(RegexPreprocessor):
     """Remove paired double bars and their contents `||like this||`"""
 
-    pattern = re.compile(r"\|\|(?:(?!\|\|).)+\|\|", flags=re.S)
+    pattern = re.compile(r"\|\|(?:(?!\|\|).)+\|\|", flags=re.DOTALL)
 
 
 class ArrowQuote(RegexPreprocessor):
