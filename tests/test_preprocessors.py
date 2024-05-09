@@ -6,7 +6,9 @@ from hypothesis import given, example
 from sonatoki.Preprocessors import (
     URLs,
     Spoilers,
+    AllQuotes,
     Backticks,
+    Reference,
     ArrowQuote,
     DoubleQuotes,
     SingleQuotes,
@@ -14,6 +16,7 @@ from sonatoki.Preprocessors import (
     DiscordSpecial,
     DiscordChannels,
     DiscordMentions,
+    AngleBracketObject,
 )
 
 
@@ -100,4 +103,41 @@ def test_DiscordChannels(s: str):
 @example("<id:browse>")
 def test_DiscordSpecial(s: str):
     res = DiscordSpecial.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(
+    st.from_regex(DiscordEmotes.pattern.pattern, fullmatch=True)
+    | st.from_regex(DiscordMentions.pattern.pattern, fullmatch=True)
+    | st.from_regex(DiscordChannels.pattern.pattern, fullmatch=True)
+    | st.from_regex(DiscordSpecial.pattern.pattern, fullmatch=True)
+    | st.from_regex(AngleBracketObject.pattern.pattern, fullmatch=True)
+)
+@example("<https://example.com>")
+@example("<#123124125125>")
+def test_AngleBracketObject(s: str):
+    res = AngleBracketObject.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(
+    st.from_regex(SingleQuotes.pattern.pattern, fullmatch=True)
+    | st.from_regex(DoubleQuotes.pattern.pattern, fullmatch=True)
+    | st.from_regex(Backticks.pattern.pattern, fullmatch=True)
+    | st.from_regex(ArrowQuote.pattern.pattern, fullmatch=True)
+    | st.from_regex(AllQuotes.pattern.pattern, fullmatch=True)
+)
+@example("> bruh")
+@example("`bruh`")
+def test_AllQuotes(s: str):
+    res = AllQuotes.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(st.from_regex(Reference.pattern.pattern, fullmatch=True))
+@example("[[Brainstorm]]")
+@example("[[Phatic Phrases]]")
+@example("[[Yahoo!]]")
+def test_Reference(s: str):
+    res = Reference.process(s).strip()
     assert res == "", (repr(s), repr(res))

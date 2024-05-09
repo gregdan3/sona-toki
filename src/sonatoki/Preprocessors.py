@@ -62,6 +62,13 @@ class URLs(RegexPreprocessor):
     pattern = re.compile(r"https?:\/\/\S+")
 
 
+class Reference(RegexPreprocessor):
+    """Remove text contained in double brackets.
+    Often used to fetch articles on Wikipedia, or Magic the Gathering cards."""
+
+    pattern = re.compile(r"\[\[.+\]\]")
+
+
 class DiscordEmotes(RegexPreprocessor):
     """Remove text-formatted Discord emotes `<flags:name:id>`"""
 
@@ -78,6 +85,13 @@ class DiscordChannels(RegexPreprocessor):
 
 class DiscordSpecial(RegexPreprocessor):
     pattern = re.compile(r"<id:[a-zA-Z0-9_]{4,}>")
+
+
+class AngleBracketObject(RegexPreprocessor):
+    """A generalized version of the Discord-specific angle bracket objects.
+    Removes any contiguous (not broken by whitespace) text in angle brackets."""
+
+    pattern = re.compile(r"<[^<>\s]+>")
 
 
 """
@@ -117,7 +131,22 @@ class ArrowQuote(RegexPreprocessor):
     pattern = re.compile(r"^>\ .+$", re.MULTILINE)
 
 
+class AllQuotes(RegexPreprocessor):
+    pattern = re.compile(
+        "|".join(
+            [
+                SingleQuotes.pattern.pattern,
+                DoubleQuotes.pattern.pattern,
+                Backticks.pattern.pattern,
+                ArrowQuote.pattern.pattern,
+            ]
+        ),
+        flags=re.MULTILINE | re.DOTALL,
+    )
+
+
 __all__ = [
+    "AngleBracketObject",
     "DiscordChannels",
     "DiscordMentions",
     "DiscordSpecial",
@@ -125,7 +154,9 @@ __all__ = [
     "SingleQuotes",
     "DoubleQuotes",
     "ArrowQuote",
+    "AllQuotes",
     "Backticks",
+    "Reference",
     "Spoilers",
     "URLs",
 ]
