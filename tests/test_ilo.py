@@ -9,7 +9,6 @@ from sonatoki.Configs import LazyConfig, PrefConfig
 @pytest.fixture
 def ilo():
     ilo = Ilo(**PrefConfig)
-    # ilo.logging_threshold = 0.8
     return ilo
 
 

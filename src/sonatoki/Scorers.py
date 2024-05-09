@@ -10,8 +10,6 @@ from typing_extensions import override
 # LOCAL
 from sonatoki.Filters import Filter
 
-LOG = logging.getLogger(__name__)
-
 Number = Union[int, float]
 Weights = Dict[str, Number]
 
@@ -37,12 +35,7 @@ class PassFail(Scorer):
     def score_token(cls, token: str, filters: List[Type[Filter]]) -> Number:
         for f in filters:
             if f.filter(token):
-                score = 1
-                LOG.debug(
-                    "%12s.%s('%s') = %.2f", cls.__name__, f.__name__, token, score
-                )
-                return score
-        LOG.debug("%12s('%s') = 0.00", cls.__name__, token)
+                return 1
         return 0
 
     @classmethod
@@ -86,12 +79,7 @@ class Scaling(Scorer):
     def score_token(cls, token: str, filters: List[Type[Filter]], scale: int):
         for i, f in enumerate(filters):
             if f.filter(token):
-                score = scale - i
-                LOG.debug(
-                    "%12s.%s('%s') = %.2f", cls.__name__, f.__name__, token, score
-                )
-                return score
-        LOG.debug("%12s('%s') = 0.00", cls.__name__, token)
+                return scale - i
         return 0
 
     @classmethod

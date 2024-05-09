@@ -1,5 +1,4 @@
 # STL
-import logging
 from typing import List, Type, Tuple
 
 # LOCAL
@@ -8,8 +7,6 @@ from sonatoki.Scorers import Number, Scorer
 from sonatoki.Cleaners import Cleaner
 from sonatoki.Tokenizers import Tokenizer
 from sonatoki.Preprocessors import Preprocessor
-
-LOG = logging.getLogger(__name__)
 
 
 class Ilo:
@@ -20,7 +17,6 @@ class Ilo:
     __scoring_filters: List[Type[Filter]]
     __scorer: Type[Scorer]
     __passing_score: Number
-    logging_threshold: Number = -1
 
     def __init__(
         self,
@@ -103,14 +99,6 @@ class Ilo:
         cleaned = self.clean_tokens(filtered)
         score = self.score_tokens(cleaned)
         result = score >= self.__passing_score
-
-        if score <= self.logging_threshold:
-            LOG.debug("msg: %.2f  %s", score, repr(message))
-            LOG.debug("preproc:   %s", repr(preprocessed))
-            LOG.debug("tokenized: %s", tokenized)
-            LOG.debug("filtered:  %s", filtered)
-            LOG.debug("cleaned:   %s", cleaned)
-        # TODO: Move to each function? Loses ability to control when logging occurs by threshold
 
         return preprocessed, tokenized, filtered, cleaned, score, result
 
