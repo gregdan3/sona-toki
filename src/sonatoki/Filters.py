@@ -160,6 +160,10 @@ class Numeric(Filter):
         return msg.isnumeric()
 
 
+class PunctuationRe1(Regex1Filter):
+    pattern = regex.compile(r"[\p{Punctuation}\p{posix_punct}]+")
+
+
 class Punctuation(RegexFilter):
     pattern = re.compile(rf"[{PRUNED_POSIX_PUNCT}{UNICODE_PUNCT}]+")
 

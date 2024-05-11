@@ -2,9 +2,8 @@
 import string
 
 # PDM
-import regex as re
 import hypothesis.strategies as st
-from hypothesis import HealthCheck, given, assume, example, settings
+from hypothesis import given, example
 
 # LOCAL
 from sonatoki.Filters import (
@@ -16,6 +15,7 @@ from sonatoki.Filters import (
     ProperName,
     Phonotactic,
     Punctuation,
+    PunctuationRe1,
 )
 from sonatoki.Cleaners import ConsecutiveDuplicates
 from sonatoki.constants import NIMI_PU, NIMI_LINKU
@@ -88,11 +88,18 @@ def test_ProperName(s: str):
 @example(r"\"")
 @example("⟨·⟩")
 @example("…")
-@example("「」")  # `　`
+@example("「」")
 @example(string.punctuation)
-def test_Punctuation(s: str):
-    res = Punctuation.filter(s)
+def test_PunctuationRe1(s: str):
+    res = PunctuationRe1.filter(s)
     assert res, repr(s)
+
+
+@given(st.from_regex(Punctuation.pattern.pattern, fullmatch=True))
+def test_Punctuation(s: str):
+    res_pn = Punctuation.filter(s)
+    res_re = PunctuationRe1.filter(s)
+    assert res_pn == res_re, repr(s)
 
 
 @given(st.from_regex(r"\d+", fullmatch=True))
