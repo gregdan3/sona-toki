@@ -17,13 +17,14 @@ It is up to the user to order them appropriately.
 """
 
 # STL
+import re
 from abc import ABC, abstractmethod
 
 # PDM
-import regex as re
+import regex
 from typing_extensions import override
 
-re.DEFAULT_VERSION = re.VERSION1
+regex.DEFAULT_VERSION = regex.VERSION1
 
 
 class Preprocessor(ABC):
@@ -41,6 +42,16 @@ class RegexPreprocessor(Preprocessor):
     @override
     def process(cls, msg: str) -> str:
         return re.sub(cls.pattern, cls.replace, msg)
+
+
+class Regex1Preprocessor(Preprocessor):
+    pattern: "regex.Pattern[str]"
+    replace: str = " "
+
+    @classmethod
+    @override
+    def process(cls, msg: str) -> str:
+        return regex.sub(cls.pattern, cls.replace, msg)
 
 
 """

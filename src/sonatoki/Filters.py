@@ -1,10 +1,11 @@
 # STL
+import re
 from abc import ABC, abstractmethod
 from typing import Set
 from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
-import regex as re
+import regex
 from typing_extensions import override
 
 # LOCAL
@@ -20,7 +21,7 @@ from sonatoki.constants import (
     NIMI_LINKU_SANDBOX_SET,
 )
 
-re.DEFAULT_VERSION = re.VERSION1
+regex.DEFAULT_VERSION = regex.VERSION1
 
 
 class Filter(ABC):
@@ -39,6 +40,16 @@ class RegexFilter(Filter):
     @cache(maxsize=None)
     def filter(cls, token: str) -> bool:
         return not not re.fullmatch(cls.pattern, token)
+
+
+class Regex1Filter(Filter):
+    pattern: "regex.Pattern[str]"
+
+    @classmethod
+    @override
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        return not not regex.fullmatch(cls.pattern, token)
 
 
 class SetFilter(Filter):
@@ -147,8 +158,8 @@ class Numeric(Filter):
         return msg.isnumeric()
 
 
-class Punctuation(RegexFilter):
-    pattern = re.compile(r"[\p{Punctuation}\p{posix_punct}]+")
+class Punctuation(Regex1Filter):
+    pattern = regex.compile(r"[\p{Punctuation}\p{posix_punct}]+")
 
 
 __all__ = [
