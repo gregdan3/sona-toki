@@ -23,7 +23,7 @@ class RegexCleaner(Cleaner):
         return re.sub(cls.pattern, cls.replace, token)
 
 
-class ConsecutiveDuplicates(RegexCleaner):
+class ConsecutiveDuplicatesRe(RegexCleaner):
     """Remove consecutive duplicates from an input string, ignoring case.
 
     The first match of any 2+ will become `\\1`, preserving initial case.
@@ -39,4 +39,23 @@ class ConsecutiveDuplicates(RegexCleaner):
     replace = r"\1"
 
 
-__all__ = ["ConsecutiveDuplicates"]
+class ConsecutiveDuplicates(Cleaner):
+    @classmethod
+    @override
+    def clean(cls, token: str) -> str:
+        if not token:
+            return token
+
+        output = token[0]
+
+        last_output = output.lower()  # ignore case in comparison
+        for i in range(1, len(token)):
+            cur_char = token[i].lower()
+            if cur_char == last_output:
+                continue
+            output += token[i]  # preserve case of string
+            last_output = cur_char
+        return output
+
+
+__all__ = ["ConsecutiveDuplicatesRe", "ConsecutiveDuplicates"]
