@@ -66,8 +66,8 @@ class WordTokenizerTok(Regex1Tokenizer):
     pattern = regex.compile(r"""([\p{posix_punct}\p{Punctuation}]+|\s+)""")
 
 
-class SentTokenizerTok(Regex1Tokenizer):
-    pattern = regex.compile(r"""(?<=[.?!:;·…“”"'()\[\]\-]|$)""")
+class SentTokenizerTok(RegexTokenizer):
+    pattern = re.compile(r"""(?<=[.?!:;·…“”"'()\[\]\-])|$""", flags=re.MULTILINE)
     # TODO: are <> or {} that common as *sentence* delims? [] are already a stretch
     # TODO: do the typography characters matter?
     # NOTE: | / and , are *not* sentence delimiters for my purpose
