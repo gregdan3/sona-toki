@@ -19,6 +19,24 @@
   output:
     - "mi mu."
     - "mi wawa."
+- name: "empty"
+  input: ""
+  output: []
+- name: "whitespace"
+  input: "  \n  "
+  output: []
+- name: "newline basic"
+  input: "sina lon seme?\nmi wile lon poka...\n"
+  output:
+    - "sina lon seme?"
+    - "mi wile lon poka."
+    - "."
+    - "."
+- name: "newline alone"
+  input: "sina lon seme\nmi wile lon poka"
+  output:
+    - "sina lon seme"
+    - "mi wile lon poka"
 - name: "dash"
   input: "mi sona ala e ni- sina seme a"
   output:
