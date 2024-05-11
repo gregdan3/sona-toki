@@ -7,6 +7,9 @@ from typing import List
 import regex
 from typing_extensions import override
 
+# LOCAL
+from sonatoki.constants import UNICODE_PUNCT, PRUNED_POSIX_PUNCT
+
 try:
     # PDM
     import nltk
@@ -17,14 +20,6 @@ except ImportError as e:
 
 
 regex.DEFAULT_VERSION = regex.VERSION1
-
-LANGUAGE = "english"  # for NLTK
-POSIX_PUNCT = r"""-!"#$%&'()*+,./:;<=>?@[\]^_`{|}~"""
-# `\p{posix_punct}` character class
-UNICODE_PUNCT = ""
-# `\p{Punctuation}` character class
-# https://www.compart.com/en/unicode/category
-# it turns out listing every unicode Punctuation character is not trivial
 
 
 class Tokenizer(ABC):
@@ -62,8 +57,8 @@ class Regex1Tokenizer(Tokenizer):
         ]
 
 
-class WordTokenizerTok(Regex1Tokenizer):
-    pattern = regex.compile(r"""([\p{posix_punct}\p{Punctuation}]+|\s+)""")
+class WordTokenizerTok(RegexTokenizer):
+    pattern = re.compile(rf"""([{PRUNED_POSIX_PUNCT}{UNICODE_PUNCT}]+|\s+)""")
 
 
 class SentTokenizerTok(RegexTokenizer):

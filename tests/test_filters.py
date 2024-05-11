@@ -82,16 +82,15 @@ def test_ProperName(s: str):
     assert res, repr(s)
 
 
-# I use `regex`'s Unicode property feature, which Hypothesis doesn't understand
-# So I have to provide a different regex tha doesn't technically match
-@given(st.from_regex(r"[^\w\s]+", fullmatch=True))
+@given(st.from_regex(Punctuation.pattern.pattern, fullmatch=True))
+@example("[]")
+@example(r"\\")
+@example(r"\"")
 @example("⟨·⟩")
 @example("…")
-@example("「　」")
+@example("「」")  # `　`
 @example(string.punctuation)
-@settings(suppress_health_check=[HealthCheck.filter_too_much])  # FIXME
 def test_Punctuation(s: str):
-    _ = assume(re.fullmatch(Punctuation.pattern.pattern, s))
     res = Punctuation.filter(s)
     assert res, repr(s)
 

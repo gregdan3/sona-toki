@@ -14,10 +14,12 @@ from sonatoki.constants import (
     CONSONANTS,
     NIMI_PU_SET,
     ALPHABET_SET,
+    UNICODE_PUNCT,
     ALLOWABLES_SET,
     NIMI_LINKU_SET,
     NIMI_PU_ALE_SET,
     NIMI_LINKU_ALE_SET,
+    PRUNED_POSIX_PUNCT,
     NIMI_LINKU_SANDBOX_SET,
 )
 
@@ -158,8 +160,8 @@ class Numeric(Filter):
         return msg.isnumeric()
 
 
-class Punctuation(Regex1Filter):
-    pattern = regex.compile(r"[\p{Punctuation}\p{posix_punct}]+")
+class Punctuation(RegexFilter):
+    pattern = re.compile(rf"[{PRUNED_POSIX_PUNCT}{UNICODE_PUNCT}]+")
 
 
 __all__ = [
