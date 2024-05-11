@@ -34,6 +34,7 @@ from sonatoki.Preprocessors import (
 
 class IloConfig(TypedDict):
     preprocessors: List[Type[Preprocessor]]
+    sent_tokenizer: NotRequired[Type[Tokenizer]]
     word_tokenizer: Type[Tokenizer]
     cleaners: List[Type[Cleaner]]
     ignoring_filters: List[Type[Filter]]

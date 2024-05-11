@@ -1,9 +1,13 @@
+# STL
+from copy import deepcopy
+
 # PDM
 import pytest
 
 # LOCAL
 from sonatoki.ilo import Ilo
 from sonatoki.Configs import LazyConfig, PrefConfig
+from sonatoki.Tokenizers import SentTokenizerTok
 
 
 @pytest.fixture
@@ -13,9 +17,16 @@ def ilo():
 
 
 @pytest.fixture()
+def sent_ilo():
+    config = deepcopy(PrefConfig)
+    config["sent_tokenizer"] = SentTokenizerTok
+    ilo = Ilo(**config)
+    return ilo
+
+
+@pytest.fixture()
 def lazy_ilo():
     ilo = Ilo(**LazyConfig)
-    # ilo.logging_threshold = 0.8
     return ilo
 
 

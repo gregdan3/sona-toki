@@ -5,7 +5,7 @@ from typing import List, Type, Tuple
 from sonatoki.Filters import Filter
 from sonatoki.Scorers import Number, Scorer
 from sonatoki.Cleaners import Cleaner
-from sonatoki.Tokenizers import Tokenizer
+from sonatoki.Tokenizers import Tokenizer, NoOpTokenizer
 from sonatoki.Preprocessors import Preprocessor
 
 
@@ -18,6 +18,8 @@ class Ilo:
     __scorer: Type[Scorer]
     __passing_score: Number
 
+    __sent_tokenizer: Type[Tokenizer]
+
     def __init__(
         self,
         preprocessors: List[Type[Preprocessor]],
@@ -27,6 +29,7 @@ class Ilo:
         scorer: Type[Scorer],
         passing_score: Number,
         word_tokenizer: Type[Tokenizer],
+        sent_tokenizer: Type[Tokenizer] = NoOpTokenizer,
     ):
         super().__init__()
         # avoid keeping a ref to user's list just in case
@@ -37,11 +40,16 @@ class Ilo:
         self.__scoring_filters = [*scoring_filters]
         self.__scorer = scorer
         self.__passing_score = passing_score
+        self.__sent_tokenizer = sent_tokenizer
 
     def preprocess(self, msg: str) -> str:
         for p in self.__preprocessors:
             msg = p.process(msg)
         return msg
+
+    def sent_tokenize(self, msg: str) -> List[str]:
+        """It is *highly* recommended that you run `ilo.preprocess` first."""
+        return self.__sent_tokenizer.tokenize(msg)
 
     def word_tokenize(self, msg: str) -> List[str]:
         """It is *highly* recommended that you run `ilo.preprocess` first."""
@@ -102,7 +110,46 @@ class Ilo:
 
         return preprocessed, tokenized, filtered, cleaned, score, result
 
+    def _are_toki_pona(self, message: str) -> Tuple[
+        str,
+        List[str],
+        List[List[str]],
+        List[List[str]],
+        List[List[str]],
+        List[Number],
+        List[bool],
+        Number,
+        bool,
+    ]:
+        preprocessed = self.preprocess(message)
+        sent_tokenized = self.sent_tokenize(preprocessed)
+        word_tokenized = [self.word_tokenize(sent) for sent in sent_tokenized]
+        filtered = [self.filter_tokens(sent) for sent in word_tokenized]
+        cleaned = [self.clean_tokens(sent) for sent in filtered]
+        scores = [self.score_tokens(sent) for sent in cleaned]
+        # TODO: weighted scoring?
+
+        results = [score >= self.__passing_score for score in scores]
+        score = results.count(True) / len(results)
+        result = score >= self.__passing_score
+        return (
+            preprocessed,
+            sent_tokenized,
+            word_tokenized,
+            filtered,
+            cleaned,
+            scores,
+            results,
+            score,
+            result,
+        )
+
     def is_toki_pona(self, message: str) -> bool:
         """Determines whether a single statement is or is not Toki Pona."""
         *_, result = self._is_toki_pona(message)
+        return result
+
+    def are_toki_pona(self, message: str) -> bool:
+        """Determines whether all sentences in a message are or are not Toki Pona."""
+        *_, result = self._are_toki_pona(message)
         return result
