@@ -58,4 +58,4 @@ class ConsecutiveDuplicates(Cleaner):
         return output
 
 
-__all__ = ["ConsecutiveDuplicatesRe", "ConsecutiveDuplicates"]
+__all__ = ["ConsecutiveDuplicates"]
