@@ -6,12 +6,12 @@ import hypothesis.strategies as st
 
 # LOCAL
 from sonatoki.Filters import Syllabic, Phonotactic, AlphabeticRe
-from sonatoki.constants import NIMI_LINKU_ALE
+from sonatoki.constants import NIMI_LINKU, NIMI_LINKU_LILI
 
 PROPER_NAME_RE = r"[A-Z][a-z]*"
 
 token_strategy = (
-    st.sampled_from(NIMI_LINKU_ALE)
+    st.sampled_from(NIMI_LINKU + NIMI_LINKU_LILI)
     | st.from_regex(Phonotactic.pattern.pattern, fullmatch=True)
     | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)
     | st.from_regex(PROPER_NAME_RE, fullmatch=True)

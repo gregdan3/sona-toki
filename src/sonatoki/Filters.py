@@ -16,11 +16,11 @@ from sonatoki.constants import (
     ALLOWABLES,
     CONSONANTS,
     NIMI_LINKU,
-    NIMI_PU_ALE,
     POSIX_PUNCT,
     UNICODE_PUNCT,
-    NIMI_LINKU_ALE,
+    NIMI_LINKU_LILI,
     ALL_PUNCT_RANGES,
+    NIMI_PU_SYNONYMS,
     NIMI_LINKU_SANDBOX,
 )
 
@@ -103,7 +103,7 @@ class NimiPu(MemberFilter):
 
 
 class NimiPuAle(MemberFilter):
-    tokens = set(NIMI_PU_ALE)
+    tokens = set(NIMI_PU + NIMI_PU_SYNONYMS)
 
 
 class NimiLinku(MemberFilter):
@@ -111,11 +111,11 @@ class NimiLinku(MemberFilter):
 
 
 class NimiLinkuAle(MemberFilter):
-    tokens = set(NIMI_LINKU_ALE)
+    tokens = set(NIMI_LINKU + NIMI_LINKU_LILI)
 
 
 class NimiLinkuSandbox(MemberFilter):
-    tokens = set(NIMI_LINKU_SANDBOX)
+    tokens = set(NIMI_LINKU + NIMI_LINKU_LILI + NIMI_LINKU_SANDBOX)
 
 
 class Phonotactic(RegexFilter):

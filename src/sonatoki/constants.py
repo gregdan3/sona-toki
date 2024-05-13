@@ -38,15 +38,19 @@ ALLOWABLES = {
 with open(LINKU) as f:
     linku: Dict[str, Dict[str, str]] = json.loads(f.read())
     NIMI_PU: List[str] = [d["word"] for d in linku.values() if d["book"] == "pu"]
-    NIMI_PU_ALE: List[str] = NIMI_PU + ["namako", "kin", "oko"]
+    NIMI_PU_SYNONYMS: List[str] = ["namako", "kin", "oko"]
     NIMI_LINKU: List[str] = [
         d["word"] for d in linku.values() if d["usage_category"] in ["core", "common"]
     ]
-    NIMI_LINKU_ALE: List[str] = [d["word"] for d in linku.values()]
+    NIMI_LINKU_LILI: List[str] = [
+        d["word"]
+        for d in linku.values()
+        if d["usage_category"] not in ["core", "common"]
+    ]
 
 with open(SANDBOX) as f:
     sandbox: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_LINKU_SANDBOX: List[str] = NIMI_LINKU_ALE + [
+    NIMI_LINKU_SANDBOX: List[str] = NIMI_LINKU_LILI + [
         d["word"] for d in sandbox.values()
     ]
 
@@ -57,10 +61,10 @@ __all__ = [
     "ALPHABET",
     "CONSONANTS",
     "NIMI_LINKU",
-    "NIMI_LINKU_ALE",
+    "NIMI_LINKU_LILI",
     "NIMI_LINKU_SANDBOX",
     "NIMI_PU",
-    "NIMI_PU_ALE",
+    "NIMI_PU_SYNONYMS",
     "VOWELS",
     "UNICODE_PUNCT",
     "ALLOWABLES",
