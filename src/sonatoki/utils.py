@@ -2,13 +2,13 @@
 import re
 from typing import List
 
-TO_ESCAPE = ["^", "]", "\\"]
+TO_ESCAPE = ["\\", "^", "[", "]", "-"]
 
 
 def regex_escape(s: str) -> str:
     """Escape all characters which must be escaped when embedded in a character class."""
     for c in TO_ESCAPE:
-        s = s.replace(c, f"\\{c}")  # one backslash
+        s = s.replace(c, rf"\{c}")  # one backslash
     return s
 
 

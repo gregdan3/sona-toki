@@ -63,5 +63,4 @@ __all__ = [
     "UNICODE_PUNCT",
     "ALLOWABLES",
     "POSIX_PUNCT",
-    "",
 ]
