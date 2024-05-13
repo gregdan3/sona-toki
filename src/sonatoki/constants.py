@@ -46,7 +46,9 @@ with open(LINKU) as f:
 
 with open(SANDBOX) as f:
     sandbox: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_LINKU_SANDBOX: List[str] = [d["word"] for d in sandbox.values()]
+    NIMI_LINKU_SANDBOX: List[str] = NIMI_LINKU_ALE + [
+        d["word"] for d in sandbox.values()
+    ]
 
 del linku
 del sandbox
