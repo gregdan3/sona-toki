@@ -48,8 +48,8 @@ if __name__ == "__main__":
     Helper script to fetch UNICODE_PUNCT in constants.py
     """
 
-    PUNCT_CATEGORIES = {"Pc", "Pd", "Pe", "Pf", "Pi", "Po", "Ps", "Sm", "Sk", "So"}
-    # Connector, Dash, Close (end), Final, Initial, Other, Open (sOpen), Symbol math, Symbol kmodifier, Symbol other
+    PUNCT_CATEGORIES = {"Pc", "Pd", "Pe", "Pf", "Pi", "Po", "Ps", "Sm", "Sk",  "Sc", "So"}
+    # Connector, Dash, Close (end), Final, Initial, Other, Open (sOpen), Math, Modifier (kModifier), Currency, Other
 
     # NOTE: UnicodeData.txt lists character ranges if there would be many characters.
     # (e.g. CJK Ideograph, First at 4E00 and CJK Ideograph, Last at 9FFF).
@@ -71,8 +71,6 @@ if __name__ == "__main__":
         return not not re.fullmatch(EXCEPTION_RANGES, c)
 
     # http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-    #
-
     unicode_punctuation = ""
     with open("UnicodeData.txt", "r") as f:
         for line in f:
