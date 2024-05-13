@@ -157,17 +157,17 @@ class AllQuotes(RegexPreprocessor):
 
 
 __all__ = [
+    "AllQuotes",
     "AngleBracketObject",
+    "ArrowQuote",
+    "Backticks",
     "DiscordChannels",
+    "DiscordEmotes",
     "DiscordMentions",
     "DiscordSpecial",
-    "DiscordEmotes",
-    "SingleQuotes",
     "DoubleQuotes",
-    "ArrowQuote",
-    "AllQuotes",
-    "Backticks",
     "Reference",
+    "SingleQuotes",
     "Spoilers",
     "URLs",
 ]

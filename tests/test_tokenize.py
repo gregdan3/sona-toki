@@ -7,22 +7,13 @@ import pytest
 
 # LOCAL
 from sonatoki.Tokenizers import (
+    SentTokenizer,
+    WordTokenizer,
     SentTokenizerRe,
     WordTokenizerRe,
-    SentTokenizerTok,
-    WordTokenizerTok,
+    SentTokenizerRe1,
+    WordTokenizerRe1,
 )
-
-try:
-    # PDM
-    import nltk
-
-    # LOCAL
-    from sonatoki.Tokenizers import SentTokenizerNLTK, WordTokenizerNLTK
-
-except ImportError as e:
-    nltk = e
-    # TODO: warn user
 
 
 class TokenizerTest(TypedDict):
@@ -56,56 +47,77 @@ def load_tokenizer_tests(json_path: str) -> List[TokenizerTest]:
 
 
 @pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences.yml")
+    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
 )
-def test_sentences_re(test: TokenizerTest):
-    if isinstance(nltk, ImportError):
-        pytest.skip("nltk not installed")
+def test_SentTokenizer(test: TokenizerTest):
     if test["xfail"]:
         pytest.xfail()
 
-    transformed_re = SentTokenizerRe.tokenize(test["input"])
-    transformed_nltk = SentTokenizerNLTK.tokenize(test["input"])
-    assert (transformed_re == transformed_nltk) == test["should_be_equal"], test["name"]
-
-
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words.yml")
-)
-def test_word_tokenize_re(test: TokenizerTest):
-    if isinstance(nltk, ImportError):
-        pytest.skip("nltk not installed")
-    if test["xfail"]:
-        pytest.xfail()
-
-    transformed_re = WordTokenizerRe.tokenize(test["input"])
-    transformed_nltk = WordTokenizerNLTK.tokenize(test["input"])
-    assert (transformed_re == transformed_nltk) == test["should_be_equal"], test["name"]
+    fn_tokenized = SentTokenizer.tokenize(test["input"])
+    re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
+    assert fn_tokenized == re1_tokenized, test["name"]
 
 
 @pytest.mark.parametrize(
     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
 )
-def test_sentences_tok(test: TokenizerTest):
+def test_SentTokenizerRe(test: TokenizerTest):
     if test["xfail"]:
         pytest.xfail()
 
-    transformed_tok = SentTokenizerTok.tokenize(test["input"])
-    if test["should_be_equal"]:
-        assert transformed_tok == test["output"], test["name"]
-    else:
-        assert transformed_tok != test["output"], test["name"]
+    re_tokenized = SentTokenizerRe.tokenize(test["input"])
+    re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
+    assert re_tokenized == re1_tokenized, test["name"]
+
+
+@pytest.mark.parametrize(
+    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
+)
+def test_SentTokenizerRe1(test: TokenizerTest):
+    if test["xfail"]:
+        pytest.xfail()
+
+    re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
+    assert re1_tokenized == test["output"], test["name"]
+
+
+###################
+# Word tokenizers #
+###################
 
 
 @pytest.mark.parametrize(
     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
 )
-def test_word_tokenize_tok(test: TokenizerTest):
+def test_WordTokenizer(test: TokenizerTest):
     if test["xfail"]:
         pytest.xfail()
 
-    transformed_tok = WordTokenizerTok.tokenize(test["input"])
-    if test["should_be_equal"]:
-        assert transformed_tok == test["output"], test["name"]
-    else:
-        assert transformed_tok != test["output"], test["name"]
+    fn_tokenized = WordTokenizer.tokenize(test["input"])
+    re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
+    assert fn_tokenized == re1_tokenized, test["name"]
+
+
+@pytest.mark.parametrize(
+    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
+)
+def test_WordTokenizerRe(test: TokenizerTest):
+    if test["xfail"]:
+        pytest.xfail()
+
+    re_tokenized = WordTokenizerRe.tokenize(test["input"])
+    re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
+    assert re_tokenized == re1_tokenized, test["name"]
+
+
+@pytest.mark.parametrize(
+    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
+)
+def test_WordTokenizerRe1(test: TokenizerTest):
+    """This implementation will always exhibit the correct behavior, so long as `regex` is up to date
+    Thus, it is used as a reference implementation for all other tests"""
+    if test["xfail"]:
+        pytest.xfail()
+
+    re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
+    assert re1_tokenized == test["output"], test["name"]

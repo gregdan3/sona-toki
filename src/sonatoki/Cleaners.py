@@ -23,7 +23,7 @@ class RegexCleaner(Cleaner):
         return re.sub(cls.pattern, cls.replace, token)
 
 
-class ConsecutiveDuplicatesRe(RegexCleaner):
+class ConsecutiveDuplicates(Cleaner):
     """Remove consecutive duplicates from an input string, ignoring case.
 
     The first match of any 2+ will become `\\1`, preserving initial case.
@@ -35,11 +35,6 @@ class ConsecutiveDuplicatesRe(RegexCleaner):
     This may be undesirable for moraic scripts like Hiragana, where `わわ` would be
     incorrectly reduced to `わ`. This does preserve phonotactic validity, though."""
 
-    pattern = re.compile(r"(.)\1+", flags=re.IGNORECASE)
-    replace = r"\1"
-
-
-class ConsecutiveDuplicates(Cleaner):
     @classmethod
     @override
     def clean(cls, token: str) -> str:
@@ -58,4 +53,13 @@ class ConsecutiveDuplicates(Cleaner):
         return output
 
 
-__all__ = ["ConsecutiveDuplicates"]
+class ConsecutiveDuplicatesRe(RegexCleaner):
+    """Reference implementation for `ConsecutiveDuplicates`."""
+
+    pattern = re.compile(r"(.)\1+", flags=re.IGNORECASE)
+    replace = r"\1"
+
+
+__all__ = [
+    "ConsecutiveDuplicates",
+]

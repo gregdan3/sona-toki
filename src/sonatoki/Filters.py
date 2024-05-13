@@ -11,16 +11,17 @@ from typing_extensions import override
 # LOCAL
 from sonatoki.constants import (
     VOWELS,
+    NIMI_PU,
+    ALPHABET,
+    ALLOWABLES,
     CONSONANTS,
-    NIMI_PU_SET,
-    ALPHABET_SET,
+    NIMI_LINKU,
+    NIMI_PU_ALE,
+    POSIX_PUNCT,
     UNICODE_PUNCT,
-    ALLOWABLES_SET,
-    NIMI_LINKU_SET,
-    NIMI_PU_ALE_SET,
-    NIMI_LINKU_ALE_SET,
-    PRUNED_POSIX_PUNCT,
-    NIMI_LINKU_SANDBOX_SET,
+    NIMI_LINKU_ALE,
+    ALL_PUNCT_RANGES,
+    NIMI_LINKU_SANDBOX,
 )
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -54,7 +55,7 @@ class Regex1Filter(Filter):
         return not not regex.fullmatch(cls.pattern, token)
 
 
-class SetFilter(Filter):
+class MemberFilter(Filter):
     tokens: Set[str]
 
     @classmethod
@@ -64,8 +65,18 @@ class SetFilter(Filter):
         return token.lower() in cls.tokens
 
 
-class Miscellaneous(SetFilter):
-    tokens = ALLOWABLES_SET
+class SubsetFilter(Filter):
+    tokens: Set[str]
+
+    @classmethod
+    @override
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        return set(token.lower()).issubset(cls.tokens)
+
+
+class Miscellaneous(MemberFilter):
+    tokens = set(ALLOWABLES)
 
 
 class ProperName(Filter):
@@ -83,26 +94,28 @@ class ProperName(Filter):
     @cache(maxsize=None)
     def filter(cls, token: str) -> bool:
         return token == token.capitalize()
+        # TODO:  If the token is in a script which doesn't have a case distinction,
+        # this will errantly match.
 
 
-class NimiPu(SetFilter):
-    tokens = NIMI_PU_SET
+class NimiPu(MemberFilter):
+    tokens = set(NIMI_PU)
 
 
-class NimiPuAle(SetFilter):
-    tokens = NIMI_PU_ALE_SET
+class NimiPuAle(MemberFilter):
+    tokens = set(NIMI_PU_ALE)
 
 
-class NimiLinku(SetFilter):
-    tokens = NIMI_LINKU_SET
+class NimiLinku(MemberFilter):
+    tokens = set(NIMI_LINKU)
 
 
-class NimiLinkuAle(SetFilter):
-    tokens = NIMI_LINKU_ALE_SET
+class NimiLinkuAle(MemberFilter):
+    tokens = set(NIMI_LINKU_ALE)
 
 
-class NimiLinkuSandbox(SetFilter):
-    tokens = NIMI_LINKU_SANDBOX_SET
+class NimiLinkuSandbox(MemberFilter):
+    tokens = set(NIMI_LINKU_SANDBOX)
 
 
 class Phonotactic(RegexFilter):
@@ -135,13 +148,12 @@ class Syllabic(RegexFilter):
     )
 
 
-class Alphabetic(Filter):
-    @classmethod
-    @override
-    @cache(maxsize=None)
-    def filter(cls, token: str) -> bool:
-        # Faster than regex version
-        return set(token.lower()).issubset(ALPHABET_SET)
+class Alphabetic(SubsetFilter):
+    tokens = set(ALPHABET)
+
+
+class AlphabeticRe(RegexFilter):
+    pattern = re.compile(rf"[{ALPHABET}]+", flags=re.IGNORECASE)
 
 
 class Numeric(Filter):
@@ -160,22 +172,35 @@ class Numeric(Filter):
         return msg.isnumeric()
 
 
+class Punctuation(SubsetFilter):
+    """Identify whether a token is entirely punctuation. Fastest implementation."""
+
+    tokens = set(POSIX_PUNCT + UNICODE_PUNCT)
+
+
+class PunctuationRe(RegexFilter):
+    """Faster implementation of `PunctuationRe1`.
+    Goes out of date compared to the `regex` library if UNICODE_PUNCT is not updated."""
+
+    pattern = re.compile(rf"[{ALL_PUNCT_RANGES}]+")
+
+
 class PunctuationRe1(Regex1Filter):
+    """Reference implementation for identifying tokens made entirely of punctuation."""
+
     pattern = regex.compile(r"[\p{Punctuation}\p{posix_punct}]+")
 
 
-class Punctuation(RegexFilter):
-    pattern = re.compile(rf"[{PRUNED_POSIX_PUNCT}{UNICODE_PUNCT}]+")
-
-
 __all__ = [
-    "NimiPu",
+    "Alphabetic",
     "NimiLinku",
     "NimiLinkuAle",
+    "NimiLinkuSandbox",
+    "NimiPu",
+    "NimiPuAle",
+    "Numeric",
     "Phonotactic",
-    "Syllabic",
-    "Alphabetic",
     "ProperName",
     "Punctuation",
-    "Numeric",
+    "Syllabic",
 ]

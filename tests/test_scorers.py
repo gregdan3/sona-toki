@@ -16,7 +16,7 @@ from sonatoki.Filters import (
     Alphabetic,
     ProperName,
     Phonotactic,
-    Punctuation,
+    PunctuationRe,
 )
 from sonatoki.Scorers import Scorer, Scaling, PassFail, SoftScaling, SoftPassFail
 
@@ -31,7 +31,7 @@ FILTERS = [
     Alphabetic,
     ProperName,
     Phonotactic,
-    Punctuation,
+    PunctuationRe,
 ]
 
 SCORERS = [

@@ -1,6 +1,6 @@
 [project]
 name = "sonatoki"
-version = "0.1.5"
+version = "0.2.0"
 description = "ilo li moku e toki li pana e sona ni: ni li toki ala toki pona?"
 authors = [
   { name = "jan Kekan San (@gregdan3)", email = "gregory.danielson3@gmail.com" },
@@ -15,9 +15,7 @@ readme = "README.md"
 license = { text = "AGPL-3.0-or-later" }
 
 [project.optional-dependencies]
-nltk = [
-    "nltk>=3.8.1",
-]
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"

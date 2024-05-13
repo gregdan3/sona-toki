@@ -15,6 +15,8 @@ from sonatoki.Filters import (
     ProperName,
     Phonotactic,
     Punctuation,
+    AlphabeticRe,
+    PunctuationRe,
     PunctuationRe1,
 )
 from sonatoki.Cleaners import ConsecutiveDuplicates
@@ -67,13 +69,20 @@ def test_Syllabic(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(ALPHABETIC_RE, fullmatch=True))
+@given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))
 @example("muems")
 @example("mpptp")
 @example("tptpt")
 def test_Alphabetic(s: str):
-    res = Alphabetic.filter(s)
-    assert res, repr(s)
+    res_fn = Alphabetic.filter(s)
+    res_re = AlphabeticRe.filter(s)
+    assert res_fn == res_re, repr(s)
+
+
+@given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))
+def test_AlphabeticRe(s: str):
+    res_re = AlphabeticRe.filter(s)
+    assert res_re, repr(s)
 
 
 @given(st.from_regex(PROPER_NAME_RE, fullmatch=True))
@@ -82,7 +91,7 @@ def test_ProperName(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(Punctuation.pattern.pattern, fullmatch=True))
+@given(st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True))
 @example("[]")
 @example(r"\\")
 @example(r"\"")
@@ -95,11 +104,18 @@ def test_PunctuationRe1(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(Punctuation.pattern.pattern, fullmatch=True))
+@given(st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True))
+def test_PunctuationRe(s: str):
+    res_re = PunctuationRe.filter(s)
+    res_re1 = PunctuationRe1.filter(s)
+    assert res_re == res_re1, repr(s)
+
+
+@given(st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True))
 def test_Punctuation(s: str):
-    res_pn = Punctuation.filter(s)
-    res_re = PunctuationRe1.filter(s)
-    assert res_pn == res_re, repr(s)
+    res_fn = Punctuation.filter(s)
+    res_re1 = PunctuationRe1.filter(s)
+    assert res_fn == res_re1, repr(s)
 
 
 @given(st.from_regex(r"\d+", fullmatch=True))

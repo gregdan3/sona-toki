@@ -21,7 +21,7 @@ from sonatoki.Filters import (
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
-from sonatoki.Tokenizers import Tokenizer, WordTokenizerTok
+from sonatoki.Tokenizers import Tokenizer, WordTokenizer
 from sonatoki.Preprocessors import (
     URLs,
     Preprocessor,
@@ -49,7 +49,7 @@ BaseConfig: IloConfig = {
     "scoring_filters": [],
     "scorer": PassFail,
     "passing_score": 0.8,
-    "word_tokenizer": WordTokenizerTok,
+    "word_tokenizer": WordTokenizer,
 }
 
 
@@ -70,11 +70,11 @@ TelegramConfig: IloConfig = deepcopy(PrefConfig)
 ForumConfig: IloConfig = deepcopy(PrefConfig)
 
 __all__ = [
-    "IloConfig",
     "BaseConfig",
-    "PrefConfig",
-    "LazyConfig",
     "DiscordConfig",
-    "TelegramConfig",
     "ForumConfig",
+    "IloConfig",
+    "LazyConfig",
+    "PrefConfig",
+    "TelegramConfig",
 ]
