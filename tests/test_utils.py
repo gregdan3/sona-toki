@@ -5,18 +5,17 @@ import itertools
 import hypothesis.strategies as st
 
 # LOCAL
-from sonatoki.Filters import Syllabic, Phonotactic
-from sonatoki.constants import ALPHABET, NIMI_LINKU_ALE
+from sonatoki.Filters import Syllabic, Phonotactic, AlphabeticRe
+from sonatoki.constants import NIMI_LINKU_ALE
 
 PROPER_NAME_RE = r"[A-Z][a-z]*"
-ALPHABETIC_RE = rf"[{ALPHABET}{ALPHABET.upper()}]+"
 
 token_strategy = (
     st.sampled_from(NIMI_LINKU_ALE)
     | st.from_regex(Phonotactic.pattern.pattern, fullmatch=True)
     | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)
     | st.from_regex(PROPER_NAME_RE, fullmatch=True)
-    | st.from_regex(ALPHABETIC_RE, fullmatch=True)
+    | st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True)
 )
 
 

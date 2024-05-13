@@ -23,7 +23,7 @@ from sonatoki.Cleaners import ConsecutiveDuplicates
 from sonatoki.constants import NIMI_PU, NIMI_LINKU
 
 # FILESYSTEM
-from .test_utils import ALPHABETIC_RE, PROPER_NAME_RE
+from .test_utils import PROPER_NAME_RE
 
 
 @given(st.sampled_from(NIMI_PU))
