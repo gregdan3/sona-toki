@@ -35,6 +35,31 @@ ALLOWABLES = {
     "wxw",  # wile ala wile
 }
 
+IGNORABLES = {
+    # o, e, n are not here bc they're not frequently problematic in english messages
+    "a",
+    "am",
+    "an",
+    "i",
+    "in",
+    "is",
+    "l",  # they'll
+    "m",  # i'm
+    "me",
+    "no",
+    "s",  # let's
+    "so",
+    "t",  # don't
+    "to",
+    "u",  # you
+    "we",
+    "un",  # un-
+    "use",
+    "some",
+    "like",
+}
+
+
 with open(LINKU) as f:
     linku: Dict[str, Dict[str, str]] = json.loads(f.read())
     NIMI_PU: List[str] = [d["word"] for d in linku.values() if d["book"] == "pu"]

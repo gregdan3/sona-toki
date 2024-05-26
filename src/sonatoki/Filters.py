@@ -15,6 +15,7 @@ from sonatoki.constants import (
     ALPHABET,
     ALLOWABLES,
     CONSONANTS,
+    IGNORABLES,
     NIMI_LINKU,
     POSIX_PUNCT,
     UNICODE_PUNCT,
@@ -77,6 +78,10 @@ class SubsetFilter(Filter):
 
 class Miscellaneous(MemberFilter):
     tokens = set(ALLOWABLES)
+
+
+class EnglishIgnorables(MemberFilter):
+    tokens = set(IGNORABLES)
 
 
 class ProperName(Filter):
@@ -193,6 +198,7 @@ class PunctuationRe1(Regex1Filter):
 
 __all__ = [
     "Alphabetic",
+    "EnglishIgnorables",
     "NimiLinku",
     "NimiLinkuAle",
     "NimiLinkuSandbox",
