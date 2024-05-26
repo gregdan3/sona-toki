@@ -18,17 +18,21 @@ from sonatoki.Filters import (
     Phonotactic,
     Punctuation,
     NimiLinkuAle,
+    NimiLinkuSandbox,
+    EnglishIgnorables,
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
 from sonatoki.Tokenizers import Tokenizer, WordTokenizer
 from sonatoki.Preprocessors import (
     URLs,
+    Reference,
     Preprocessor,
     DiscordEmotes,
     DiscordSpecial,
     DiscordChannels,
     DiscordMentions,
+    AngleBracketObject,
 )
 
 
@@ -42,6 +46,8 @@ class IloConfig(TypedDict):
     passing_score: Number
 
 
+# TODO: branching configs?
+
 BaseConfig: IloConfig = {
     "preprocessors": [URLs],
     "cleaners": [ConsecutiveDuplicates],
@@ -53,24 +59,53 @@ BaseConfig: IloConfig = {
 }
 
 
-PrefConfig: IloConfig = deepcopy(BaseConfig)
-PrefConfig["scoring_filters"].extend([NimiLinku, Syllabic, ProperName, Alphabetic])
-PrefConfig["scorer"] = SoftScaling
+PrefConfig: IloConfig = {
+    "preprocessors": [URLs],
+    "cleaners": [ConsecutiveDuplicates],
+    "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
+    "scoring_filters": [NimiLinku, Syllabic, ProperName, Alphabetic],
+    "scorer": SoftScaling,
+    "passing_score": 0.8,
+    "word_tokenizer": WordTokenizer,
+}
+
+CorpusConfig: IloConfig = {
+    "preprocessors": [URLs, AngleBracketObject, Reference],
+    "cleaners": [ConsecutiveDuplicates],
+    "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
+    "scoring_filters": [NimiLinkuSandbox, Syllabic, ProperName, Alphabetic],
+    "scorer": SoftScaling,
+    "passing_score": 0.8,
+    "word_tokenizer": WordTokenizer,
+}
 
 
-LazyConfig: IloConfig = deepcopy(BaseConfig)
-LazyConfig["scoring_filters"].extend([Alphabetic, ProperName])
-LazyConfig["scorer"] = SoftPassFail
+LazyConfig: IloConfig = {
+    "preprocessors": [URLs],
+    "cleaners": [ConsecutiveDuplicates],
+    "ignoring_filters": [Numeric, Punctuation],
+    "scoring_filters": [Alphabetic, ProperName],
+    "scorer": SoftPassFail,
+    "passing_score": 0.8,
+    "word_tokenizer": WordTokenizer,
+}
 
-DiscordConfig: IloConfig = deepcopy(PrefConfig)
-DiscordConfig["preprocessors"].extend(
-    [DiscordEmotes, DiscordMentions, DiscordChannels, DiscordSpecial]
-)
+DiscordConfig: IloConfig = {
+    "preprocessors": [URLs, AngleBracketObject, Reference],
+    "cleaners": [ConsecutiveDuplicates],
+    "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
+    "scoring_filters": [NimiLinku, Syllabic, ProperName, Alphabetic],
+    "scorer": SoftScaling,
+    "passing_score": 0.8,
+    "word_tokenizer": WordTokenizer,
+}
+
 TelegramConfig: IloConfig = deepcopy(PrefConfig)
 ForumConfig: IloConfig = deepcopy(PrefConfig)
 
 __all__ = [
     "BaseConfig",
+    "CorpusConfig",
     "DiscordConfig",
     "ForumConfig",
     "IloConfig",
