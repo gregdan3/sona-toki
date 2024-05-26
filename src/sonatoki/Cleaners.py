@@ -60,6 +60,13 @@ class ConsecutiveDuplicatesRe(RegexCleaner):
     replace = r"\1"
 
 
+class Lowercase(Cleaner):
+    @classmethod
+    @override
+    def clean(cls, token: str) -> str:
+        return token.lower()
+
+
 __all__ = [
     "ConsecutiveDuplicates",
 ]
