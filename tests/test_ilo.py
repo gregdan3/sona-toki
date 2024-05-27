@@ -3,19 +3,24 @@ import pytest
 
 # LOCAL
 from sonatoki.ilo import Ilo
-from sonatoki.Configs import LazyConfig, PrefConfig
+from sonatoki.Configs import LazyConfig, PrefConfig, CorpusConfig
 
 
 @pytest.fixture
-def ilo():
+def ilo() -> Ilo:
     ilo = Ilo(**PrefConfig)
     return ilo
 
 
 @pytest.fixture()
-def lazy_ilo():
+def lazy_ilo() -> Ilo:
     ilo = Ilo(**LazyConfig)
-    # ilo.logging_threshold = 0.8
+    return ilo
+
+
+@pytest.fixture()
+def corpus_ilo() -> Ilo:
+    ilo = Ilo(**CorpusConfig)
     return ilo
 
 
@@ -76,6 +81,11 @@ SOME_INVALID = [
     "wawa la o lukin e ni: your mom",
 ]
 
+CORPUS_SPECIFIC = [
+    "ki le konsi si te isipin epiku le pasila to",
+    'jasima omekapo, ki nimisin "jasima enko nimisin". ki enko alu linluwi Jutu alu epiku ki epiku baba is you. ki likujo "SINtelen pona", ki epiku alu "sitelen pona". ki kepen wawajete isipin, kin ki yupekosi alu lipamanka alu wawajete, kin ki enko isipin lipamanka linluwi alu wawajete',
+]
+
 
 EXCESSIVE_SYLLABICS = [
     # NOTE: these are actually harder to spot bc of the EnglishIgnorables filter
@@ -118,6 +128,23 @@ NON_MATCHES = [
     "homestuck Homestuck",
 ]
 
+KNOWN_GOOD = (
+    ALL_VALID
+    + SYLLABIC_MATCHES
+    + ALPHABETIC_MATCHES
+    + NAME_MATCHES
+    + SOME_INVALID
+    + IGNORABLES
+)
+
+KNOWN_BAD = (
+    EXCESSIVE_SYLLABICS
+    + EXCESSIVE_ALPHABETICS
+    + EXCESSIVE_NAMES
+    + EXCESSIVE_TYPOES
+    + NON_MATCHES
+)
+
 FALSE_NEGATIVES = [
     # emoticon should not be a problem
     "lete li ike x.x",
@@ -133,40 +160,27 @@ FALSE_POSITIVES = [
 ]
 
 
-@pytest.mark.parametrize(
-    "text",
-    ALL_VALID
-    + SYLLABIC_MATCHES
-    + ALPHABETIC_MATCHES
-    + NAME_MATCHES
-    + SOME_INVALID
-    + IGNORABLES,
-)
+@pytest.mark.parametrize("text", KNOWN_GOOD)
 def test_known_good(ilo: Ilo, text: str):
     assert ilo.is_toki_pona(text), text
 
 
-@pytest.mark.parametrize(
-    "text",
-    EXCESSIVE_SYLLABICS
-    + EXCESSIVE_ALPHABETICS
-    + EXCESSIVE_NAMES
-    + EXCESSIVE_TYPOES
-    + NON_MATCHES,
-)
+@pytest.mark.parametrize("text", KNOWN_GOOD + CORPUS_SPECIFIC)
+def test_known_good_for_corpus(corpus_ilo: Ilo, text: str):
+    assert corpus_ilo.is_toki_pona(text), text
+
+
+@pytest.mark.parametrize("text", KNOWN_BAD + CORPUS_SPECIFIC)
 def test_known_bad(ilo: Ilo, text: str):
     assert not ilo.is_toki_pona(text), text
 
 
-@pytest.mark.parametrize(
-    "text",
-    ALL_VALID
-    + SYLLABIC_MATCHES
-    + ALPHABETIC_MATCHES
-    + NAME_MATCHES
-    + SOME_INVALID
-    + IGNORABLES,
-)
+@pytest.mark.parametrize("text", KNOWN_BAD)
+def test_known_bad_for_corpus(corpus_ilo: Ilo, text: str):
+    assert not corpus_ilo.is_toki_pona(text), text
+
+
+@pytest.mark.parametrize("text", KNOWN_GOOD)
 def test_known_good_lazy(lazy_ilo: Ilo, text: str):
     assert lazy_ilo.is_toki_pona(text), text
     # assumption: lazy ilo should pass anything the more strict ilo does
@@ -177,10 +191,8 @@ def test_known_bad_lazy(lazy_ilo: Ilo, text: str):
     assert not lazy_ilo.is_toki_pona(text), text
 
 
-@pytest.mark.parametrize(
-    "text",
-    EXCESSIVE_SYLLABICS + EXCESSIVE_ALPHABETICS + EXCESSIVE_NAMES + EXCESSIVE_TYPOES,
-)
+# yes this set manip is silly
+@pytest.mark.parametrize("text", list(set(KNOWN_BAD) - set(NON_MATCHES)))
 def test_weakness_of_lazy(lazy_ilo: Ilo, text: str):
     # NOTE: This is demonstrative, not preferential
     assert lazy_ilo.is_toki_pona(text), text
