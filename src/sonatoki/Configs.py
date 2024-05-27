@@ -60,7 +60,7 @@ BaseConfig: IloConfig = {
 
 
 PrefConfig: IloConfig = {
-    "preprocessors": [URLs],
+    "preprocessors": [URLs, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [NimiLinku, Syllabic, ProperName, Alphabetic],
