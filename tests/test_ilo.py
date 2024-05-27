@@ -41,6 +41,7 @@ IGNORABLES = [
     "...",
     " ⟨·⟩, a",
     "·····",
+    "o lukin: [[w:QWERTY]]",
 ]
 
 SYLLABIC_MATCHES = [
@@ -68,28 +69,46 @@ NAME_MATCHES = [
     "toki Lojban li nasa e lawa mi",
 ]
 
-SOME_INVALID = ["kulupu xerox li ike", "mi tawa ma ohio"]
+SOME_INVALID = [
+    "kulupu xerox li ike",
+    "mi tawa ma ohio",
+    "sina toki e nimi what pi toki Inli",
+    "wawa la o lukin e ni: your mom",
+]
 
 
 EXCESSIVE_SYLLABICS = [
+    # NOTE: these are actually harder to spot bc of the EnglishIgnorables filter
+    # it simply stops counting all the short english phonomatches
+    # so you can use any number of them...
     "manama manama namana namana majani makala",
+    "I manipulate a passe pile so a ton emulate, akin to intake",
+    "a ton of insolate puke. make no amen, no joke.",
+    "I elope so, to an elite untaken tune, some unwise tone",
 ]
 
 EXCESSIVE_ALPHABETICS = [
     "21st",  # candidate for xfails?
-    "tok",
-    "mut",
-    "mtue",
+    "wen i tok usin onli notes in toki pona i look silli. ",
     "I wait, I sulk, as a tool I make stoops to ineptness.",
     "aaa i non-saw usa's most multiple element-set. it's as asinine as in `e`-less speak",
-    "mi pakla ln tepo mtue ls mi kn ala tok poan aun seem",
     "so, to atone like papa—an awesome anon (no-name) sin man—i ate an asinine lemon-limelike tomato jalapeno isotope. 'nonsense!' amen. note to Oman: take mine katana to imitate a ninja in pantomime. atomise one nuke? 'insane misuse!' same. likewise, Susan, awaken a pepino melon in a linen pipeline. (penile) emanate semen. joke: manipulate a tame toneme to elope online tonite",
+]
+
+EXCESSIVE_TYPOES = [
+    "mi pakla ln tepo mtue ls mi kn ala tok poan aun seem",
+    "sina poan",
 ]
 
 EXCESSIVE_NAMES = [
     "I Want To Evade The Filter",
     "If You Do This The Bot Can't See You",
     "This Is A Statement In Perfect Toki Pona, I Guarantee",
+    "How to Cut a Kiwi",  # previous false positive; fixed by english ignorables
+]
+
+EXCESSIVE_ENGLISH = [
+    "me when i tawa sike",  # previous false positive; fixed by english ignorables
 ]
 
 NON_MATCHES = [
@@ -99,8 +118,18 @@ NON_MATCHES = [
     "homestuck Homestuck",
 ]
 
-XFAILS = [
-    "lete li ike x.x",  # emoticon should not be a problem
+FALSE_NEGATIVES = [
+    # emoticon should not be a problem
+    "lete li ike x.x",
+    # a token that is one edit off a known word should be allowed
+    "tok",
+    "mut",
+    "poan",
+    "mtue",
+]
+
+FALSE_POSITIVES = [
+    "Maybe I’m too nasa",
 ]
 
 
@@ -113,12 +142,17 @@ XFAILS = [
     + SOME_INVALID
     + IGNORABLES,
 )
-def test_known_good(ilo: Ilo, lazy_ilo: Ilo, text: str):
+def test_known_good(ilo: Ilo, text: str):
     assert ilo.is_toki_pona(text), text
 
 
 @pytest.mark.parametrize(
-    "text", EXCESSIVE_SYLLABICS + EXCESSIVE_ALPHABETICS + EXCESSIVE_NAMES + NON_MATCHES
+    "text",
+    EXCESSIVE_SYLLABICS
+    + EXCESSIVE_ALPHABETICS
+    + EXCESSIVE_NAMES
+    + EXCESSIVE_TYPOES
+    + NON_MATCHES,
 )
 def test_known_bad(ilo: Ilo, text: str):
     assert not ilo.is_toki_pona(text), text
@@ -144,7 +178,8 @@ def test_known_bad_lazy(lazy_ilo: Ilo, text: str):
 
 
 @pytest.mark.parametrize(
-    "text", EXCESSIVE_SYLLABICS + EXCESSIVE_ALPHABETICS + EXCESSIVE_NAMES
+    "text",
+    EXCESSIVE_SYLLABICS + EXCESSIVE_ALPHABETICS + EXCESSIVE_NAMES + EXCESSIVE_TYPOES,
 )
 def test_weakness_of_lazy(lazy_ilo: Ilo, text: str):
     # NOTE: This is demonstrative, not preferential
@@ -152,6 +187,12 @@ def test_weakness_of_lazy(lazy_ilo: Ilo, text: str):
 
 
 @pytest.mark.xfail
-@pytest.mark.parametrize("text", XFAILS)
-def test_known_xfails(ilo: Ilo, text: str):
+@pytest.mark.parametrize("text", FALSE_POSITIVES)
+def test_false_positives(ilo: Ilo, text: str):
+    assert not ilo.is_toki_pona(text)
+
+
+@pytest.mark.xfail
+@pytest.mark.parametrize("text", FALSE_NEGATIVES)
+def test_false_negatives(ilo: Ilo, text: str):
     assert ilo.is_toki_pona(text)
