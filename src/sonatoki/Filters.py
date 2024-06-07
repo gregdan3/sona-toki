@@ -166,6 +166,11 @@ class AlphabeticRe(RegexFilter):
     pattern = re.compile(rf"[{ALPHABET}]+", flags=re.IGNORECASE)
 
 
+class TwoOrMoreAlphabetic(Filter):
+    # TODO: alphabetic implementation that ignores single characters
+    pass
+
+
 class Numeric(Filter):
     """Determine if a given token is entirely numeric.
     Covers all numeric symbols in Unicode.
