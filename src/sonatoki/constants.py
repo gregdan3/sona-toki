@@ -355,6 +355,12 @@ UNICODE_PUNCT_RANGES = [
     "\\U0001fb94-\\U0001fbca",
 ]
 
+UCSUR_PUNCT_RANGES = ["\\U000F1990-\\U000F199D"]
+
+UNICODE_PUNCT_RANGES += UCSUR_PUNCT_RANGES
+# This isn't technically accurate, but it is for my purposes!
+# I hope one day to add actual unicode SP punctuation.
+
 UNICODE_PUNCT = find_unicode_chars(UNICODE_PUNCT_RANGES)
 # this is a large string.
 
@@ -411,6 +417,12 @@ IGNORABLES = {
     "like",
 }
 
+UCSUR_RANGES = [
+    "\\U000F1900-\\U000F1977",  # pu
+    "\\U000F1978-\\U000F1988",  # ku suli
+    "\\U000F19A0-\\U000F19A3",  # ku lili
+]
+NIMI_UCSUR = find_unicode_chars(UCSUR_RANGES)
 
 with open(LINKU) as f:
     linku: Dict[str, Dict[str, str]] = json.loads(f.read())
