@@ -39,8 +39,8 @@ class IloConfig(TypedDict):
     preprocessors: List[Type[Preprocessor]]
     word_tokenizer: Type[Tokenizer]
     cleaners: List[Type[Cleaner]]
-    ignoring_filters: List[Union[Type[Filter], Filter]]
-    scoring_filters: List[Union[Type[Filter], Filter]]
+    ignoring_filters: List[Type[Filter]]
+    scoring_filters: List[Type[Filter]]
     scorer: Type[Scorer]
     passing_score: Number
 
@@ -63,7 +63,7 @@ PrefConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [
-        OrFilter([NimiLinku, NimiUCSUR]),
+        OrFilter(NimiLinku, NimiUCSUR),
         Syllabic,
         ProperName,
         Alphabetic,
@@ -78,7 +78,7 @@ CorpusConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [
-        OrFilter([NimiLinkuSandbox, NimiUCSUR]),
+        OrFilter(NimiLinkuSandbox, NimiUCSUR),
         Syllabic,
         ProperName,
         Alphabetic,
@@ -104,7 +104,7 @@ DiscordConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [
-        OrFilter([NimiLinku, NimiUCSUR]),
+        OrFilter(NimiLinku, NimiUCSUR),
         Syllabic,
         ProperName,
         Alphabetic,
