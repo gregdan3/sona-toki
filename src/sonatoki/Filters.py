@@ -1,7 +1,7 @@
 # STL
 import re
 from abc import ABC, abstractmethod
-from typing import Set
+from typing import Set, List, Type
 from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
@@ -199,6 +199,59 @@ class PunctuationRe1(Regex1Filter):
     """Reference implementation for identifying tokens made entirely of punctuation."""
 
     pattern = regex.compile(r"[\p{Punctuation}\p{posix_punct}]+")
+
+
+class OrFilter(Filter):
+    """Instantiate with more than one filter to compose them into one filter,
+    returning True when any individual filter matches or False otherwise.
+    Requires at least two filters.
+
+    OrFilter exists as a compromise between the need to score some filters equally,
+    while not adding custom behavior to scorers.
+    I could have allowed a position to have a list of filters instead of one filter,
+    but this would require cleaning the user's input, and nested handling of lists.
+    It also would not have been as powerful- I would need another param for the and/or switch,
+    or to not give users the choice.
+
+    Instead, the user is responsible for building an OrFilter out of their desired filters.
+    """
+
+    # a scorer with multiple filters in one scoring position,
+    filters: List[Type[Filter]]
+
+    def __init__(self, filters: List[Type[Filter]]) -> None:
+        if not len(filters) >= 2:
+            raise ValueError("Must provide at least one Filter to OrFilter.")
+        self.filters = filters
+
+    @override
+    @cache(maxsize=None)
+    def filter(self, token: str) -> bool:
+        for f in self.filters:
+            if f.filter(token):
+                return True
+        return False
+
+
+class AndFilter(Filter):
+    """Instantiate with more than one filter to compose them into one filter,
+    returning False when any individual filter fails to match or True otherwise.
+    Requires at least two filters."""
+
+    filters: List[Type[Filter]]
+
+    def __init__(self, filters: List[Type[Filter]]) -> None:
+        if not len(filters) >= 2:
+            raise ValueError("Must provide at least two Filters to AndFilter.")
+        self.filters = filters
+
+    @override
+    @cache(maxsize=None)
+    def filter(self, token: str) -> bool:
+        for f in self.filters:
+            if not f.filter(token):
+                return False
+        return True
 
 
 __all__ = [
