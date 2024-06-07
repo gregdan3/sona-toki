@@ -112,6 +112,7 @@ def test_PunctuationRe(s: str):
 
 
 @given(st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True))
+@example("\U000f1990")  # UCSUR char
 def test_Punctuation(s: str):
     res_fn = Punctuation.filter(s)
     res_re1 = PunctuationRe1.filter(s)

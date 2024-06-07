@@ -23,6 +23,7 @@ from sonatoki.constants import (
     ALL_PUNCT_RANGES,
     NIMI_PU_SYNONYMS,
     NIMI_LINKU_SANDBOX,
+    UCSUR_PUNCT_RANGES,
 )
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -198,7 +199,9 @@ class PunctuationRe(RegexFilter):
 class PunctuationRe1(Regex1Filter):
     """Reference implementation for identifying tokens made entirely of punctuation."""
 
-    pattern = regex.compile(r"[\p{Punctuation}\p{posix_punct}]+")
+    pattern = regex.compile(
+        rf"[\p{{Punctuation}}\p{{posix_punct}}{UCSUR_PUNCT_RANGES}]+"
+    )
 
 
 class OrFilter:

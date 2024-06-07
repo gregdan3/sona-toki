@@ -353,13 +353,10 @@ UNICODE_PUNCT_RANGES = [
     "\\U0001faf0-\\U0001faf8",
     "\\U0001fb00-\\U0001fb92",
     "\\U0001fb94-\\U0001fbca",
+    "\\U000f1990-\\U000f199d",  # UCSUR punctuation
 ]
 
-UCSUR_PUNCT_RANGES = ["\\U000F1990-\\U000F199D"]
-
-UNICODE_PUNCT_RANGES += UCSUR_PUNCT_RANGES
-# This isn't technically accurate, but it is for my purposes!
-# I hope one day to add actual unicode SP punctuation.
+UCSUR_PUNCT_RANGES = UNICODE_PUNCT_RANGES[-1]  # NOTE: THIS CAN CHANGE
 
 UNICODE_PUNCT = find_unicode_chars(UNICODE_PUNCT_RANGES)
 # this is a large string.
