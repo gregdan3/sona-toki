@@ -94,30 +94,31 @@ def test_WordTokenizer(test: TokenizerTest):
         pytest.xfail()
 
     fn_tokenized = WordTokenizer.tokenize(test["input"])
-    re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
-    assert fn_tokenized == re1_tokenized, test["name"]
+    # re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
+    # assert fn_tokenized == re1_tokenized, test["name"]
+    assert fn_tokenized == test["output"], test["name"]
 
 
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
-)
-def test_WordTokenizerRe(test: TokenizerTest):
-    if test["xfail"]:
-        pytest.xfail()
-
-    re_tokenized = WordTokenizerRe.tokenize(test["input"])
-    re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
-    assert re_tokenized == re1_tokenized, test["name"]
-
-
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
-)
-def test_WordTokenizerRe1(test: TokenizerTest):
-    """This implementation will always exhibit the correct behavior, so long as `regex` is up to date
-    Thus, it is used as a reference implementation for all other tests"""
-    if test["xfail"]:
-        pytest.xfail()
-
-    re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
-    assert re1_tokenized == test["output"], test["name"]
+# @pytest.mark.parametrize(
+#     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
+# )
+# def test_WordTokenizerRe(test: TokenizerTest):
+#     if test["xfail"]:
+#         pytest.xfail()
+#
+#     re_tokenized = WordTokenizerRe.tokenize(test["input"])
+#     re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
+#     assert re_tokenized == re1_tokenized, test["name"]
+#
+#
+# @pytest.mark.parametrize(
+#     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
+# )
+# def test_WordTokenizerRe1(test: TokenizerTest):
+#     """This implementation will always exhibit the correct behavior, so long as `regex` is up to date
+#     Thus, it is used as a reference implementation for all other tests"""
+#     if test["xfail"]:
+#         pytest.xfail()
+#
+#     re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
+#     assert re1_tokenized == test["output"], test["name"]

@@ -184,15 +184,13 @@
     - "󱥩"
     - "󱤴"
 - name: UCSUR 2
-  xfail: true
-  input: "󱥞sina󱥞sina"
+  input: "󱤿nasin󱥞sina"
   output:
-    - "󱥞"
-    - "mi"
+    - "󱤿"
+    - "nasin"
     - "󱥞"
     - "sina"
 - name: UCSUR 3
-  xfail: true
   input: "󱥞󱤘󱤆󱤉󱤿󱥞󱦜󱥓「Input mode」󱤡󱤿󱥮󱤧󱤬󱦜󱥫󱥁󱤡󱥞󱤙󱤿「Direct」"
   output:
     - "󱥞"

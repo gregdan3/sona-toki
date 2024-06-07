@@ -5,7 +5,7 @@ from typing import Set, List
 
 # PDM
 import regex
-from typing_extensions import override
+from typing_extensions import override, deprecated
 
 # LOCAL
 from sonatoki.utils import regex_escape
@@ -72,6 +72,16 @@ class WordTokenizer(SetTokenizer):
             if not changed:
                 continue
 
+            if ucsur:
+                if i > last_match:
+                    # Add the token before UCSUR character
+                    cls.__helper(s, tokens, last_match, i)
+                # Add UCSUR character itself as a token
+                tokens.append(char)
+                last_match = i + 1
+                last_membership = mem
+                continue
+
             cls.__helper(s, tokens, last_match, i)
             last_match = i
             last_membership = mem
@@ -80,12 +90,18 @@ class WordTokenizer(SetTokenizer):
         return tokens
 
 
+@deprecated(
+    "WordTokenizerRe is a previous reference implementation. Its behavior has diverged from WordTokenizer and it may not be restored."
+)
 class WordTokenizerRe(RegexTokenizer):
     pattern = re.compile(rf"""([{ALL_PUNCT_RANGES}]+|\s+)""")
 
 
+@deprecated(
+    "WordTokenizerRe1 is a previous reference implementation. Its behavior has diverged from WordTokenizer and it may not be restored."
+)
 class WordTokenizerRe1(Regex1Tokenizer):
-    """Reference implementation for WorkTokenizer."""
+    """Reference implementation for WordTokenizer."""
 
     pattern = regex.compile(r"""([\p{posix_punct}\p{Punctuation}]+|\s+)""")
 
