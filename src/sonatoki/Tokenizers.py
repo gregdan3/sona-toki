@@ -9,12 +9,7 @@ from typing_extensions import override
 
 # LOCAL
 from sonatoki.utils import regex_escape
-from sonatoki.constants import (
-    POSIX_PUNCT,
-    UNICODE_PUNCT,
-    SENTENCE_PUNCT,
-    ALL_PUNCT_RANGES,
-)
+from sonatoki.constants import ALL_PUNCT, SENTENCE_PUNCT, ALL_PUNCT_RANGES
 
 regex.DEFAULT_VERSION = regex.VERSION1
 
@@ -50,7 +45,7 @@ class Regex1Tokenizer(Tokenizer):
 
 
 class WordTokenizer(SetTokenizer):
-    delimiters = set(POSIX_PUNCT + UNICODE_PUNCT)
+    delimiters = set(ALL_PUNCT)
 
     @classmethod
     @override

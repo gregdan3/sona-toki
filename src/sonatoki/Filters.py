@@ -13,12 +13,11 @@ from sonatoki.constants import (
     VOWELS,
     NIMI_PU,
     ALPHABET,
+    ALL_PUNCT,
     ALLOWABLES,
     CONSONANTS,
     IGNORABLES,
     NIMI_LINKU,
-    POSIX_PUNCT,
-    UNICODE_PUNCT,
     NIMI_LINKU_LILI,
     ALL_PUNCT_RANGES,
     NIMI_PU_SYNONYMS,
@@ -180,12 +179,13 @@ class Numeric(Filter):
 class Punctuation(SubsetFilter):
     """Identify whether a token is entirely punctuation. Fastest implementation."""
 
-    tokens = set(POSIX_PUNCT + UNICODE_PUNCT)
+    tokens = set(ALL_PUNCT)
 
 
 class PunctuationRe(RegexFilter):
     """Faster implementation of `PunctuationRe1`.
-    Goes out of date compared to the `regex` library if UNICODE_PUNCT is not updated."""
+    Goes out of date compared to the `regex` library if UNICODE_PUNCT_RANGES is not updated.
+    """
 
     pattern = re.compile(rf"[{ALL_PUNCT_RANGES}]+")
 

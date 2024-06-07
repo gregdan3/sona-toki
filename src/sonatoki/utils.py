@@ -43,6 +43,19 @@ def find_unicode_ranges(chars: str) -> List[str]:
     return ranges
 
 
+def find_unicode_chars(ranges: List[str]) -> str:
+    result: List[str] = []
+    for item in ranges:
+        if "-" in item:
+            start, end = item.split("-")
+            start = int(start.lstrip("\\U"), 16)
+            end = int(end.lstrip("\\U"), 16)
+            result.extend(chr(code_point) for code_point in range(start, end + 1))
+        else:
+            result.append(chr(int(item.lstrip("\\U"), 16)))
+    return "".join(result)
+
+
 if __name__ == "__main__":
     """
     Helper script to fetch UNICODE_PUNCT in constants.py
