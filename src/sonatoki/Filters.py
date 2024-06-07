@@ -18,6 +18,7 @@ from sonatoki.constants import (
     CONSONANTS,
     IGNORABLES,
     NIMI_LINKU,
+    NIMI_UCSUR,
     NIMI_LINKU_LILI,
     ALL_PUNCT_RANGES,
     NIMI_PU_SYNONYMS,
@@ -120,6 +121,10 @@ class NimiLinkuAle(MemberFilter):
 
 class NimiLinkuSandbox(MemberFilter):
     tokens = set(NIMI_LINKU + NIMI_LINKU_LILI + NIMI_LINKU_SANDBOX)
+
+
+class NimiUCSUR(MemberFilter):
+    tokens = set(NIMI_UCSUR)
 
 
 class Phonotactic(RegexFilter):
