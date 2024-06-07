@@ -61,7 +61,19 @@ if __name__ == "__main__":
     Helper script to fetch UNICODE_PUNCT in constants.py
     """
 
-    PUNCT_CATEGORIES = {"Pc", "Pd", "Pe", "Pf", "Pi", "Po", "Ps", "Sm", "Sk",  "Sc", "So"}
+    PUNCT_CATEGORIES = {
+        "Pc",
+        "Pd",
+        "Pe",
+        "Pf",
+        "Pi",
+        "Po",
+        "Ps",
+        "Sm",
+        "Sk",
+        "Sc",
+        "So",
+    }
     # Connector, Dash, Close (end), Final, Initial, Other, Open (sOpen), Math, Modifier (kModifier), Currency, Other
 
     # NOTE: UnicodeData.txt lists character ranges if there would be many characters.

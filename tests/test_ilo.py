@@ -32,6 +32,9 @@ ALL_VALID = [
     "AAAAAAAAAAA",
     "muuuu MUUU muUuUuU",
     "wawa mute. " * 10,
+    "󱥄󱥬󱥩󱤴",  # "o toki tawa mi" in UCSUR
+    "󱤴󱤧󱤑󱥍󱦗󱤖󱥡󱦘󱤬󱥭‍󱥡󱥚",
+    "󱤑󱦐󱥗󱦜󱦈󱦜󱥉󱦜󱦑󱥄󱤤󱤂󱤉󱥆󱤀",
 ]
 
 IGNORABLES = [
@@ -75,6 +78,7 @@ NAME_MATCHES = [
 ]
 
 SOME_INVALID = [
+    "󱤎󱥁󱤡󱥀󱤬󱥚󱥁󱤧󱤬󱦜󱤬󱥆󱤡󱥞󱤘󱤆󱤉󱥬󱥠󱥞󱦜󱤬󱥓「Input mode」󱤿󱥮󱤧󱤬󱦜󱤘󱤡󱥫󱥁󱤡󱥞󱤙󱤿「Direct」󱦜󱤿󱥁󱤧󱥈",
     "kulupu xerox li ike",
     "mi tawa ma ohio",
     "sina toki e nimi what pi toki Inli",
@@ -161,12 +165,12 @@ FALSE_POSITIVES = [
 
 
 @pytest.mark.parametrize("text", KNOWN_GOOD)
-def test_known_good(ilo: Ilo, text: str):
+def test_known_good_pref(ilo: Ilo, text: str):
     assert ilo.is_toki_pona(text), text
 
 
 @pytest.mark.parametrize("text", KNOWN_GOOD + CORPUS_SPECIFIC)
-def test_known_good_for_corpus(corpus_ilo: Ilo, text: str):
+def test_known_good_corpus(corpus_ilo: Ilo, text: str):
     assert corpus_ilo.is_toki_pona(text), text
 
 
@@ -176,7 +180,7 @@ def test_known_bad(ilo: Ilo, text: str):
 
 
 @pytest.mark.parametrize("text", KNOWN_BAD)
-def test_known_bad_for_corpus(corpus_ilo: Ilo, text: str):
+def test_known_bad_corpus(corpus_ilo: Ilo, text: str):
     assert not corpus_ilo.is_toki_pona(text), text
 
 
