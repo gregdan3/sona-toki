@@ -9,6 +9,7 @@ from typing_extensions import override
 
 # LOCAL
 from sonatoki.utils import regex_escape
+from sonatoki.Filters import NimiUCSUR  # seriously this sucks
 from sonatoki.constants import ALL_PUNCT, SENTENCE_PUNCT, ALL_PUNCT_RANGES
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -48,6 +49,11 @@ class WordTokenizer(SetTokenizer):
     delimiters = set(ALL_PUNCT)
 
     @classmethod
+    def __helper(cls, s: str, tokens: List[str], last_match: int, i: int):
+        match = s[last_match:i].split()
+        [tokens.append(t) for t in match if t]
+
+    @classmethod
     @override
     def tokenize(cls, s: str) -> List[str]:
         if not s:
@@ -55,23 +61,22 @@ class WordTokenizer(SetTokenizer):
 
         tokens: List[str] = []
 
+        i = 0  # ensure i is bound
         last_match = 0
         last_membership = s[0] in cls.delimiters
         for i, char in enumerate(s):
             mem = char in cls.delimiters
-            if mem == last_membership:
+            ucsur = NimiUCSUR.filter(char)  # always "changed" means
+            changed = (mem != last_membership) or ucsur
+            # this keeps contiguous words together, but splits UCSUR
+            if not changed:
                 continue
 
-            match = s[last_match:i].split()
-            # TODO: kinda sucks? what about unicode whitespace?
+            cls.__helper(s, tokens, last_match, i)
             last_match = i
             last_membership = mem
-            [tokens.append(t) for t in match if t]
 
-        match = s[last_match:].strip().split()
-        if match:
-            tokens.extend(match)
-
+        cls.__helper(s, tokens, last_match, i + 1)
         return tokens
 
 
