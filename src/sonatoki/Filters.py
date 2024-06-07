@@ -227,6 +227,7 @@ class OrFilter:
             filters: List[Type[Filter]] = list(filters_)  # TODO: tuple better?
 
             @classmethod
+            @override
             @cache(maxsize=None)
             def filter(cls, token: str) -> bool:
                 for f in cls.filters:
@@ -250,6 +251,7 @@ class AndFilter(Filter):
             filters: List[Type[Filter]] = list(filters_)  # TODO: tuple better?
 
             @classmethod
+            @override
             @cache(maxsize=None)
             def filter(cls, token: str) -> bool:
                 for f in cls.filters:
