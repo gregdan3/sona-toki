@@ -12,12 +12,15 @@ from sonatoki.Filters import (
     OrFilter,
     Syllabic,
     Alphabetic,
+    NimiKuLili,
+    NimiKuSuli,
     ProperName,
     Phonotactic,
     Punctuation,
     AlphabeticRe,
     NimiLinkuCore,
     PunctuationRe,
+    NimiPuSynonyms,
     OrMemberFilter,
     PunctuationRe1,
     NimiLinkuCommon,
@@ -28,7 +31,10 @@ from sonatoki.Filters import (
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
 from sonatoki.constants import (
     NIMI_PU,
+    NIMI_KU_LILI,
+    NIMI_KU_SULI,
     NIMI_LINKU_CORE,
+    NIMI_PU_SYNONYMS,
     NIMI_LINKU_COMMON,
     NIMI_LINKU_OBSCURE,
     NIMI_LINKU_SANDBOX,
@@ -85,15 +91,6 @@ def test_NimiLinkuSandbox(s: str):
     # above two are necessary due to kalamARR and Pingo
     res = NimiLinkuSandbox.filter(s)
     assert res, repr(s)
-
-
-@given(st.sampled_from(NIMI_LINKU_CORE + NIMI_LINKU_COMMON + NIMI_LINKU_UNCOMMON))
-def test_nimi_linku_properties(s: str):
-    assert ConsecutiveDuplicates.clean(s) == s, repr(s)
-    assert Alphabetic.filter(s), repr(s)
-    assert Syllabic.filter(s), repr(s)
-    assert Phonotactic.filter(s), repr(s)
-    # Passing phonotactic implies all of the above
 
 
 @given(st.from_regex(Phonotactic.pattern.pattern, fullmatch=True))
@@ -185,7 +182,7 @@ def test_OrFilter(s: str):
 # e.g. "apple" passes Alphabetic, "..." passes Punctuation, "apple..." passes neither
 # but would incorrectly pass a combined filter.
 @given(st.sampled_from(NIMI_PU + NIMI_LINKU_OBSCURE))
-def test_OrSubsetFilter(s: str):
+def test_OrMemberFilter(s: str):
     filter = OrMemberFilter(NimiPu, NimiLinkuObscure)
     res = filter.filter(s)
     res_pu = NimiPu.filter(s)
@@ -193,15 +190,74 @@ def test_OrSubsetFilter(s: str):
     assert res and (res_pu or res_obscure)
 
 
-@given(st.sampled_from(NIMI_LINKU_UNCOMMON + NIMI_LINKU_OBSCURE + NIMI_LINKU_SANDBOX))
-def test_OrSubsetFilter_isipin_epiku(s: str):
-    filter = OrMemberFilter(NimiLinkuUncommon, NimiLinkuObscure, NimiLinkuSandbox)
+@given(
+    st.sampled_from(
+        NIMI_KU_SULI
+        + NIMI_KU_LILI
+        + NIMI_LINKU_UNCOMMON
+        + NIMI_LINKU_OBSCURE
+        + NIMI_LINKU_SANDBOX,
+    )
+)
+def test_OrMemberFilter_IsipinEpiku(s: str):
+    filter = OrMemberFilter(
+        NimiKuSuli, NimiKuLili, NimiLinkuUncommon, NimiLinkuObscure, NimiLinkuSandbox
+    )
 
     s = Lowercase.clean(s)
     s = ConsecutiveDuplicates.clean(s)
 
     res = filter.filter(s)
+    res_ku_suli = NimiKuSuli.filter(s)
+    res_ku_lili = NimiKuLili.filter(s)
     res_uncommon = NimiLinkuUncommon.filter(s)
     res_obscure = NimiLinkuObscure.filter(s)
     res_sandbox = NimiLinkuSandbox.filter(s)
-    assert res and (res_uncommon or res_obscure or res_sandbox)
+    assert res and (
+        res_ku_suli or res_ku_lili or res_uncommon or res_obscure or res_sandbox
+    )
+
+
+@given(st.sampled_from(NIMI_PU + NIMI_PU_SYNONYMS))
+def test_pu_filters_non_overlap(s: str):
+    res_pu = NimiPu.filter(s)
+    res_synonyms = NimiPuSynonyms.filter(s)
+    assert (res_pu + res_synonyms) == 1
+
+
+@given(st.sampled_from(NIMI_KU_SULI + NIMI_KU_LILI))
+def test_ku_filters_non_overlap(s: str):
+    res_ku_suli = NimiKuSuli.filter(s)
+    res_ku_lili = NimiKuLili.filter(s)
+    assert (res_ku_suli + res_ku_lili) == 1
+
+
+@given(
+    st.sampled_from(
+        NIMI_LINKU_CORE
+        + NIMI_LINKU_COMMON
+        + NIMI_LINKU_UNCOMMON
+        + NIMI_LINKU_OBSCURE
+        + NIMI_LINKU_SANDBOX
+    )
+)
+def test_linku_filters_non_overlap(s: str):
+    s = Lowercase.clean(s)
+    s = ConsecutiveDuplicates.clean(s)
+
+    res_core = NimiLinkuCore.filter(s)
+    res_common = NimiLinkuCommon.filter(s)
+    res_uncommon = NimiLinkuUncommon.filter(s)
+    res_obscure = NimiLinkuObscure.filter(s)
+    res_sandbox = NimiLinkuSandbox.filter(s)
+
+    assert (res_core + res_common + res_uncommon + res_obscure + res_sandbox) == 1
+
+
+@given(st.sampled_from(NIMI_LINKU_CORE + NIMI_LINKU_COMMON + NIMI_LINKU_UNCOMMON))
+def test_nimi_linku_properties(s: str):
+    assert ConsecutiveDuplicates.clean(s) == s, repr(s)
+    assert Alphabetic.filter(s), repr(s)
+    assert Syllabic.filter(s), repr(s)
+    assert Phonotactic.filter(s), repr(s)
+    # Passing phonotactic implies all of the above
