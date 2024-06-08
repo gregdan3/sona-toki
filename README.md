@@ -1,14 +1,21 @@
 # sona toki
 
+<div align="center">
+
+![Test workflow for this library](https://github.com/gregdan3/sona-toki/workflows/Tests/badge.svg)
+[![Version number for this library](https://img.shields.io/pypi/v/sonatoki?logo=python&logoColor=%23cccccc)](https://pypi.org/project/sonatoki)
+
+</div>
+
 ## What is **sona toki**?
 
-This library, "Language Knowledge," helps you identify whether a message is in Toki Pona. No grammar checking, yet, which means this more checks whether a given message has enough Toki Pona words.
+This library, "Language Knowledge," helps you identify whether a message is in Toki Pona. It does so by determining whether a large enough number of words in a statement are "in Toki Pona". No grammar checking, yet.
 
-I wrote it with a variety of scraps and lessons learned from a prior project, [ilo pi toki pona taso, "toki-pona-only tool"](https://github.com/gregdan3/ilo-pi-toki-pona-taso). That tool will be rewritten to use this library shortly.
+I wrote this library with a variety of scraps and lessons learned from a prior project, [ilo pi toki pona taso, "toki-pona-only tool"](https://github.com/gregdan3/ilo-pi-toki-pona-taso). That tool now uses this library to great success!
 
-If you've ever worked on a similar project, you know the question "is this message in [language]" is not a consistent one- the environment, time, preferences of the speaker, and much more, can all alter whether a given message is "in" any specific language, and this question applies to Toki Pona too.
+If you've ever worked on a similar project, you know the question "is this message in [language]" is not a consistent one- the environment, time, preferences of the speaker, and much more, can all alter whether a given message is "in" any specific language. This complexity applies to Toki Pona too.
 
-This project "solves" that complex problem by offering a highly configurable parser, so you can tune it to your preferences and goals.
+So, this project "solves" that complex problem by offering an opinionated tokenizer and a configurable parser, allowing you to tune its output to your preferences and goals. [Even silly ones.](https://sona.pona.la/wiki/isipin_epiku).
 
 ## Quick Start
 
@@ -41,12 +48,12 @@ Or if you'd prefer to configure on your own:
 from copy import deepcopy
 from sonatoki.ilo import Ilo
 from sonatoki.Configs import BaseConfig
-from sonatoki.Filters import NimiPuAle, Phonotactic, ProperName
+from sonatoki.Filters import NimiLinkuCore, Phonotactic, ProperName
 from sonatoki.Scorers import SoftPassFail
 
 def main():
     config = deepcopy(BaseConfig)
-    config["scoring_filters"].extend([NimiPuAle, Phonotactic, ProperName])
+    config["scoring_filters"].extend([NimiLinkuCore, Phonotactic, ProperName])
     config["scorer"] = SoftPassFail
 
     ilo = Ilo(**config)
@@ -76,24 +83,28 @@ After our proposal has been examined and a result given by the committee, I will
 
 ### What's the deal with the tokenizers?
 
-The Toki Pona tokenizer `word_tokenize_tok` is very specific in always separating writing characters from punctuation, and leaving contiguous punctuation as contiguous- this is a level of precision that NLTK's English tokenizer does not want for several reasons, such as that English words can have "punctuation" characters in them.
+The Toki Pona tokenizer `sonatoki.Tokenizers.WordTokenizer` has the goal of tokenizing statements such that every token either represents a word candidate ("toki", "mumumu") or a complete non-candidate ("..!", "123").
+This design is highly undesirable for NLTK's English tokenizer because English words can have "punctuation" characters in them.
+But Toki Pona doesn't have any mid-word symbols when rendered in the Latin alphabet or in [Private Use Area Unicode characters](https://www.kreativekorp.com/ucsur/), so a more aggressive tokenizer is highly desirable.
 
-Toki Pona doesn't have any mid-word symbols when rendered in the Latin alphabet, so a more aggressive tokenizer is highly desirable.
-
-The other tokenizers are provided as a comparison case more than anything. I do not recommend their use.
+The goal of splitting into word candidates and non-candidates is important, because any [encoding of Toki Pona's logographic script](https://www.kreativekorp.com/ucsur/charts/sitelen.html) will require each character be split into its own token, where the default behavior would be to leave consecutive non-punctuation together.
 
 ### Aren't there a lot of false positives?
 
-Yes. It's up to you to use this tool responsibly on input you've done your best to clean, and better, use stronger filters before weaker ones. For now though, here's a list of relevant false positives:
+Yes, depending on the filter you choose and how you apply it.
+It's up to you to use this tool responsibly on input you've done your best to clean, such as by using stronger filters before weaker ones.
+For now though, here's a list of relevant false positives:
 
-- `ProperName` will errantly match text in languages without a capital/lowercase distinction, artificially inflating the scores.
-- `Alphabetic` will match a _lot_ of undesirable text- it essentially allows 14 letters of the English alphabet.
+- `ProperName` will errantly match text in languages without a capital/lowercase distinction, artificially increasing scores.
+- `Alphabetic` will match a _lot_ of undesirable text- it essentially allows 14 letters of the English alphabet. For example, "I'm well" would match as _three_ words: "i", "m", "well".
+- `NimiPu` and other sets containing `a`, `mute`, `open`, and others will unavoidably match those words in English text too.
 
 ### Don't some of the cleaners/filters conflict?
 
-Yes. Some do so
+Yes, though not terribly much.
 
 - `ConsecutiveDuplicates` may errantly change a word's validity. For example, "manna" is phonotactically invalid in Toki Pona, but would become "mana" which is valid.
-- `ConsecutiveDuplicates` will not work correctly with syllabaries (alphabets, but representing a pair of consonant and vowel).
+- `ConsecutiveDuplicates` will not work correctly with syllabaries, though this should not change the validity of the analyzed word unless you attempt to dictionary match these words.
+- If you build your own `MemberFilter` with words that have capital letters or consecutive duplicates, they will never match unless you use `prep_dictionary`.
 
-You'll notice a _lot_ of these are troubles regarding the application of latin alphabet filters to non-latin text. Working on it!
+You'll notice these are mostly casued by applying latin alphabet filters to non-latin text. Working on it!
