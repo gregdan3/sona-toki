@@ -75,6 +75,8 @@ NAME_MATCHES = [
     "ilo Google li sona ala e nimi Emoticon la mi wile utala e ona",
     "toki Kanse li lon",
     "toki Lojban li nasa e lawa mi",
+    "ilo Firefox",
+    "mi musi Space Station 13",
 ]
 
 SOME_INVALID = [
@@ -88,6 +90,8 @@ SOME_INVALID = [
 CORPUS_SPECIFIC = [
     "ki le konsi si te isipin epiku le pasila to",
     'jasima omekapo, ki nimisin "jasima enko nimisin". ki enko alu linluwi Jutu alu epiku ki epiku baba is you. ki likujo "SINtelen pona", ki epiku alu "sitelen pona". ki kepen wawajete isipin, kin ki yupekosi alu lipamanka alu wawajete, kin ki enko isipin lipamanka linluwi alu wawajete',
+    "kalamARRRR",
+    "Pingo",
 ]
 
 
@@ -153,6 +157,7 @@ FALSE_NEGATIVES = [
     # emoticon should not be a problem
     "lete li ike x.x",
     # a token that is one edit off a known word should be allowed
+    "mi pnoa",
     "tok",
     "mut",
     "poan",

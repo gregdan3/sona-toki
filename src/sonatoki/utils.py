@@ -1,8 +1,21 @@
 # STL
 import re
-from typing import List
+from typing import Set, List, Iterable
+
+# LOCAL
+from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
 
 TO_ESCAPE = ["\\", "^", "[", "]", "-"]
+
+
+def prep_dictionary(words: Iterable[str]) -> Set[str]:
+    out: Set[str] = set()
+    cleaners = [Lowercase, ConsecutiveDuplicates]
+    for word in words:
+        for c in cleaners:
+            word = c.clean(word)
+        out.add(word)
+    return out
 
 
 def regex_escape(s: str) -> str:

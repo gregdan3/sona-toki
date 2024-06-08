@@ -9,6 +9,7 @@ import regex
 from typing_extensions import override
 
 # LOCAL
+from sonatoki.utils import prep_dictionary
 from sonatoki.constants import (
     VOWELS,
     NIMI_PU,
@@ -105,27 +106,27 @@ class ProperName(Filter):
 
 
 class NimiPu(MemberFilter):
-    tokens = set(NIMI_PU)
+    tokens = prep_dictionary(NIMI_PU)
 
 
 class NimiPuAle(MemberFilter):
-    tokens = set(NIMI_PU + NIMI_PU_SYNONYMS)
+    tokens = prep_dictionary(NIMI_PU + NIMI_PU_SYNONYMS)
 
 
 class NimiLinku(MemberFilter):
-    tokens = set(NIMI_LINKU)
+    tokens = prep_dictionary(NIMI_LINKU)
 
 
 class NimiLinkuAle(MemberFilter):
-    tokens = set(NIMI_LINKU + NIMI_LINKU_LILI)
+    tokens = prep_dictionary(NIMI_LINKU + NIMI_LINKU_LILI)
 
 
 class NimiLinkuSandbox(MemberFilter):
-    tokens = set(NIMI_LINKU + NIMI_LINKU_LILI + NIMI_LINKU_SANDBOX)
+    tokens = prep_dictionary(NIMI_LINKU + NIMI_LINKU_LILI + NIMI_LINKU_SANDBOX)
 
 
 class NimiUCSUR(MemberFilter):
-    tokens = set(NIMI_UCSUR)
+    tokens = prep_dictionary(NIMI_UCSUR)
 
 
 class Phonotactic(RegexFilter):
