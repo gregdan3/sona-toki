@@ -421,24 +421,31 @@ UCSUR_RANGES = [
 ]
 NIMI_UCSUR = find_unicode_chars(UCSUR_RANGES)
 
+
+# NIMI_PU_UCSUR_RANGES = ["\\U000F1900-\\U000F1977"]
+# NIMI_PU_ALE_UCSUR_RANGES = NIMI_PU_UCSUR_RANGES + ["\\U000F1978-\\U000F197A"]
+
+
+def category_helper(data: Dict[str, Dict[str, str]], key: str, value: str) -> List[str]:
+    return [d["word"] for d in data.values() if d[key] == value]
+
+
 with open(LINKU) as f:
     linku: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_PU: List[str] = [d["word"] for d in linku.values() if d["book"] == "pu"]
+    NIMI_PU: List[str] = category_helper(linku, "book", "pu")
     NIMI_PU_SYNONYMS: List[str] = ["namako", "kin", "oko"]
-    NIMI_LINKU: List[str] = [
-        d["word"] for d in linku.values() if d["usage_category"] in ["core", "common"]
-    ]
-    NIMI_LINKU_LILI: List[str] = [
-        d["word"]
-        for d in linku.values()
-        if d["usage_category"] not in ["core", "common"]
-    ]
+
+    NIMI_KU_SULI = category_helper(linku, "book", "ku suli")
+    NIMI_KU_LILI = category_helper(linku, "book", "ku lili")
+
+    NIMI_LINKU_CORE = category_helper(linku, "usage_category", "core")
+    NIMI_LINKU_COMMON = category_helper(linku, "usage_category", "common")
+    NIMI_LINKU_UNCOMMON = category_helper(linku, "usage_category", "uncommon")
+    NIMI_LINKU_OBSCURE = category_helper(linku, "usage_category", "obscure")
 
 with open(SANDBOX) as f:
     sandbox: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_LINKU_SANDBOX: List[str] = NIMI_LINKU_LILI + [
-        d["word"] for d in sandbox.values()
-    ]
+    NIMI_LINKU_SANDBOX: List[str] = [d["word"] for d in sandbox.values()]
 
 del linku
 del sandbox
@@ -449,9 +456,13 @@ __all__ = [
     "ALL_PUNCT_RANGES",
     "ALPHABET",
     "CONSONANTS",
-    "NIMI_LINKU",
-    "NIMI_LINKU_LILI",
+    "NIMI_KU_LILI",
+    "NIMI_KU_SULI",
+    "NIMI_LINKU_COMMON",
+    "NIMI_LINKU_CORE",
+    "NIMI_LINKU_OBSCURE",
     "NIMI_LINKU_SANDBOX",
+    "NIMI_LINKU_UNCOMMON",
     "NIMI_PU",
     "NIMI_PU_SYNONYMS",
     "POSIX_PUNCT",

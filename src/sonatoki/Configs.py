@@ -1,6 +1,6 @@
 # STL
 from copy import deepcopy
-from typing import List, Type, Union, TypedDict
+from typing import List, Type, TypedDict
 
 # LOCAL
 from sonatoki.Filters import (
@@ -9,16 +9,19 @@ from sonatoki.Filters import (
     Numeric,
     OrFilter,
     Syllabic,
-    NimiLinku,
-    NimiPuAle,
     NimiUCSUR,
     Alphabetic,
     ProperName,
     Phonotactic,
     Punctuation,
-    NimiLinkuAle,
+    NimiLinkuCore,
+    NimiPuSynonyms,
+    OrMemberFilter,
+    NimiLinkuCommon,
+    NimiLinkuObscure,
     NimiLinkuSandbox,
     EnglishIgnorables,
+    NimiLinkuUncommon,
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
@@ -63,7 +66,7 @@ PrefConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [
-        OrFilter(NimiLinku, NimiUCSUR),
+        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR),
         Syllabic,
         ProperName,
         Alphabetic,
@@ -78,7 +81,14 @@ CorpusConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [
-        OrFilter(NimiLinkuSandbox, NimiUCSUR),
+        OrMemberFilter(
+            NimiLinkuCore,
+            NimiLinkuCommon,
+            NimiLinkuUncommon,
+            NimiLinkuObscure,
+            NimiLinkuSandbox,
+            NimiUCSUR,
+        ),
         Syllabic,
         ProperName,
         Alphabetic,
@@ -104,7 +114,7 @@ DiscordConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [
-        OrFilter(NimiLinku, NimiUCSUR),
+        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR),
         Syllabic,
         ProperName,
         Alphabetic,

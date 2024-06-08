@@ -9,18 +9,31 @@ from hypothesis import given, example
 from sonatoki.Filters import (
     NimiPu,
     Numeric,
+    OrFilter,
     Syllabic,
-    NimiLinku,
     Alphabetic,
     ProperName,
     Phonotactic,
     Punctuation,
     AlphabeticRe,
+    NimiLinkuCore,
     PunctuationRe,
+    OrMemberFilter,
     PunctuationRe1,
+    NimiLinkuCommon,
+    NimiLinkuObscure,
+    NimiLinkuSandbox,
+    NimiLinkuUncommon,
 )
-from sonatoki.Cleaners import ConsecutiveDuplicates
-from sonatoki.constants import NIMI_PU, NIMI_LINKU
+from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
+from sonatoki.constants import (
+    NIMI_PU,
+    NIMI_LINKU_CORE,
+    NIMI_LINKU_COMMON,
+    NIMI_LINKU_OBSCURE,
+    NIMI_LINKU_SANDBOX,
+    NIMI_LINKU_UNCOMMON,
+)
 
 # FILESYSTEM
 from .test_utils import PROPER_NAME_RE
@@ -35,17 +48,46 @@ def test_NimiPu(s: str):
     assert res, repr(s)
 
 
-@given(st.sampled_from(NIMI_LINKU))
+@given(st.sampled_from(NIMI_LINKU_CORE))
 @example("pona")
-@example("tonsi")
-@example("kipisi")
-@example("n")
-def test_NimiLinku(s: str):
-    res = NimiLinku.filter(s)
+def test_NimiLinkuCore(s: str):
+    res = NimiLinkuCore.filter(s)
     assert res, repr(s)
 
 
-@given(st.sampled_from(NIMI_LINKU))
+@given(st.sampled_from(NIMI_LINKU_COMMON))
+@example("n")
+@example("tonsi")
+@example("kipisi")
+def test_NimiLinkuCommon(s: str):
+    res = NimiLinkuCommon.filter(s)
+    assert res, repr(s)
+
+
+@given(st.sampled_from(NIMI_LINKU_UNCOMMON))
+def test_NimiLinkuUncommon(s: str):
+    res = NimiLinkuUncommon.filter(s)
+    assert res, repr(s)
+
+
+@given(st.sampled_from(NIMI_LINKU_OBSCURE))
+def test_NimiLinkuObscure(s: str):
+    res = NimiLinkuObscure.filter(s)
+    assert res, repr(s)
+
+
+@given(st.sampled_from(NIMI_LINKU_SANDBOX))
+@example("kalamARR")
+@example("Pingo")
+def test_NimiLinkuSandbox(s: str):
+    s = Lowercase.clean(s)
+    s = ConsecutiveDuplicates.clean(s)
+    # above two are necessary due to kalamARR and Pingo
+    res = NimiLinkuSandbox.filter(s)
+    assert res, repr(s)
+
+
+@given(st.sampled_from(NIMI_LINKU_CORE + NIMI_LINKU_COMMON + NIMI_LINKU_UNCOMMON))
 def test_nimi_linku_properties(s: str):
     assert ConsecutiveDuplicates.clean(s) == s, repr(s)
     assert Alphabetic.filter(s), repr(s)
@@ -125,3 +167,41 @@ def test_Punctuation(s: str):
 def test_Numeric(s: str):
     res = Numeric.filter(s)
     assert res, repr(s)
+
+
+@given(
+    st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True)
+    | st.from_regex(r"\d+", fullmatch=True),
+)
+def test_OrFilter(s: str):
+    filter = OrFilter(Punctuation, Numeric)
+    res = filter.filter(s)
+    res_punctuation = Punctuation.filter(s)
+    res_numeric = Numeric.filter(s)
+    assert res and (res_punctuation or res_numeric)
+
+
+# NOTE: No subset filter test because A | B is not the same as A combined with B.
+# e.g. "apple" passes Alphabetic, "..." passes Punctuation, "apple..." passes neither
+# but would incorrectly pass a combined filter.
+@given(st.sampled_from(NIMI_PU + NIMI_LINKU_OBSCURE))
+def test_OrSubsetFilter(s: str):
+    filter = OrMemberFilter(NimiPu, NimiLinkuObscure)
+    res = filter.filter(s)
+    res_pu = NimiPu.filter(s)
+    res_obscure = NimiLinkuObscure.filter(s)
+    assert res and (res_pu or res_obscure)
+
+
+@given(st.sampled_from(NIMI_LINKU_UNCOMMON + NIMI_LINKU_OBSCURE + NIMI_LINKU_SANDBOX))
+def test_OrSubsetFilter_isipin_epiku(s: str):
+    filter = OrMemberFilter(NimiLinkuUncommon, NimiLinkuObscure, NimiLinkuSandbox)
+
+    s = Lowercase.clean(s)
+    s = ConsecutiveDuplicates.clean(s)
+
+    res = filter.filter(s)
+    res_uncommon = NimiLinkuUncommon.filter(s)
+    res_obscure = NimiLinkuObscure.filter(s)
+    res_sandbox = NimiLinkuSandbox.filter(s)
+    assert res and (res_uncommon or res_obscure or res_sandbox)

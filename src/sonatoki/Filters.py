@@ -18,13 +18,17 @@ from sonatoki.constants import (
     ALLOWABLES,
     CONSONANTS,
     IGNORABLES,
-    NIMI_LINKU,
     NIMI_UCSUR,
-    NIMI_LINKU_LILI,
+    NIMI_KU_LILI,
+    NIMI_KU_SULI,
+    NIMI_LINKU_CORE,
     ALL_PUNCT_RANGES,
     NIMI_PU_SYNONYMS,
+    NIMI_LINKU_COMMON,
+    NIMI_LINKU_OBSCURE,
     NIMI_LINKU_SANDBOX,
     UCSUR_PUNCT_RANGES,
+    NIMI_LINKU_UNCOMMON,
 )
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -109,20 +113,36 @@ class NimiPu(MemberFilter):
     tokens = prep_dictionary(NIMI_PU)
 
 
-class NimiPuAle(MemberFilter):
-    tokens = prep_dictionary(NIMI_PU + NIMI_PU_SYNONYMS)
+class NimiPuSynonyms(MemberFilter):
+    tokens = prep_dictionary(NIMI_PU_SYNONYMS)
 
 
-class NimiLinku(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU)
+class NimiKuSuli(MemberFilter):
+    tokens = prep_dictionary(NIMI_KU_SULI)
 
 
-class NimiLinkuAle(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU + NIMI_LINKU_LILI)
+class NimiKuLili(MemberFilter):
+    tokens = prep_dictionary(NIMI_KU_LILI)
+
+
+class NimiLinkuCore(MemberFilter):
+    tokens = prep_dictionary(NIMI_LINKU_CORE)
+
+
+class NimiLinkuCommon(MemberFilter):
+    tokens = prep_dictionary(NIMI_LINKU_COMMON)
+
+
+class NimiLinkuUncommon(MemberFilter):
+    tokens = prep_dictionary(NIMI_LINKU_UNCOMMON)
+
+
+class NimiLinkuObscure(MemberFilter):
+    tokens = prep_dictionary(NIMI_LINKU_OBSCURE)
 
 
 class NimiLinkuSandbox(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU + NIMI_LINKU_LILI + NIMI_LINKU_SANDBOX)
+    tokens = prep_dictionary(NIMI_LINKU_SANDBOX)
 
 
 class NimiUCSUR(MemberFilter):
@@ -225,11 +245,10 @@ class OrFilter:
     Instead, the user is responsible for building an OrFilter out of their desired filters.
     """
 
-    def __new__(cls, *filters_: Type[Filter]) -> Type[Filter]:
-        if not len(filters_) >= 2:
-            raise ValueError("Must provide at least two Filters to OrFilter.")
+    @staticmethod
+    def __generic_filter(*filters_: Type[Filter]) -> Type[Filter]:
 
-        class AnonymousOrFilter(Filter):
+        class CombinedFilter(Filter):
             filters: List[Type[Filter]] = list(filters_)  # TODO: tuple better?
 
             @classmethod
@@ -241,7 +260,39 @@ class OrFilter:
                         return True
                 return False
 
-        return AnonymousOrFilter
+        return CombinedFilter
+
+    def __new__(cls, *filters: Type[Filter]) -> Type[Filter]:
+        if not len(filters) >= 2:
+            raise ValueError("Provide at least two Filters to OrFilter.")
+
+        subset_filters = [f for f in filters if issubclass(f, MemberFilter)]
+        if len(subset_filters) >= 2:
+            raise Warning(
+                "Prefer OrMemberFilter for combining two or more MemberFilters."
+            )
+
+        filter = cls.__generic_filter(*filters)
+
+        return filter
+
+
+class OrMemberFilter:
+    @staticmethod
+    def __subset_filter(*filters: Type[MemberFilter]) -> Type[MemberFilter]:
+        all_token_sets: List[Set[str]] = [f.tokens for f in filters]
+        all_tokens: Set[str] = set().union(*all_token_sets)
+
+        class CombinedFilter(MemberFilter):
+            tokens = all_tokens
+
+        return CombinedFilter
+
+    def __new__(cls, *filters_: Type[MemberFilter]) -> Type[MemberFilter]:
+        if not len(filters_) >= 2:
+            raise ValueError("Provide two or more MemberFilters to OrMemberFilter.")
+        filter = cls.__subset_filter(*filters_)
+        return filter
 
 
 class AndFilter(Filter):
@@ -272,11 +323,10 @@ __all__ = [
     "Alphabetic",
     "AndFilter",
     "EnglishIgnorables",
-    "NimiLinku",
-    "NimiLinkuAle",
+    "NimiLinkuCore",
     "NimiLinkuSandbox",
     "NimiPu",
-    "NimiPuAle",
+    "NimiPuSynonyms",
     "NimiUCSUR",
     "Numeric",
     "OrFilter",

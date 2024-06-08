@@ -12,11 +12,12 @@ from sonatoki.Filters import (
     NimiPu,
     Numeric,
     Syllabic,
-    NimiLinku,
     Alphabetic,
     ProperName,
     Phonotactic,
+    NimiLinkuCore,
     PunctuationRe,
+    NimiLinkuCommon,
 )
 from sonatoki.Scorers import Scorer, Scaling, PassFail, SoftScaling, SoftPassFail
 
@@ -27,7 +28,8 @@ FILTERS = [
     NimiPu,
     Numeric,
     Syllabic,
-    NimiLinku,
+    NimiLinkuCore,
+    NimiLinkuCommon,
     Alphabetic,
     ProperName,
     Phonotactic,
