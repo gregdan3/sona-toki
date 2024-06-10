@@ -383,7 +383,6 @@ LANGUAGE = "english"  # for NLTK
 
 """Commonly occurring strings which are some kind of valid Toki Pona or external token"""
 ALLOWABLES = {
-    "cw",  # Content Warning
     "x",  # ala
     "y",  # anu
     "kxk",  # ken ala ken
