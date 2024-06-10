@@ -59,6 +59,8 @@ SYLLABIC_MATCHES = [
     "mi sona ala e nimi sunopatikuna",
     "kalama wuwojiti li pana e sona",
     "jan Awaja en jan Alasali en jan Akesinu li pona",  # syllables match before names here
+    "jan Ke Tami",
+    "kulupu Kuko",
 ]
 
 ALPHABETIC_MATCHES = [
@@ -85,13 +87,20 @@ SOME_INVALID = [
     "mi tawa ma ohio",
     "sina toki e nimi what pi toki Inli",
     "wawa la o lukin e ni: your mom",
+    "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
 ]
 
 CORPUS_SPECIFIC = [
-    "ki le konsi si te isipin epiku le pasila to",
+    # "ki le konsi si te isipin epiku le pasila to",
+    "ki konsi te isipin epiku pasila to",  # the sandbox has not documented si or le
     'jasima omekapo, ki nimisin "jasima enko nimisin". ki enko alu linluwi Jutu alu epiku ki epiku baba is you. ki likujo "SINtelen pona", ki epiku alu "sitelen pona". ki kepen wawajete isipin, kin ki yupekosi alu lipamanka alu wawajete, kin ki enko isipin lipamanka linluwi alu wawajete',
     "kalamARRRR",
     "Pingo",
+    "we Luke",
+]
+CORPUS_SPECIFIC_XFAIL = [
+    "How to Cut a Kiwi",
+    "a e i o u",
 ]
 
 
@@ -103,6 +112,7 @@ EXCESSIVE_SYLLABICS = [
     "I manipulate a passe pile so a ton emulate, akin to intake",
     "a ton of insolate puke. make no amen, no joke.",
     "I elope so, to an elite untaken tune, some unwise tone",
+    "insane asinine lemon awesome atone joke",
 ]
 
 EXCESSIVE_ALPHABETICS = [
@@ -122,11 +132,13 @@ EXCESSIVE_NAMES = [
     "I Want To Evade The Filter",
     "If You Do This The Bot Can't See You",
     "This Is A Statement In Perfect Toki Pona, I Guarantee",
-    "How to Cut a Kiwi",  # previous false positive; fixed by english ignorables
 ]
 
 EXCESSIVE_ENGLISH = [
     "me when i tawa sike",  # previous false positive; fixed by english ignorables
+    "Maybe I’m too nasa",  # previous false positive; fixed by LongSyllabic and LongAlphabetic
+    "I see :)",
+    "I wanna see",  # same down to here
 ]
 
 NON_MATCHES = [
@@ -134,6 +146,7 @@ NON_MATCHES = [
     "super bruh moment 64",
     "homestuck",
     "homestuck Homestuck",
+    "what if i went to the store ",
 ]
 
 KNOWN_GOOD = (
@@ -150,22 +163,23 @@ KNOWN_BAD = (
     + EXCESSIVE_ALPHABETICS
     + EXCESSIVE_NAMES
     + EXCESSIVE_TYPOES
+    + EXCESSIVE_ENGLISH
     + NON_MATCHES
 )
 
 FALSE_NEGATIVES = [
     # emoticon should not be a problem
-    "lete li ike x.x",
     # a token that is one edit off a known word should be allowed
     "mi pnoa",
     "tok",
     "mut",
     "poan",
     "mtue",
+    "mi nasa B^)",  # emoticon
 ]
 
 FALSE_POSITIVES = [
-    "Maybe I’m too nasa",
+    "insane asinine lemon awesome atone",
 ]
 
 
@@ -174,14 +188,14 @@ def test_known_good_pref(ilo: Ilo, text: str):
     assert ilo.is_toki_pona(text), text
 
 
+@pytest.mark.parametrize("text", KNOWN_BAD + CORPUS_SPECIFIC)
+def test_known_bad_pref(ilo: Ilo, text: str):
+    assert not ilo.is_toki_pona(text), text
+
+
 @pytest.mark.parametrize("text", KNOWN_GOOD + CORPUS_SPECIFIC)
 def test_known_good_corpus(corpus_ilo: Ilo, text: str):
     assert corpus_ilo.is_toki_pona(text), text
-
-
-@pytest.mark.parametrize("text", KNOWN_BAD + CORPUS_SPECIFIC)
-def test_known_bad(ilo: Ilo, text: str):
-    assert not ilo.is_toki_pona(text), text
 
 
 @pytest.mark.parametrize("text", KNOWN_BAD)
@@ -209,11 +223,17 @@ def test_weakness_of_lazy(lazy_ilo: Ilo, text: str):
 
 @pytest.mark.xfail
 @pytest.mark.parametrize("text", FALSE_POSITIVES)
-def test_false_positives(ilo: Ilo, text: str):
+def test_false_positives_pref(ilo: Ilo, text: str):
     assert not ilo.is_toki_pona(text)
 
 
 @pytest.mark.xfail
 @pytest.mark.parametrize("text", FALSE_NEGATIVES)
-def test_false_negatives(ilo: Ilo, text: str):
+def test_false_negatives_pref(ilo: Ilo, text: str):
     assert ilo.is_toki_pona(text)
+
+
+@pytest.mark.xfail
+@pytest.mark.parametrize("text", CORPUS_SPECIFIC_XFAIL)
+def test_false_positives_corpus(corpus_ilo: Ilo, text: str):
+    assert not corpus_ilo.is_toki_pona(text)

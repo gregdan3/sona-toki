@@ -5,17 +5,17 @@ from typing import List, Type, TypedDict
 # LOCAL
 from sonatoki.Filters import (
     Filter,
-    NimiPu,
     Numeric,
-    OrFilter,
     Syllabic,
     NimiUCSUR,
     Alphabetic,
     ProperName,
-    Phonotactic,
     Punctuation,
+    LongSyllabic,
+    Miscellaneous,
     NimiLinkuCore,
-    NimiPuSynonyms,
+    LongAlphabetic,
+    LongProperName,
     OrMemberFilter,
     NimiLinkuCommon,
     NimiLinkuObscure,
@@ -28,12 +28,9 @@ from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
 from sonatoki.Tokenizers import Tokenizer, WordTokenizer
 from sonatoki.Preprocessors import (
     URLs,
+    Backticks,
     Reference,
     Preprocessor,
-    DiscordEmotes,
-    DiscordSpecial,
-    DiscordChannels,
-    DiscordMentions,
     AngleBracketObject,
 )
 
@@ -62,14 +59,14 @@ BaseConfig: IloConfig = {
 
 
 PrefConfig: IloConfig = {
-    "preprocessors": [URLs, Reference],
+    "preprocessors": [Backticks, URLs, Reference],
     "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
+    "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR),
-        Syllabic,
-        ProperName,
-        Alphabetic,
+        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
+        LongSyllabic,
+        LongProperName,
+        LongAlphabetic,
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
@@ -77,9 +74,9 @@ PrefConfig: IloConfig = {
 }
 
 CorpusConfig: IloConfig = {
-    "preprocessors": [URLs, AngleBracketObject, Reference],
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
+    "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
         OrMemberFilter(
             NimiLinkuCore,
@@ -88,10 +85,11 @@ CorpusConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
             NimiUCSUR,
+            Miscellaneous,
         ),
-        Syllabic,
-        ProperName,
-        Alphabetic,
+        LongSyllabic,
+        LongProperName,
+        LongAlphabetic,
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
@@ -99,25 +97,28 @@ CorpusConfig: IloConfig = {
 }
 
 
+"""
+Mimics the previous implementation of ilo pi toki pona taso
+"""
 LazyConfig: IloConfig = {
-    "preprocessors": [URLs],
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
-    "scoring_filters": [Alphabetic, NimiUCSUR, ProperName],
+    "scoring_filters": [Alphabetic, NimiUCSUR, ProperName, Miscellaneous],
     "scorer": SoftPassFail,
     "passing_score": 0.8,
     "word_tokenizer": WordTokenizer,
 }
 
 DiscordConfig: IloConfig = {
-    "preprocessors": [URLs, AngleBracketObject, Reference],
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
     "scoring_filters": [
         OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR),
-        Syllabic,
-        ProperName,
-        Alphabetic,
+        LongSyllabic,
+        LongProperName,
+        LongAlphabetic,
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,

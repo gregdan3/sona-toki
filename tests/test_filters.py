@@ -18,11 +18,14 @@ from sonatoki.Filters import (
     Phonotactic,
     Punctuation,
     AlphabeticRe,
+    LongSyllabic,
     NimiLinkuCore,
     PunctuationRe,
+    LongAlphabetic,
     NimiPuSynonyms,
     OrMemberFilter,
     PunctuationRe1,
+    LongPhonotactic,
     NimiLinkuCommon,
     NimiLinkuObscure,
     NimiLinkuSandbox,
@@ -101,11 +104,25 @@ def test_Phonotactic(s: str):
     assert res, repr(s)
 
 
+@given(st.from_regex(Phonotactic.pattern.pattern, fullmatch=True))
+def test_LongPhonotactic(s: str):
+    len_ok = len(s) >= LongPhonotactic.length
+    res = LongPhonotactic.filter(s)
+    assert res == len_ok, repr(s)  # will match given fullmatch
+
+
 @given(st.from_regex(Syllabic.pattern.pattern, fullmatch=True))
 @example("wuwojitiwunwonjintinmanna")
 def test_Syllabic(s: str):
     res = Syllabic.filter(s)
     assert res, repr(s)
+
+
+@given(st.from_regex(Syllabic.pattern.pattern, fullmatch=True))
+def test_LongSyllabic(s: str):
+    len_ok = len(s) >= LongSyllabic.length
+    res = LongSyllabic.filter(s)
+    assert res == len_ok
 
 
 @given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))
@@ -116,6 +133,13 @@ def test_Alphabetic(s: str):
     res_fn = Alphabetic.filter(s)
     res_re = AlphabeticRe.filter(s)
     assert res_fn == res_re, repr(s)
+
+
+@given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))
+def test_LongAlphabetic(s: str):
+    len_ok = len(s) >= LongAlphabetic.length
+    res = LongAlphabetic.filter(s)
+    assert res == len_ok
 
 
 @given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))

@@ -42,6 +42,17 @@ class Filter(ABC):
         raise NotImplementedError
 
 
+class MinLen(Filter):
+    length = 0
+
+    @classmethod
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        if len(token) < cls.length:
+            return False
+        return super().filter(token)
+
+
 class RegexFilter(Filter):
     pattern: "re.Pattern[str]"
 
@@ -83,11 +94,11 @@ class SubsetFilter(Filter):
 
 
 class Miscellaneous(MemberFilter):
-    tokens = set(ALLOWABLES)
+    tokens = prep_dictionary(ALLOWABLES)
 
 
 class EnglishIgnorables(MemberFilter):
-    tokens = set(IGNORABLES)
+    tokens = prep_dictionary(IGNORABLES)
 
 
 class ProperName(Filter):
@@ -107,6 +118,10 @@ class ProperName(Filter):
         return token == token.capitalize()
         # TODO:  If the token is in a script which doesn't have a case distinction,
         # this will errantly match.
+
+
+class LongProperName(MinLen, ProperName):
+    length = 2  # reject "names" of length 1
 
 
 class NimiPu(MemberFilter):
@@ -166,6 +181,10 @@ class Phonotactic(RegexFilter):
     )
 
 
+class LongPhonotactic(MinLen, Phonotactic):
+    length = 3
+
+
 class Syllabic(RegexFilter):
     """Determines if a given token is syllabically valid Toki Pona (or `n`).
     Words must have correctly ordered vowels and consonants, but the phonotactic
@@ -179,6 +198,10 @@ class Syllabic(RegexFilter):
     )
 
 
+class LongSyllabic(MinLen, Syllabic):
+    length = 3
+
+
 class Alphabetic(SubsetFilter):
     tokens = set(ALPHABET)
 
@@ -187,9 +210,8 @@ class AlphabeticRe(RegexFilter):
     pattern = re.compile(rf"[{ALPHABET}]+", flags=re.IGNORECASE)
 
 
-class TwoOrMoreAlphabetic(Filter):
-    # TODO: alphabetic implementation that ignores single characters
-    pass
+class LongAlphabetic(MinLen, Alphabetic):
+    length = 3
 
 
 class Numeric(Filter):
