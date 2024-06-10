@@ -43,6 +43,16 @@ class Filter(ABC):
 
 
 class MinLen(Filter):
+    """
+    Meta filter meant to be inherited by another filter to add a length requirement.
+    Multiple-inherit with `MinLen` as the first argument so `super()` resolves correctly.
+    You may also construct any other filter with a minimum length filter like so:
+
+    ```
+    MinLen(Alphabetic, 3)
+    ```
+    """
+
     length = 0
 
     @classmethod
@@ -51,6 +61,12 @@ class MinLen(Filter):
         if len(token) < cls.length:
             return False
         return super().filter(token)
+
+    def __new__(cls, filter: Type[Filter], length_: int) -> Type[Filter]:
+        class MinLenFilter(MinLen, Filter):
+            length = length_
+
+        return MinLenFilter
 
 
 class RegexFilter(Filter):
@@ -98,6 +114,11 @@ class Miscellaneous(MemberFilter):
 
 
 class EnglishIgnorables(MemberFilter):
+    """NOTE: Not recommended for use.
+    It is better to use a Long* filter such as LongSyllabic than to use this filter.
+    This filter hides words from scoring rather than scoring them poorly,
+    which is more of a benefit than a loss for a word you would like to omit."""
+
     tokens = prep_dictionary(IGNORABLES)
 
 
@@ -343,6 +364,11 @@ __all__ = [
     "Alphabetic",
     "AndFilter",
     "EnglishIgnorables",
+    "LongAlphabetic",
+    "LongPhonotactic",
+    "LongProperName",
+    "LongSyllabic",
+    "MinLen",
     "NimiLinkuCore",
     "NimiLinkuSandbox",
     "NimiPu",

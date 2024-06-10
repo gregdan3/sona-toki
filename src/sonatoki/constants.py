@@ -389,29 +389,55 @@ ALLOWABLES = {
     "wxw",  # wile ala wile
 }
 
-IGNORABLES = {
-    # o, e, n are not here bc they're not frequently problematic in english messages
-    "a",
-    "am",
-    "an",
-    "i",
-    "in",
-    "is",
-    "l",  # they'll
-    "m",  # i'm
-    "me",
-    "no",
-    "s",  # let's
-    "so",
-    "t",  # don't
-    "to",
-    "u",  # you
-    "we",
-    "un",  # un-
-    "use",
+PHONOMATCHES = {
+    # "a",  # ignore
+    # "an",  # against
+    # "i",  # against
+    # "in",  # against
     "some",
-    "like",
+    "like",  # against
+    # "me",  # against
+    # "no",  # against
+    # "on",  # against
+    # "se",  # against
+    # "so",  # against
+    # "some",  # against
+    "to",  # ignore
+    # "u",  # against
+    # "un",  # against
+    "use",  # against
+    # "we",  # against
 }
+
+ALPHABETIC_MATCHES = PHONOMATCHES | {
+    "a",
+    # "am",
+    # "as",
+    # "at",
+    # "aw",  # aww
+    # "ek",  # eek
+    # "ew",
+    # "ik",
+    # "il",  # ill
+    # "im",
+    # "im",
+    # "ip",
+    # "is",
+    # "it",
+    # "l",  # they'll
+    # "m",  # i'm
+    # "ok",
+    # "op",
+    # "ow",
+    # "s",  # let's
+    # "t",  # don't
+    # "up",
+    # "us",
+    # "ut",
+    # "uw",
+}
+
+IGNORABLES = PHONOMATCHES | ALPHABETIC_MATCHES
 
 UCSUR_RANGES = [
     "\\U000F1900-\\U000F1977",  # pu
