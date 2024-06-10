@@ -288,11 +288,9 @@ class OrFilter:
         if not len(filters) >= 2:
             raise ValueError("Provide at least two Filters to OrFilter.")
 
-        subset_filters = [f for f in filters if issubclass(f, MemberFilter)]
-        if len(subset_filters) >= 2:
-            raise Warning(
-                "Prefer OrMemberFilter for combining two or more MemberFilters."
-            )
+        member_filters = [f for f in filters if issubclass(f, MemberFilter)]
+        if len(member_filters) >= 2:
+            raise Warning("Use OrMemberFilter for combining two or more MemberFilters.")
 
         filter = cls.__generic_filter(*filters)
 
@@ -301,7 +299,7 @@ class OrFilter:
 
 class OrMemberFilter:
     @staticmethod
-    def __subset_filter(*filters: Type[MemberFilter]) -> Type[MemberFilter]:
+    def __member_filter(*filters: Type[MemberFilter]) -> Type[MemberFilter]:
         all_token_sets: List[Set[str]] = [f.tokens for f in filters]
         all_tokens: Set[str] = set().union(*all_token_sets)
 
@@ -313,7 +311,7 @@ class OrMemberFilter:
     def __new__(cls, *filters_: Type[MemberFilter]) -> Type[MemberFilter]:
         if not len(filters_) >= 2:
             raise ValueError("Provide two or more MemberFilters to OrMemberFilter.")
-        filter = cls.__subset_filter(*filters_)
+        filter = cls.__member_filter(*filters_)
         return filter
 
 
