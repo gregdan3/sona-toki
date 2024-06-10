@@ -11,7 +11,7 @@ from sonatoki.constants import NIMI_LINKU_CORE, NIMI_LINKU_COMMON
 PROPER_NAME_RE = r"[A-Z][a-z]*"
 
 token_strategy = (
-    st.sampled_from(NIMI_LINKU_CORE + NIMI_LINKU_COMMON)
+    st.sampled_from(list(NIMI_LINKU_CORE | NIMI_LINKU_COMMON))
     | st.from_regex(Phonotactic.pattern.pattern, fullmatch=True)
     | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)
     | st.from_regex(PROPER_NAME_RE, fullmatch=True)

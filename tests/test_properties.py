@@ -31,14 +31,14 @@ from sonatoki.constants import (
 )
 
 
-@given(st.sampled_from(NIMI_PU + NIMI_PU_SYNONYMS))
+@given(st.sampled_from(list(NIMI_PU | NIMI_PU_SYNONYMS)))
 def test_pu_filters_non_overlap(s: str):
     res_pu = NimiPu.filter(s)
     res_synonyms = NimiPuSynonyms.filter(s)
     assert (res_pu + res_synonyms) == 1
 
 
-@given(st.sampled_from(NIMI_KU_SULI + NIMI_KU_LILI))
+@given(st.sampled_from(list(NIMI_KU_SULI | NIMI_KU_LILI)))
 def test_ku_filters_non_overlap(s: str):
     res_ku_suli = NimiKuSuli.filter(s)
     res_ku_lili = NimiKuLili.filter(s)
@@ -47,11 +47,13 @@ def test_ku_filters_non_overlap(s: str):
 
 @given(
     st.sampled_from(
-        NIMI_LINKU_CORE
-        + NIMI_LINKU_COMMON
-        + NIMI_LINKU_UNCOMMON
-        + NIMI_LINKU_OBSCURE
-        + NIMI_LINKU_SANDBOX
+        list(
+            NIMI_LINKU_CORE
+            | NIMI_LINKU_COMMON
+            | NIMI_LINKU_UNCOMMON
+            | NIMI_LINKU_OBSCURE
+            | NIMI_LINKU_SANDBOX
+        )
     )
 )
 def test_linku_filters_non_overlap(s: str):
@@ -67,7 +69,7 @@ def test_linku_filters_non_overlap(s: str):
     assert (res_core + res_common + res_uncommon + res_obscure + res_sandbox) == 1
 
 
-@given(st.sampled_from(NIMI_LINKU_CORE + NIMI_LINKU_COMMON + NIMI_LINKU_UNCOMMON))
+@given(st.sampled_from(list(NIMI_LINKU_CORE | NIMI_LINKU_COMMON | NIMI_LINKU_UNCOMMON)))
 def test_nimi_linku_properties(s: str):
     assert ConsecutiveDuplicates.clean(s) == s, repr(s)
     assert Alphabetic.filter(s), repr(s)

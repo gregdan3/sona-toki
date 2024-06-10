@@ -1,6 +1,6 @@
 # STL
 import json
-from typing import Dict, List
+from typing import Set, Dict, List
 from pathlib import Path
 
 # LOCAL
@@ -425,14 +425,14 @@ NIMI_UCSUR = find_unicode_chars(UCSUR_RANGES)
 # NIMI_PU_ALE_UCSUR_RANGES = NIMI_PU_UCSUR_RANGES + ["\\U000F1978-\\U000F197A"]
 
 
-def category_helper(data: Dict[str, Dict[str, str]], key: str, value: str) -> List[str]:
-    return [d["word"] for d in data.values() if d[key] == value]
+def category_helper(data: Dict[str, Dict[str, str]], key: str, value: str) -> Set[str]:
+    return {d["word"] for d in data.values() if d[key] == value}
 
 
 with open(LINKU) as f:
     linku: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_PU: List[str] = category_helper(linku, "book", "pu")
-    NIMI_PU_SYNONYMS: List[str] = ["namako", "kin", "oko"]
+    NIMI_PU = category_helper(linku, "book", "pu")
+    NIMI_PU_SYNONYMS = {"namako", "kin", "oko"}
 
     NIMI_KU_SULI = category_helper(linku, "book", "ku suli")
     NIMI_KU_LILI = category_helper(linku, "book", "ku lili")
@@ -444,7 +444,7 @@ with open(LINKU) as f:
 
 with open(SANDBOX) as f:
     sandbox: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_LINKU_SANDBOX: List[str] = [d["word"] for d in sandbox.values()]
+    NIMI_LINKU_SANDBOX = {d["word"] for d in sandbox.values()}
 
 del linku
 del sandbox

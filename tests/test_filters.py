@@ -46,7 +46,7 @@ from sonatoki.constants import (
 from .test_utils import PROPER_NAME_RE
 
 
-@given(st.sampled_from(NIMI_PU))
+@given(st.sampled_from(list(NIMI_PU)))
 @example("lukin")
 @example("selo")
 @example("li")
@@ -55,14 +55,14 @@ def test_NimiPu(s: str):
     assert res, repr(s)
 
 
-@given(st.sampled_from(NIMI_LINKU_CORE))
+@given(st.sampled_from(list(NIMI_LINKU_CORE)))
 @example("pona")
 def test_NimiLinkuCore(s: str):
     res = NimiLinkuCore.filter(s)
     assert res, repr(s)
 
 
-@given(st.sampled_from(NIMI_LINKU_COMMON))
+@given(st.sampled_from(list(NIMI_LINKU_COMMON)))
 @example("n")
 @example("tonsi")
 @example("kipisi")
@@ -71,19 +71,19 @@ def test_NimiLinkuCommon(s: str):
     assert res, repr(s)
 
 
-@given(st.sampled_from(NIMI_LINKU_UNCOMMON))
+@given(st.sampled_from(list(NIMI_LINKU_UNCOMMON)))
 def test_NimiLinkuUncommon(s: str):
     res = NimiLinkuUncommon.filter(s)
     assert res, repr(s)
 
 
-@given(st.sampled_from(NIMI_LINKU_OBSCURE))
+@given(st.sampled_from(list(NIMI_LINKU_OBSCURE)))
 def test_NimiLinkuObscure(s: str):
     res = NimiLinkuObscure.filter(s)
     assert res, repr(s)
 
 
-@given(st.sampled_from(NIMI_LINKU_SANDBOX))
+@given(st.sampled_from(list(NIMI_LINKU_SANDBOX)))
 @example("kalamARR")
 @example("Pingo")
 def test_NimiLinkuSandbox(s: str):
@@ -203,7 +203,7 @@ def test_OrFilter(s: str):
 # NOTE: No subset filter test because A | B is not the same as A combined with B.
 # e.g. "apple" passes Alphabetic, "..." passes Punctuation, "apple..." passes neither
 # but would incorrectly pass a combined filter.
-@given(st.sampled_from(NIMI_PU + NIMI_LINKU_OBSCURE))
+@given(st.sampled_from(list(NIMI_PU | NIMI_LINKU_OBSCURE)))
 def test_OrMemberFilter(s: str):
     filter = OrMemberFilter(NimiPu, NimiLinkuObscure)
     res = filter.filter(s)
@@ -214,11 +214,13 @@ def test_OrMemberFilter(s: str):
 
 @given(
     st.sampled_from(
-        NIMI_KU_SULI
-        + NIMI_KU_LILI
-        + NIMI_LINKU_UNCOMMON
-        + NIMI_LINKU_OBSCURE
-        + NIMI_LINKU_SANDBOX,
+        list(
+            NIMI_KU_SULI
+            | NIMI_KU_LILI
+            | NIMI_LINKU_UNCOMMON
+            | NIMI_LINKU_OBSCURE
+            | NIMI_LINKU_SANDBOX
+        ),
     )
 )
 def test_OrMemberFilter_IsipinEpiku(s: str):
