@@ -113,7 +113,7 @@ LazyConfig: IloConfig = {
 DiscordConfig: IloConfig = {
     "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation, EnglishIgnorables],
+    "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
         OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR),
         LongSyllabic,
