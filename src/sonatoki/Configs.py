@@ -115,7 +115,7 @@ DiscordConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR),
+        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
         LongSyllabic,
         LongProperName,
         LongAlphabetic,
