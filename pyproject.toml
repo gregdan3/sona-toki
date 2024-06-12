@@ -33,7 +33,8 @@ test = [
 ]
 lint = [
     "black>=23.9.1",
-    "isort>=5.12.0"
+    "isort>=5.12.0",
+    "docformatter>=1.7.5",
 ]
 doc = [
     "sphinx>=7.1.2",
