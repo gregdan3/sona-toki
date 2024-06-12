@@ -127,9 +127,11 @@ class ProperName(Filter):
     When Toki Pona is written with the Latin alphabet, names are generally
     capitalized at their start. This filter identifies those tokens.
 
-    Note that this alone cannot determine if a token is a valid name, because
-    a standalone name is considered invalid in Toki Pona- names generally have head nouns.
-    This tool only examines one token at a time, so cannot detect names any better than identifying their capital letter.
+    Note that this alone cannot determine if a token is a valid name,
+    because a standalone name is considered invalid in Toki Pona- names
+    generally have head nouns. This tool only examines one token at a
+    time, so cannot detect names any better than identifying their
+    capital letter.
     """
 
     @classmethod
@@ -187,12 +189,14 @@ class NimiUCSUR(MemberFilter):
 
 class Phonotactic(RegexFilter):
     """Determines if a given token is phonotactically valid Toki Pona (or `n`).
+
     Excludes both consecutive nasals and the illegal syllables:
     - "nm", "nn"
     - "wu", "wo", "ji", "ti"
 
     Note that if this validator is used after `Cleaners.ConsecutiveDuplicates`,
-    "nn" cannot be found."""
+    "nn" cannot be found.
+    """
 
     pattern = re.compile(
         rf"^((^[{VOWELS}]|[klmnps][{VOWELS}]|[jt][aeou]|[w][aei])(n(?![mn]))?)+$|^n$",
@@ -208,8 +212,10 @@ class LongPhonotactic(MinLen, Phonotactic):
 
 class Syllabic(RegexFilter):
     """Determines if a given token is syllabically valid Toki Pona (or `n`).
-    Words must have correctly ordered vowels and consonants, but the phonotactic
-    exceptions are not considered."""
+
+    Words must have correctly ordered vowels and consonants, but the
+    phonotactic exceptions are not considered.
+    """
 
     # rf"^((^[{VOWELS}]|[{CONSONANTS}][{VOWELS}])n?)+$|^n$"
     # Alterative I was exploring takes ~15% more steps
@@ -236,13 +242,14 @@ class LongAlphabetic(MinLen, Alphabetic):
 
 
 class Numeric(Filter):
-    """Determine if a given token is entirely numeric.
-    Covers all numeric symbols in Unicode.
+    """Determine if a given token is entirely numeric. Covers all numeric
+    symbols in Unicode.
 
     This will fail to find numeric tokens such as "1.111" or "-42",
     but if used with the aggressive tokenizer designed for `tok`, these will be
     split into `["1", ".", "111"]` and `["-", "42"]` respectively. As such, the
-    numeric tokens will be split from their punctuation."""
+    numeric tokens will be split from their punctuation.
+    """
 
     @classmethod
     @override
@@ -252,13 +259,17 @@ class Numeric(Filter):
 
 
 class Punctuation(SubsetFilter):
-    """Identify whether a token is entirely punctuation. Fastest implementation."""
+    """Identify whether a token is entirely punctuation.
+
+    Fastest implementation.
+    """
 
     tokens = set(ALL_PUNCT)
 
 
 class PunctuationRe(RegexFilter):
     """Faster implementation of `PunctuationRe1`.
+
     Goes out of date compared to the `regex` library if UNICODE_PUNCT_RANGES is not updated.
     """
 
@@ -266,7 +277,8 @@ class PunctuationRe(RegexFilter):
 
 
 class PunctuationRe1(Regex1Filter):
-    """Reference implementation for identifying tokens made entirely of punctuation."""
+    """Reference implementation for identifying tokens made entirely of
+    punctuation."""
 
     pattern = regex.compile(
         rf"[\p{{Punctuation}}\p{{posix_punct}}{UCSUR_PUNCT_RANGES}]+"
@@ -278,14 +290,16 @@ class OrFilter:
     returning True when any individual filter matches or False otherwise.
     Requires at least two filters.
 
-    OrFilter exists as a compromise between the need to score some filters equally,
-    while not adding custom behavior to scorers.
-    I could have allowed a position to have a list of filters instead of one filter,
-    but this would require cleaning the user's input, and nested handling of lists.
-    It also would not have been as powerful- I would need another param for the and/or switch,
-    or to not give users the choice.
+    OrFilter exists as a compromise between the need to score some
+    filters equally, while not adding custom behavior to scorers. I
+    could have allowed a position to have a list of filters instead of
+    one filter, but this would require cleaning the user's input, and
+    nested handling of lists. It also would not have been as powerful- I
+    would need another param for the and/or switch, or to not give users
+    the choice.
 
-    Instead, the user is responsible for building an OrFilter out of their desired filters.
+    Instead, the user is responsible for building an OrFilter out of
+    their desired filters.
     """
 
     @staticmethod
@@ -338,8 +352,11 @@ class OrMemberFilter:
 
 class AndFilter(Filter):
     """Instantiate with more than one filter to compose them into one filter,
-    returning False when any individual filter fails to match or True otherwise.
-    Requires at least two filters."""
+    returning False when any individual filter fails to match or True
+    otherwise.
+
+    Requires at least two filters.
+    """
 
     def __new__(cls, *filters_: Type[Filter]) -> Type[Filter]:
         if not len(filters_) >= 2:

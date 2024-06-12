@@ -28,7 +28,8 @@ class Scorer(ABC):
 
 
 class PassFail(Scorer):
-    """The token passes any filter or fails all of them, scoring 1 or 0 respectively."""
+    """The token passes any filter or fails all of them, scoring 1 or 0
+    respectively."""
 
     @classmethod
     def score_token(cls, token: str, filters: List[Type[Filter]]) -> Number:
@@ -68,10 +69,12 @@ class SoftPassFail(PassFail):
 
 
 class Scaling(Scorer):
-    """
-    The sooner a token matches a filter, the higher its score.
-    In other words, filter order matters, weighing earlier listed filters higher than later ones.
-    This is desirable to avoid messages which would only match weaker filters, as these are less likely to be Toki Pona.
+    """The sooner a token matches a filter, the higher its score.
+
+    In other words, filter order matters, weighing earlier listed
+    filters higher than later ones. This is desirable to avoid messages
+    which would only match weaker filters, as these are less likely to
+    be Toki Pona.
     """
 
     @classmethod
@@ -96,9 +99,10 @@ class Scaling(Scorer):
 
 
 class SoftScaling(Scaling):
-    """Shorter messages are subject to less harsh scoring
-    by mapping the token count to [0.5, 1.0] via the sigmoid function,
-    then raising the score to the resultant power.
+    """Shorter messages are subject to less harsh scoring by mapping the token
+    count to [0.5, 1.0] via the sigmoid function, then raising the score to the
+    resultant power.
+
     For example, a single token scoring 0.64 will now score 0.8.
     """
 

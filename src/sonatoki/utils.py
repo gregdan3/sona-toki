@@ -19,7 +19,8 @@ def prep_dictionary(words: Iterable[str]) -> Set[str]:
 
 
 def regex_escape(s: str) -> str:
-    """Escape all characters which must be escaped when embedded in a character class."""
+    """Escape all characters which must be escaped when embedded in a character
+    class."""
     for c in TO_ESCAPE:
         s = s.replace(c, rf"\{c}")  # one backslash
     return s
@@ -70,9 +71,7 @@ def find_unicode_chars(ranges: List[str]) -> str:
 
 
 if __name__ == "__main__":
-    """
-    Helper script to fetch UNICODE_PUNCT in constants.py
-    """
+    """Helper script to fetch UNICODE_PUNCT in constants.py."""
 
     PUNCT_CATEGORIES = {
         "Pc",

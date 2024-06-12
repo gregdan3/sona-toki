@@ -2,7 +2,7 @@
 "Preprocessors" are classes which strip content from a given string prior to tokenization.
 There are currently two distinct types of Preprocessor:
 
-- Remove a token from a string which would be difficult to identify after tokenization. 
+- Remove a token from a string which would be difficult to identify after tokenization.
   - URLs
   - DiscordEmotes
 - Remove a section of a string which is contained in or marked by certain character(s). Also called "Containers"
@@ -61,21 +61,24 @@ Ignorables are tokens which do not count toward the accepted number of tokens
 or the total number of tokens.
 This is generally because they are considered external to Toki Pona.
 
-It is likely that every user will want to use these. 
+It is likely that every user will want to use these.
 Not having them will cause many false negatives, such as when a URL is divided
 into its parts and checked as a token.
 """
 
 
 class URLs(RegexPreprocessor):
-    """Remove http(s) protocol URLs"""
+    """Remove http(s) protocol URLs."""
 
     pattern = re.compile(r"https?:\/\/\S+")
 
 
 class Reference(RegexPreprocessor):
     """Remove text contained in double brackets.
-    Often used to fetch articles on Wikipedia, or Magic the Gathering cards."""
+
+    Often used to fetch articles on Wikipedia, or Magic the Gathering
+    cards.
+    """
 
     pattern = re.compile(r"\[\[.+\]\]")
 
@@ -100,7 +103,10 @@ class DiscordSpecial(RegexPreprocessor):
 
 class AngleBracketObject(RegexPreprocessor):
     """A generalized version of the Discord-specific angle bracket objects.
-    Removes any contiguous (not broken by whitespace) text in angle brackets."""
+
+    Removes any contiguous (not broken by whitespace) text in angle
+    brackets.
+    """
 
     pattern = re.compile(r"<[^<>\s]+>")
 
@@ -111,7 +117,7 @@ The following classes are Containers.
 Containers are a special case of Ignorables, where an entire segment of an input
 may be removed and not counted toward the accepted or total number of tokens.
 
-Some users may prefer to use these so that they may quote third parties who 
+Some users may prefer to use these so that they may quote third parties who
 would likely be using a language other than Toki Pona.
 """
 

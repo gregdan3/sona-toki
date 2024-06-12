@@ -1,0 +1,49 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-ast
+      - id: detect-private-key
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: forbid-submodules
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
+    hooks:
+      - id: docformatter
+        args: ["--in-place", "--config", "./pyproject.toml"]
+  # - repo: https://github.com/PyCQA/pydocstyle
+  #   rev: 6.3.0
+  #   hooks:
+  #     - id: pydocstyle
+  - repo: https://github.com/PyCQA/bandit
+    # Cannot ignore tests dir
+    rev: 1.7.8
+    hooks:
+      - id: bandit
+        args: ["--exclude", "tests"]
+  - repo: https://github.com/DetachHead/basedpyright
+    rev: v1.12.5
+    hooks:
+      - id: basedpyright
+  # - repo: local
+  #   hooks:
+  #     - id: pytest-check
+  #       name: pytest-check
+  #       entry: ".venv/bin/pytest -vvrP"
+  #       language: system
+  #       pass_filenames: false
+  #       always_run: true
