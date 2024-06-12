@@ -387,55 +387,22 @@ ALLOWABLES = {
     "y",  # anu
     "kxk",  # ken ala ken
     "wxw",  # wile ala wile
+    "msa",
 }
 
 PHONOMATCHES = {
-    # "a",  # ignore
-    # "an",  # against
-    # "i",  # against
-    # "in",  # against
+    "non",
+    "nope",
     "some",
-    "like",  # against
-    # "me",  # against
-    # "no",  # against
-    # "on",  # against
-    # "se",  # against
-    # "so",  # against
-    # "some",  # against
-    "to",  # ignore
-    # "u",  # against
-    # "un",  # against
-    "use",  # against
-    # "we",  # against
+    "like",
+    "use",
+    "imo",
+    "time",
+    "man",
+    "also",
 }
 
-ALPHABETIC_MATCHES = PHONOMATCHES | {
-    "a",
-    # "am",
-    # "as",
-    # "at",
-    # "aw",  # aww
-    # "ek",  # eek
-    # "ew",
-    # "ik",
-    # "il",  # ill
-    # "im",
-    # "im",
-    # "ip",
-    # "is",
-    # "it",
-    # "l",  # they'll
-    # "m",  # i'm
-    # "ok",
-    # "op",
-    # "ow",
-    # "s",  # let's
-    # "t",  # don't
-    # "up",
-    # "us",
-    # "ut",
-    # "uw",
-}
+ALPHABETIC_MATCHES: Set[str] = set()
 
 IGNORABLES = PHONOMATCHES | ALPHABETIC_MATCHES
 
