@@ -95,11 +95,7 @@ CorpusConfig: IloConfig = {
     "passing_score": 0.8,
     "word_tokenizer": WordTokenizer,
 }
-
-
-"""
-Mimics the previous implementation of ilo pi toki pona taso
-"""
+"""Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
     "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],

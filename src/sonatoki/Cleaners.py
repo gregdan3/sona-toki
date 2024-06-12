@@ -33,7 +33,8 @@ class ConsecutiveDuplicates(Cleaner):
     may be altered for emphasis or effect, such as in "sonaaaa" or "AAAAAA".
 
     This may be undesirable for moraic scripts like Hiragana, where `わわ` would be
-    incorrectly reduced to `わ`. This does preserve phonotactic validity, though."""
+    incorrectly reduced to `わ`. This does preserve phonotactic validity, though.
+    """
 
     @classmethod
     @override

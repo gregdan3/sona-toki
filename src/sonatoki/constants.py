@@ -380,8 +380,8 @@ CONSONANTS = "jklmnpstw"
 ALPHABET = VOWELS + CONSONANTS
 
 LANGUAGE = "english"  # for NLTK
-
-"""Commonly occurring strings which are some kind of valid Toki Pona or external token"""
+"""Commonly occurring strings which are some kind of valid Toki Pona or
+external token."""
 ALLOWABLES = {
     "x",  # ala
     "y",  # anu
