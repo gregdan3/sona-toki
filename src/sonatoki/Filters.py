@@ -350,7 +350,7 @@ class OrMemberFilter:
         return filter
 
 
-class AndFilter(Filter):
+class AndFilter:
     """Instantiate with more than one filter to compose them into one filter,
     returning False when any individual filter fails to match or True
     otherwise.

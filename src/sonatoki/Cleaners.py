@@ -10,6 +10,7 @@ class Cleaner(ABC):
     @classmethod
     @abstractmethod
     def clean(cls, token: str) -> str:
+        """Transform a token to remove some undesirable part."""
         raise NotImplementedError
 
 
@@ -70,4 +71,5 @@ class Lowercase(Cleaner):
 
 __all__ = [
     "ConsecutiveDuplicates",
+    "Lowercase",
 ]

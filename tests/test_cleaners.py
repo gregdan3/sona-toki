@@ -5,10 +5,10 @@ import hypothesis.strategies as st
 from hypothesis import given, assume, example
 
 # LOCAL
-from sonatoki.Cleaners import ConsecutiveDuplicates, ConsecutiveDuplicatesRe
+from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates, ConsecutiveDuplicatesRe
 
 # FILESYSTEM
-from .test_utils import overlapping_pairs
+from .test_utils import PROPER_NAME_RE, overlapping_pairs
 
 
 @given(st.from_regex(ConsecutiveDuplicatesRe.pattern.pattern))
@@ -34,3 +34,9 @@ def test_ConsecutiveDuplicates(s: str):
     res_re = ConsecutiveDuplicatesRe.clean(s)
     res_fn = ConsecutiveDuplicates.clean(s)
     assert res_re == res_fn, repr(s)
+
+
+@given(st.from_regex(PROPER_NAME_RE))
+def test_Lowercase(s: str):
+    cleaned = Lowercase.clean(s)
+    assert cleaned == s.lower()  # yeah really

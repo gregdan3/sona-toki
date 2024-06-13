@@ -11,6 +11,7 @@ from sonatoki.Filters import (
     Numeric,
     OrFilter,
     Syllabic,
+    AndFilter,
     Alphabetic,
     NimiKuLili,
     NimiKuSuli,
@@ -240,3 +241,10 @@ def test_OrMemberFilter_IsipinEpiku(s: str):
     assert res and (
         res_ku_suli or res_ku_lili or res_uncommon or res_obscure or res_sandbox
     )
+
+
+@given(st.sampled_from(list(NIMI_PU)))
+def test_AndFilter(s: str):
+    s = s.capitalize()
+    f = AndFilter(ProperName, NimiPu)
+    assert f.filter(s)
