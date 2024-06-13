@@ -9,6 +9,8 @@ from sonatoki.Filters import (
     Syllabic,
     NimiUCSUR,
     Alphabetic,
+    NimiKuLili,
+    NimiKuSuli,
     ProperName,
     Punctuation,
     LongSyllabic,
@@ -20,7 +22,6 @@ from sonatoki.Filters import (
     NimiLinkuCommon,
     NimiLinkuObscure,
     NimiLinkuSandbox,
-    EnglishIgnorables,
     NimiLinkuUncommon,
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
@@ -45,7 +46,7 @@ class IloConfig(TypedDict):
     passing_score: Number
 
 
-# TODO: branching configs?
+# TODO: branching configs? config builder?
 
 BaseConfig: IloConfig = {
     "preprocessors": [URLs],
@@ -105,6 +106,28 @@ LazyConfig: IloConfig = {
     "passing_score": 0.8,
     "word_tokenizer": WordTokenizer,
 }
+"""This is extremely silly."""
+IsipinEpikuConfig: IloConfig = {
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
+    "cleaners": [ConsecutiveDuplicates],
+    "ignoring_filters": [Numeric, Punctuation],
+    "scoring_filters": [
+        OrMemberFilter(
+            NimiKuSuli,
+            NimiKuLili,
+            NimiLinkuUncommon,
+            NimiLinkuObscure,
+            NimiLinkuSandbox,
+        ),
+        LongSyllabic,
+        LongProperName,
+        LongAlphabetic,
+    ],
+    "scorer": SoftScaling,
+    "passing_score": 0.8,
+    "word_tokenizer": WordTokenizer,
+}
+
 
 DiscordConfig: IloConfig = {
     "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
@@ -123,6 +146,7 @@ DiscordConfig: IloConfig = {
 
 TelegramConfig: IloConfig = deepcopy(PrefConfig)
 ForumConfig: IloConfig = deepcopy(PrefConfig)
+
 
 __all__ = [
     "BaseConfig",
