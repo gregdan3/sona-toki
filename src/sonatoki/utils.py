@@ -1,11 +1,14 @@
 # STL
 import re
-from typing import Set, List, Iterable
+import itertools
+from typing import Set, List, TypeVar, Iterable
 
 # LOCAL
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
 
 TO_ESCAPE = ["\\", "^", "[", "]", "-"]
+
+T = TypeVar("T")
 
 
 def prep_dictionary(words: Iterable[str]) -> Set[str]:
@@ -68,6 +71,22 @@ def find_unicode_chars(ranges: List[str]) -> str:
         else:
             result.append(chr(int(item.lstrip("\\U"), 16)))
     return "".join(result)
+
+
+def overlapping_pairs(iterable: Iterable[T]) -> zip[T]:
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    return overlapping_ntuples(iterable, n=2)
+
+
+def overlapping_ntuples(iterable: Iterable[T], n: int):
+    teed = itertools.tee(iterable, n)
+    for i in range(1, n):
+        for j in range(i):
+            _ = next(teed[i], None)
+            # offset start by position
+
+    # ends when any iter is empty; all groups will be same size
+    return zip(*teed)
 
 
 if __name__ == "__main__":

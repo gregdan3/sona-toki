@@ -5,10 +5,11 @@ import hypothesis.strategies as st
 from hypothesis import given, assume, example
 
 # LOCAL
+from sonatoki.utils import overlapping_pairs
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates, ConsecutiveDuplicatesRe
 
 # FILESYSTEM
-from .test_utils import PROPER_NAME_RE, overlapping_pairs
+from .test_utils import PROPER_NAME_RE
 
 
 @given(st.from_regex(ConsecutiveDuplicatesRe.pattern.pattern))
