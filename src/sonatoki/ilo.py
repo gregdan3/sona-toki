@@ -119,7 +119,7 @@ class Ilo:
         *_, result = self._is_toki_pona(message)
         return result
 
-    def _are_toki_pona(self, message: str):
+    def _are_toki_pona(self, message: str) -> List[Scorecard]:
         """Split a message into sentences, then return a list each sentence's
         results via `self._is_toki_pona()`.
 
