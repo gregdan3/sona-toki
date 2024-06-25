@@ -2,6 +2,9 @@
 from copy import deepcopy
 from typing import List, Type, TypedDict
 
+# PDM
+from typing_extensions import NotRequired
+
 # LOCAL
 from sonatoki.Filters import (
     Filter,
@@ -26,7 +29,7 @@ from sonatoki.Filters import (
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
-from sonatoki.Tokenizers import Tokenizer, WordTokenizer
+from sonatoki.Tokenizers import Tokenizer
 from sonatoki.Preprocessors import (
     URLs,
     Backticks,
@@ -38,12 +41,13 @@ from sonatoki.Preprocessors import (
 
 class IloConfig(TypedDict):
     preprocessors: List[Type[Preprocessor]]
-    word_tokenizer: Type[Tokenizer]
     cleaners: List[Type[Cleaner]]
     ignoring_filters: List[Type[Filter]]
     scoring_filters: List[Type[Filter]]
     scorer: Type[Scorer]
     passing_score: Number
+    word_tokenizer: NotRequired[Type[Tokenizer]]
+    sent_tokenizer: NotRequired[Type[Tokenizer]]
 
 
 # TODO: branching configs? config builder?
@@ -55,7 +59,6 @@ BaseConfig: IloConfig = {
     "scoring_filters": [],
     "scorer": PassFail,
     "passing_score": 0.8,
-    "word_tokenizer": WordTokenizer,
 }
 
 
@@ -71,7 +74,6 @@ PrefConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
-    "word_tokenizer": WordTokenizer,
 }
 
 CorpusConfig: IloConfig = {
@@ -94,7 +96,6 @@ CorpusConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
-    "word_tokenizer": WordTokenizer,
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
@@ -104,7 +105,6 @@ LazyConfig: IloConfig = {
     "scoring_filters": [Alphabetic, NimiUCSUR, ProperName, Miscellaneous],
     "scorer": SoftPassFail,
     "passing_score": 0.8,
-    "word_tokenizer": WordTokenizer,
 }
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
@@ -125,7 +125,6 @@ IsipinEpikuConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
-    "word_tokenizer": WordTokenizer,
 }
 
 
@@ -141,7 +140,6 @@ DiscordConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
-    "word_tokenizer": WordTokenizer,
 }
 
 TelegramConfig: IloConfig = deepcopy(PrefConfig)
