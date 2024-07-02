@@ -7,9 +7,9 @@ from typing_extensions import NotRequired
 
 # LOCAL
 from sonatoki.Filters import (
+    Or,
     Filter,
     Numeric,
-    OrFilter,
     Syllabic,
     NimiUCSUR,
     Alphabetic,
@@ -67,7 +67,7 @@ PrefConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
+        Or(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
         LongSyllabic,
         LongProperName,
         LongAlphabetic,
@@ -81,7 +81,7 @@ CorpusConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrFilter(
+        Or(
             NimiLinkuCore,
             NimiLinkuCommon,
             NimiLinkuUncommon,
@@ -112,7 +112,7 @@ IsipinEpikuConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrFilter(
+        Or(
             NimiKuSuli,
             NimiKuLili,
             NimiLinkuUncommon,
@@ -133,7 +133,7 @@ DiscordConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
+        Or(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
         LongSyllabic,
         LongProperName,
         LongAlphabetic,

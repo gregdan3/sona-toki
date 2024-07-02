@@ -7,11 +7,11 @@ from hypothesis import given, example
 
 # LOCAL
 from sonatoki.Filters import (
+    Or,
+    And,
     NimiPu,
     Numeric,
-    OrFilter,
     Syllabic,
-    AndFilter,
     Alphabetic,
     NimiKuLili,
     NimiKuSuli,
@@ -193,7 +193,7 @@ def test_Numeric(s: str):
     | st.from_regex(r"\d+", fullmatch=True),
 )
 def test_OrFilter(s: str):
-    filter = OrFilter(Punctuation, Numeric)
+    filter = Or(Punctuation, Numeric)
     res = filter.filter(s)
     res_punctuation = Punctuation.filter(s)
     res_numeric = Numeric.filter(s)
@@ -205,7 +205,7 @@ def test_OrFilter(s: str):
 # but would incorrectly pass a combined filter.
 @given(st.sampled_from(list(NIMI_PU | NIMI_LINKU_OBSCURE)))
 def test_MemberFilters_OrFilter(s: str):
-    filter = OrFilter(NimiPu, NimiLinkuObscure)
+    filter = Or(NimiPu, NimiLinkuObscure)
     res = filter.filter(s)
     res_pu = NimiPu.filter(s)
     res_obscure = NimiLinkuObscure.filter(s)
@@ -224,7 +224,7 @@ def test_MemberFilters_OrFilter(s: str):
     )
 )
 def test_OrFilter_IsipinEpiku(s: str):
-    filter = OrFilter(
+    filter = Or(
         NimiKuSuli, NimiKuLili, NimiLinkuUncommon, NimiLinkuObscure, NimiLinkuSandbox
     )
 
@@ -245,5 +245,5 @@ def test_OrFilter_IsipinEpiku(s: str):
 @given(st.sampled_from(list(NIMI_PU)))
 def test_AndFilter(s: str):
     s = s.capitalize()
-    f = AndFilter(ProperName, NimiPu)
+    f = And(ProperName, NimiPu)
     assert f.filter(s)

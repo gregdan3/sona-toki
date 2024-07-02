@@ -285,20 +285,20 @@ class PunctuationRe1(Regex1Filter):
     )
 
 
-class OrFilter:
+class Or:
     """Instantiate with more than one filter to compose them into one filter,
     returning True when any individual filter matches or False otherwise.
     Requires at least two filters. If two or more MemberFilters are provided,
     they will be combined by creating a single set with the members of every
     individual filter.
 
-    OrFilter exists as a compromise between the need to score some
-    filters equally, while not adding custom behavior to scorers. I
-    could have allowed a position to have a list of filters instead of
-    one filter, but this would require cleaning the user's input, and
-    nested handling of lists. It also would not have been as powerful- I
-    would need another param for the and/or switch, or to not give users
-    the choice.
+    Or exists as a compromise between the need to score some filters
+    equally, while not adding custom behavior to scorers. I could have
+    allowed a position to have a list of filters instead of one filter,
+    but this would require cleaning the user's input, and nested
+    handling of lists. It also would not have been as powerful- I would
+    need another param for the and/or switch, or to not give users the
+    choice.
 
     Instead, the user is responsible for building an OrFilter out of
     their desired filters.
@@ -347,7 +347,7 @@ class OrFilter:
         return filter
 
 
-class AndFilter:
+class And:
     """Instantiate with more than one filter to compose them into one filter,
     returning False when any individual filter fails to match or True
     otherwise.
@@ -376,7 +376,7 @@ class AndFilter:
 
 __all__ = [
     "Alphabetic",
-    "AndFilter",
+    "And",
     "EnglishIgnorables",
     "LongAlphabetic",
     "LongPhonotactic",
@@ -389,7 +389,7 @@ __all__ = [
     "NimiPuSynonyms",
     "NimiUCSUR",
     "Numeric",
-    "OrFilter",
+    "Or",
     "Phonotactic",
     "ProperName",
     "Punctuation",
