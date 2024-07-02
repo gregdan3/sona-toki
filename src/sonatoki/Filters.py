@@ -21,15 +21,16 @@ from sonatoki.constants import (
     NIMI_KU_LILI,
     NIMI_KU_SULI,
     NIMI_LINKU_CORE,
-    ALL_PUNCT_RANGES,
     NIMI_PU_SYNONYMS,
     NIMI_LINKU_COMMON,
     FALSE_POS_SYLLABIC,
     NIMI_LINKU_OBSCURE,
     NIMI_LINKU_SANDBOX,
-    UCSUR_PUNCT_RANGES,
     NIMI_LINKU_UNCOMMON,
+    ALL_PUNCT_RANGES_STR,
     FALSE_POS_ALPHABETIC,
+    UCSUR_PUNCT_RANGES_STR,
+    EMOJI_VARIATION_SELECTOR_RANGES_STR,
 )
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -279,7 +280,7 @@ class PunctuationRe(RegexFilter):
     Goes out of date compared to the `regex` library if UNICODE_PUNCT_RANGES is not updated.
     """
 
-    pattern = re.compile(rf"[{ALL_PUNCT_RANGES}]+")
+    pattern = re.compile(rf"[{ALL_PUNCT_RANGES_STR}]+")
 
 
 class PunctuationRe1(Regex1Filter):
@@ -287,7 +288,7 @@ class PunctuationRe1(Regex1Filter):
     punctuation."""
 
     pattern = regex.compile(
-        rf"[\p{{Punctuation}}\p{{posix_punct}}{UCSUR_PUNCT_RANGES}]+"
+        rf"[\p{{Punctuation}}\p{{posix_punct}}{UCSUR_PUNCT_RANGES_STR}{EMOJI_VARIATION_SELECTOR_RANGES_STR}]+"
     )
 
 
@@ -407,7 +408,7 @@ class Not(Filter):
 __all__ = [
     "Alphabetic",
     "And",
-    "EnglishIgnorables",
+    "FalsePosSyllabic",
     "LongAlphabetic",
     "LongPhonotactic",
     "LongProperName",

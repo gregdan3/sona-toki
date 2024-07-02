@@ -1,6 +1,6 @@
 # STL
 import json
-from typing import Set, Dict, List
+from typing import Set, Dict
 from pathlib import Path
 
 # LOCAL
@@ -139,7 +139,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U0000218a-\\U0000218b",
     "\\U00002190-\\U00002426",
     "\\U00002440-\\U0000244a",
-    "\\U0000249c-\\U000024b5",
+    "\\U0000249c-\\U000024e9",
     "\\U00002500-\\U00002775",
     "\\U00002794-\\U00002b73",
     "\\U00002b76-\\U00002b95",
@@ -204,6 +204,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U0000fd3e-\\U0000fd4f",
     "\\U0000fdcf",
     "\\U0000fdfc-\\U0000fdff",
+    "\\U0000fe0e-\\U0000fe0f",  # emoji variation selectors
     "\\U0000fe10-\\U0000fe19",
     "\\U0000fe30-\\U0000fe52",
     "\\U0000fe54-\\U0000fe66",
@@ -320,10 +321,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U0001f0b1-\\U0001f0bf",
     "\\U0001f0c1-\\U0001f0cf",
     "\\U0001f0d1-\\U0001f0f5",
-    "\\U0001f10d-\\U0001f12f",
-    "\\U0001f14a-\\U0001f14f",
-    "\\U0001f16a-\\U0001f16f",
-    "\\U0001f18a-\\U0001f1ad",
+    "\\U0001f10d-\\U0001f1ad",
     "\\U0001f1e6-\\U0001f202",
     "\\U0001f210-\\U0001f23b",
     "\\U0001f240-\\U0001f248",
@@ -356,7 +354,18 @@ UNICODE_PUNCT_RANGES = [
     "\\U000f1990-\\U000f199d",  # UCSUR punctuation
 ]
 
-UCSUR_PUNCT_RANGES = UNICODE_PUNCT_RANGES[-1]  # NOTE: THIS CAN CHANGE
+# NOTE: These ranges are already in UNICODE_PUNCT_RANGES; they are separated for the Regex filters.
+ALL_VARIATION_SELECTOR_RANGES = ["\\U0000fe00-\\U0000fe0f", "\\U000e0100-\\U000e01ef"]
+EMOJI_VARIATION_SELECTOR_RANGES = ["\\U0000fe0e-\\U0000fe0f"]
+EMOJI_VARIATION_SELECTOR_RANGES_STR = "".join(EMOJI_VARIATION_SELECTOR_RANGES)
+"""All variation selectors are in Nonspacing Mark (Mn), but it is more apt to
+mark these two as punctuation, since they are used exclusively for rendering
+emoji."""
+
+UCSUR_PUNCT_RANGES = ["\\U000f1990-\\U000f199d"]
+UCSUR_PUNCT_RANGES_STR = "".join(UCSUR_PUNCT_RANGES)
+"""Private Use Area glyphs are given the apt but unhelpful 'Private Use'
+class."""
 
 UNICODE_PUNCT = find_unicode_chars(UNICODE_PUNCT_RANGES)
 # this is a large string.
@@ -366,7 +375,7 @@ POSIX_PUNCT = r"""-!"#$%&'()*+,./:;<=>?@[\]^_`{|}~"""
 POSIX_PUNCT_RANGES = find_unicode_ranges(POSIX_PUNCT)
 
 ALL_PUNCT = "".join(sorted(list(set(POSIX_PUNCT + UNICODE_PUNCT))))
-ALL_PUNCT_RANGES = "".join(find_unicode_ranges(ALL_PUNCT))
+ALL_PUNCT_RANGES_STR = "".join(find_unicode_ranges(ALL_PUNCT))
 # combined bc the result could be simpler
 
 SENTENCE_PUNCT = """.?!:;'"()[-]“”·…"""
@@ -443,9 +452,11 @@ del sandbox
 __all__ = [
     "ALLOWABLES",
     "ALL_PUNCT",
-    "ALL_PUNCT_RANGES",
+    "ALL_PUNCT_RANGES_STR",
     "ALPHABET",
     "CONSONANTS",
+    "EMOJI_VARIATION_SELECTOR_RANGES",
+    "EMOJI_VARIATION_SELECTOR_RANGES_STR",
     "NIMI_KU_LILI",
     "NIMI_KU_SULI",
     "NIMI_LINKU_COMMON",
@@ -457,6 +468,8 @@ __all__ = [
     "NIMI_PU_SYNONYMS",
     "POSIX_PUNCT",
     "POSIX_PUNCT_RANGES",
+    "UCSUR_PUNCT_RANGES",
+    "UCSUR_PUNCT_RANGES_STR",
     "UNICODE_PUNCT",
     "UNICODE_PUNCT_RANGES",
     "VOWELS",

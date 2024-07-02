@@ -1,5 +1,4 @@
 # STL
-import re
 import itertools
 from typing import Set, List, TypeVar, Iterable
 
@@ -87,58 +86,3 @@ def overlapping_ntuples(iterable: Iterable[T], n: int) -> Iterable[T]:
 
     # ends when any iter is empty; all groups will be same size
     return zip(*teed)
-
-
-if __name__ == "__main__":
-    """Helper script to fetch UNICODE_PUNCT in constants.py."""
-
-    PUNCT_CATEGORIES = {
-        "Pc",
-        "Pd",
-        "Pe",
-        "Pf",
-        "Pi",
-        "Po",
-        "Ps",
-        "Sm",
-        "Sk",
-        "Sc",
-        "So",
-    }
-    # Connector, Dash, Close (end), Final, Initial, Other, Open (sOpen), Math, Modifier (kModifier), Currency, Other
-
-    # NOTE: UnicodeData.txt lists character ranges if there would be many characters.
-    # (e.g. CJK Ideograph, First at 4E00 and CJK Ideograph, Last at 9FFF).
-    # This does not apply to any currently defined punctuation category.
-
-    EXCEPTION_RANGES = re.compile(r"""[Ⓐ-ⓩ🄰-🅉🅐-🅩🅰-🆉]+""")
-    # These groups are in Symbol other (So) but are not part of `\p{Punctuation}`
-    # NOTE: There are many characters which look like writing characters but are not. Examples:
-    # - kangxi radicals from ⺀ to ⿕ which are for demonstration
-    # - circled katakana from  to ㋾ which... shouldn't be in \p{Punctuation} but oh well
-
-    def is_punctuation(data: List[str]):
-        return data[2] in PUNCT_CATEGORIES
-
-    def get_character(data: List[str]):
-        return chr(int(data[0], 16))
-
-    def is_exception(c: str):
-        return not not re.fullmatch(EXCEPTION_RANGES, c)
-
-    # http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-    unicode_punctuation = ""
-    with open("UnicodeData.txt", "r") as f:
-        for line in f:
-            data = line.split(";")
-            if not is_punctuation(data):
-                continue
-
-            char = get_character(data)
-            if is_exception(char):
-                continue
-
-            unicode_punctuation += char
-
-    with open("UnicodePunctuation.txt", "w") as f:
-        _ = f.write(unicode_punctuation)

@@ -172,10 +172,11 @@
     - "mu"
     - "╚(•⌂•)╝"
 - name: discovered case 7
-  input: "toki 🅱️ona"
+  input: "toki 🅱️ona" # there is a blood-type B before 'ona'
   output:
     - "toki"
-    - "🅱️ona"
+    - "🅱️"
+    - "ona"
 - name: UCSUR 1
   input: "󱥄󱥬󱥩󱤴"
   output:

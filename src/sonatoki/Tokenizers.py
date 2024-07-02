@@ -10,7 +10,7 @@ from typing_extensions import override, deprecated
 # LOCAL
 from sonatoki.utils import regex_escape
 from sonatoki.Filters import NimiUCSUR  # seriously this sucks
-from sonatoki.constants import ALL_PUNCT, SENTENCE_PUNCT, ALL_PUNCT_RANGES
+from sonatoki.constants import ALL_PUNCT, SENTENCE_PUNCT, ALL_PUNCT_RANGES_STR
 
 regex.DEFAULT_VERSION = regex.VERSION1
 
@@ -94,7 +94,7 @@ class WordTokenizer(SetTokenizer):
     "WordTokenizerRe is a previous reference implementation. Its behavior has diverged from WordTokenizer and it may not be restored."
 )
 class WordTokenizerRe(RegexTokenizer):
-    pattern = re.compile(rf"""([{ALL_PUNCT_RANGES}]+|\s+)""")
+    pattern = re.compile(rf"""([{ALL_PUNCT_RANGES_STR}]+|\s+)""")
 
 
 @deprecated(
