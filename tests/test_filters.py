@@ -9,6 +9,7 @@ from hypothesis import given, example
 from sonatoki.Filters import (
     Or,
     And,
+    Not,
     NimiPu,
     Numeric,
     Syllabic,
@@ -247,3 +248,9 @@ def test_AndFilter(s: str):
     s = s.capitalize()
     f = And(ProperName, NimiPu)
     assert f.filter(s)
+
+
+@given(st.sampled_from(list(NIMI_PU)))
+def test_NotFilter(s: str):
+    f = Not(NimiPu)
+    assert not f.filter(s)

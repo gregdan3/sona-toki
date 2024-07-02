@@ -390,7 +390,7 @@ ALLOWABLES = {
     "msa",
 }
 
-PHONOMATCHES = {
+FALSE_POS_SYLLABIC = {
     "non",
     "nope",
     "some",
@@ -402,9 +402,7 @@ PHONOMATCHES = {
     "also",
 }
 
-ALPHABETIC_MATCHES: Set[str] = set()
-
-IGNORABLES = PHONOMATCHES | ALPHABETIC_MATCHES
+FALSE_POS_ALPHABETIC: Set[str] = set()
 
 UCSUR_RANGES = [
     "\\U000F1900-\\U000F1977",  # pu

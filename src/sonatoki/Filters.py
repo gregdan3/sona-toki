@@ -17,7 +17,6 @@ from sonatoki.constants import (
     ALL_PUNCT,
     ALLOWABLES,
     CONSONANTS,
-    IGNORABLES,
     NIMI_UCSUR,
     NIMI_KU_LILI,
     NIMI_KU_SULI,
@@ -25,10 +24,12 @@ from sonatoki.constants import (
     ALL_PUNCT_RANGES,
     NIMI_PU_SYNONYMS,
     NIMI_LINKU_COMMON,
+    FALSE_POS_SYLLABIC,
     NIMI_LINKU_OBSCURE,
     NIMI_LINKU_SANDBOX,
     UCSUR_PUNCT_RANGES,
     NIMI_LINKU_UNCOMMON,
+    FALSE_POS_ALPHABETIC,
 )
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -113,13 +114,18 @@ class Miscellaneous(MemberFilter):
     tokens = prep_dictionary(ALLOWABLES)
 
 
-class EnglishIgnorables(MemberFilter):
-    """NOTE: Not recommended for use.
-    It is better to use a Long* filter such as LongSyllabic than to use this filter.
-    This filter hides words from scoring rather than scoring them poorly,
-    which is more of a benefit than a loss for a word you would like to omit."""
+class FalsePosSyllabic(MemberFilter):
+    """A MemberFilter of words which would match Syllabic (and often Phonetic),
+    but are words in other languages."""
 
-    tokens = prep_dictionary(IGNORABLES)
+    tokens = prep_dictionary(FALSE_POS_SYLLABIC)
+
+
+class FalsePosAlphabetic(MemberFilter):
+    """A MemberFilter of words which would match Alphabetic, but are words in
+    other languages."""
+
+    tokens = prep_dictionary(FALSE_POS_ALPHABETIC)
 
 
 class ProperName(Filter):
@@ -374,6 +380,30 @@ class And:
         return AnonymousAndFilter
 
 
+class Not(Filter):
+    """
+    Meta filter which may be inherited by or constructed with a filter to invert its output.
+    ---
+    ```
+    from sonatoki.Filters import Alphabetic, Not
+
+    my_filter = Not(Alphabetic)
+    class MyFilter(Not, Alphabetic):
+        ...
+    ```
+    """
+
+    @classmethod
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        return not super().filter(token)
+
+    def __new__(cls, filter: Type[Filter]) -> Type[Filter]:
+        class NotFilter(Not, filter): ...
+
+        return NotFilter
+
+
 __all__ = [
     "Alphabetic",
     "And",
@@ -388,6 +418,7 @@ __all__ = [
     "NimiPu",
     "NimiPuSynonyms",
     "NimiUCSUR",
+    "Not",
     "Numeric",
     "Or",
     "Phonotactic",

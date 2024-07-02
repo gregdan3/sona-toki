@@ -87,7 +87,6 @@ SOME_INVALID = [
     "mi tawa ma ohio",
     "sina toki e nimi what pi toki Inli",
     "wawa la o lukin e ni: your mom",
-    "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
 ]
 
 CORPUS_SPECIFIC = [
@@ -180,6 +179,7 @@ FALSE_NEGATIVES = [
 
 FALSE_POSITIVES = [
     "insane asinine lemon awesome atone",
+    "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
 ]
 
 

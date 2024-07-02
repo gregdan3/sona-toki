@@ -8,6 +8,8 @@ from typing_extensions import NotRequired
 # LOCAL
 from sonatoki.Filters import (
     Or,
+    And,
+    Not,
     Filter,
     Numeric,
     Syllabic,
@@ -23,6 +25,7 @@ from sonatoki.Filters import (
     LongAlphabetic,
     LongProperName,
     NimiLinkuCommon,
+    FalsePosSyllabic,
     NimiLinkuObscure,
     NimiLinkuSandbox,
     NimiLinkuUncommon,
@@ -68,7 +71,7 @@ PrefConfig: IloConfig = {
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
         Or(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
-        LongSyllabic,
+        And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
         LongAlphabetic,
     ],
@@ -88,9 +91,9 @@ CorpusConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
             NimiUCSUR,
-            Miscellaneous,
+            # Miscellaneous,
         ),
-        LongSyllabic,
+        And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
         LongAlphabetic,
     ],
