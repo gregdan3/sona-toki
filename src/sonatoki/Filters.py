@@ -288,7 +288,9 @@ class PunctuationRe1(Regex1Filter):
 class OrFilter:
     """Instantiate with more than one filter to compose them into one filter,
     returning True when any individual filter matches or False otherwise.
-    Requires at least two filters.
+    Requires at least two filters. If two or more MemberFilters are provided,
+    they will be combined by creating a single set with the members of every
+    individual filter.
 
     OrFilter exists as a compromise between the need to score some
     filters equally, while not adding custom behavior to scorers. I
@@ -304,7 +306,6 @@ class OrFilter:
 
     @staticmethod
     def __generic_filter(*filters_: Type[Filter]) -> Type[Filter]:
-
         class CombinedFilter(Filter):
             filters: List[Type[Filter]] = list(filters_)  # TODO: tuple better?
 
@@ -319,20 +320,6 @@ class OrFilter:
 
         return CombinedFilter
 
-    def __new__(cls, *filters: Type[Filter]) -> Type[Filter]:
-        if not len(filters) >= 2:
-            raise ValueError("Provide at least two Filters to OrFilter.")
-
-        member_filters = [f for f in filters if issubclass(f, MemberFilter)]
-        if len(member_filters) >= 2:
-            raise Warning("Use OrMemberFilter for combining two or more MemberFilters.")
-
-        filter = cls.__generic_filter(*filters)
-
-        return filter
-
-
-class OrMemberFilter:
     @staticmethod
     def __member_filter(*filters: Type[MemberFilter]) -> Type[MemberFilter]:
         all_token_sets: List[Set[str]] = [f.tokens for f in filters]
@@ -343,10 +330,20 @@ class OrMemberFilter:
 
         return CombinedFilter
 
-    def __new__(cls, *filters_: Type[MemberFilter]) -> Type[MemberFilter]:
-        if not len(filters_) >= 2:
-            raise ValueError("Provide two or more MemberFilters to OrMemberFilter.")
-        filter = cls.__member_filter(*filters_)
+    def __new__(cls, *filters: Type[Filter]) -> Type[Filter]:
+        if not len(filters) >= 2:
+            raise ValueError("Provide at least two Filters to OrFilter.")
+
+        member_filters = [f for f in filters if issubclass(f, MemberFilter)]
+        other_filters = [f for f in filters if not issubclass(f, MemberFilter)]
+        if len(member_filters) >= 2:
+            # we can save some effort by making a single filter out of these
+            member_filter = cls.__member_filter(*member_filters)
+            other_filters.append(member_filter)
+        else:
+            other_filters.extend(member_filters)
+
+        filter = cls.__generic_filter(*other_filters)
         return filter
 
 

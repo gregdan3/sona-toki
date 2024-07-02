@@ -23,7 +23,6 @@ from sonatoki.Filters import (
     NimiLinkuCore,
     PunctuationRe,
     LongAlphabetic,
-    OrMemberFilter,
     PunctuationRe1,
     LongPhonotactic,
     NimiLinkuCommon,
@@ -205,8 +204,8 @@ def test_OrFilter(s: str):
 # e.g. "apple" passes Alphabetic, "..." passes Punctuation, "apple..." passes neither
 # but would incorrectly pass a combined filter.
 @given(st.sampled_from(list(NIMI_PU | NIMI_LINKU_OBSCURE)))
-def test_OrMemberFilter(s: str):
-    filter = OrMemberFilter(NimiPu, NimiLinkuObscure)
+def test_MemberFilters_OrFilter(s: str):
+    filter = OrFilter(NimiPu, NimiLinkuObscure)
     res = filter.filter(s)
     res_pu = NimiPu.filter(s)
     res_obscure = NimiLinkuObscure.filter(s)
@@ -224,8 +223,8 @@ def test_OrMemberFilter(s: str):
         ),
     )
 )
-def test_OrMemberFilter_IsipinEpiku(s: str):
-    filter = OrMemberFilter(
+def test_OrFilter_IsipinEpiku(s: str):
+    filter = OrFilter(
         NimiKuSuli, NimiKuLili, NimiLinkuUncommon, NimiLinkuObscure, NimiLinkuSandbox
     )
 

@@ -9,6 +9,7 @@ from typing_extensions import NotRequired
 from sonatoki.Filters import (
     Filter,
     Numeric,
+    OrFilter,
     Syllabic,
     NimiUCSUR,
     Alphabetic,
@@ -21,7 +22,6 @@ from sonatoki.Filters import (
     NimiLinkuCore,
     LongAlphabetic,
     LongProperName,
-    OrMemberFilter,
     NimiLinkuCommon,
     NimiLinkuObscure,
     NimiLinkuSandbox,
@@ -67,7 +67,7 @@ PrefConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
+        OrFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
         LongSyllabic,
         LongProperName,
         LongAlphabetic,
@@ -81,7 +81,7 @@ CorpusConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrMemberFilter(
+        OrFilter(
             NimiLinkuCore,
             NimiLinkuCommon,
             NimiLinkuUncommon,
@@ -112,7 +112,7 @@ IsipinEpikuConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrMemberFilter(
+        OrFilter(
             NimiKuSuli,
             NimiKuLili,
             NimiLinkuUncommon,
@@ -133,7 +133,7 @@ DiscordConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        OrMemberFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
+        OrFilter(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
         LongSyllabic,
         LongProperName,
         LongAlphabetic,
