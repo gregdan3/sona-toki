@@ -1,9 +1,7 @@
 #!/bin/env python3
 # STL
-import re
 import json
 import argparse
-import urllib.request  # avoiding requests dep bc we can
 from typing import Any, Dict, List
 
 # PDM

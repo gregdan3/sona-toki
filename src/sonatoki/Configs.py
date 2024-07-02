@@ -37,6 +37,7 @@ from sonatoki.Preprocessors import (
     URLs,
     Backticks,
     Reference,
+    ZeroWidths,
     Preprocessor,
     AngleBracketObject,
 )
@@ -66,7 +67,7 @@ BaseConfig: IloConfig = {
 
 
 PrefConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, Reference],
+    "preprocessors": [Backticks, URLs, Reference, ZeroWidths],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -80,7 +81,7 @@ PrefConfig: IloConfig = {
 }
 
 CorpusConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -102,7 +103,7 @@ CorpusConfig: IloConfig = {
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [Alphabetic, NimiUCSUR, ProperName, Miscellaneous],
@@ -111,7 +112,7 @@ LazyConfig: IloConfig = {
 }
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -122,7 +123,7 @@ IsipinEpikuConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
         ),
-        LongSyllabic,
+        And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
         LongAlphabetic,
     ],
@@ -132,12 +133,12 @@ IsipinEpikuConfig: IloConfig = {
 
 
 DiscordConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
         Or(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
-        LongSyllabic,
+        And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
         LongAlphabetic,
     ],

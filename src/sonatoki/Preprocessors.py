@@ -162,6 +162,27 @@ class AllQuotes(RegexPreprocessor):
     )
 
 
+class ZeroWidths(RegexPreprocessor):
+    """Remove the Zero Width Joiner and Zero Width Non-Joiner from the input.
+
+    ZWJ and ZWNJ do serve semantic purposes,
+    such as combining many person emojis into the family emojis,
+    or ensuring two characters do not become a ligature.
+    However, all emojis are considered punctuation by this library,
+    so preprocessing ZWJ out is more accurate:
+    It will leave behind the component emojis, which will be ignored.
+
+    But ZWJ cannot be considered punctuation for tokenizing purposes because it is used in the middle of words to render them differently.
+    In this vein, ZWJ is a function character.
+
+    In the future, it may be smarter to omit ZWJ in the tokenization process,
+    or to make the tokenizer smarter by having it keep together collected emojis.
+    But in order to do this, emoji would have to be accurately distinguished from all other punctuation.
+    """
+
+    pattern = re.compile("[\\U0000200C-\\U0000200D]")
+
+
 __all__ = [
     "AllQuotes",
     "AngleBracketObject",
@@ -176,4 +197,5 @@ __all__ = [
     "SingleQuotes",
     "Spoilers",
     "URLs",
+    "ZeroWidths",
 ]

@@ -50,6 +50,9 @@ IGNORABLES = [
     " ⟨·⟩, a",
     "·····",
     "o lukin: [[w:QWERTY]]",
+    "❤️",
+    "😊",
+    "👨‍👩‍👧‍👧",
 ]
 
 SYLLABIC_MATCHES = [

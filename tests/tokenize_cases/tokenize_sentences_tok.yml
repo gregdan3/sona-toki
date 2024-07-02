@@ -60,3 +60,7 @@
     - "_ike_nanpa_lete_ike]"
     - "."
     - "ni li pona kin."
+- name: "zwj in emoji"
+  input: "👨‍👩‍👧‍👧"
+  output:
+    - "👨‍👩‍👧‍👧"

@@ -177,6 +177,11 @@
     - "toki"
     - "🅱️"
     - "ona"
+- name: "zwj in emoji"
+  input: "👨‍👩‍👧‍👧"
+  output:
+    - "👨‍👩‍👧‍👧"
+  xfail: true
 - name: UCSUR 1
   input: "󱥄󱥬󱥩󱤴"
   output:

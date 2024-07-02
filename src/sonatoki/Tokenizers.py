@@ -66,7 +66,7 @@ class WordTokenizer(SetTokenizer):
         last_membership = s[0] in cls.delimiters
         for i, char in enumerate(s):
             mem = char in cls.delimiters
-            ucsur = NimiUCSUR.filter(char)  # always "changed" means
+            ucsur = NimiUCSUR.filter(char)
             changed = (mem != last_membership) or ucsur
             # this keeps contiguous words together, but splits UCSUR
             if not changed:
