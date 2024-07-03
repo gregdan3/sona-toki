@@ -351,6 +351,10 @@ class Or:
         else:
             other_filters.extend(member_filters)
 
+        if len(other_filters) == 1:  # we only had member filters
+            # TODO: this sucks?
+            return other_filters[0]
+
         filter = cls.__generic_filter(*other_filters)
         return filter
 

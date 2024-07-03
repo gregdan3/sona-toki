@@ -21,6 +21,7 @@ from sonatoki.Filters import (
     Punctuation,
     AlphabeticRe,
     LongSyllabic,
+    MemberFilter,
     NimiLinkuCore,
     PunctuationRe,
     LongAlphabetic,
@@ -207,6 +208,8 @@ def test_OrFilter(s: str):
 @given(st.sampled_from(list(NIMI_PU | NIMI_LINKU_OBSCURE)))
 def test_MemberFilters_OrFilter(s: str):
     filter = Or(NimiPu, NimiLinkuObscure)
+    assert issubclass(filter, MemberFilter)
+
     res = filter.filter(s)
     res_pu = NimiPu.filter(s)
     res_obscure = NimiLinkuObscure.filter(s)
