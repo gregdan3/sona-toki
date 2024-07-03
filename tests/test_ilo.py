@@ -50,9 +50,14 @@ IGNORABLES = [
     " ⟨·⟩, a",
     "·····",
     "o lukin: [[w:QWERTY]]",
-    "❤️",
+    "nasa la mi ken pana e ni: <unrelated_words_that_are_illegal>",
+    "❤️",  # heart
     "😊",
-    "👨‍👩‍👧‍👧",
+    "👨‍👩‍👧‍👧",  # family emoji with zwj
+    # every non-emoji in
+    "🄀🄁🄂🄃🄄🄅🄆🄇🄈🄉🄊🄋🄌🄍🄎🄏🄐🄑🄒🄓🄔🄕🄖🄗🄘🄙🄚🄛🄜🄝🄞🄟🄠🄡🄢🄣🄤🄥🄦🄧🄨🄩🄪🄫🄬🄭🄮🄯🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🅊🅋🅌🅍🅎🅏🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅪🅫🅬🅭🅮🅯🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🆊🆋🆌🆍🆏🆐 🆛🆜🆝🆞🆟🆠🆡🆢🆣🆤🆥🆦🆧🆨🆩🆪🆫🆬🆭🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿",
+    "🅰️🅱️🅾️🅱️🅰️",  # blood type emojis
+    # "😃⃢👍",  # sincerely, no idea, but it came up
 ]
 
 SYLLABIC_MATCHES = [

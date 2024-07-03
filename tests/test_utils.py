@@ -1,3 +1,6 @@
+# STL
+import re
+
 # PDM
 import hypothesis.strategies as st
 

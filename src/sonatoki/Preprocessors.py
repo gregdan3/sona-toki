@@ -21,6 +21,7 @@ import re
 from abc import ABC, abstractmethod
 
 # PDM
+import emoji
 import regex
 from typing_extensions import override
 
@@ -162,6 +163,13 @@ class AllQuotes(RegexPreprocessor):
     )
 
 
+class Emoji(Preprocessor):
+    @classmethod
+    @override
+    def process(cls, msg: str) -> str:
+        return emoji.replace_emoji(msg)
+
+
 class ZeroWidths(RegexPreprocessor):
     """Remove the Zero Width Joiner and Zero Width Non-Joiner from the input.
 
@@ -198,4 +206,5 @@ __all__ = [
     "Spoilers",
     "URLs",
     "ZeroWidths",
+    "Emoji",
 ]

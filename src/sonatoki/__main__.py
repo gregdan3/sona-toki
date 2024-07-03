@@ -5,6 +5,7 @@ import argparse
 from typing import Any, Dict, List
 
 # PDM
+import emoji
 import requests
 
 # LOCAL
@@ -58,12 +59,9 @@ def regen_unicode_data():
         "Sc",  # Currency
         "So",  # Other
     }
-
-    # EXCEPTIONS_RE = re.compile(r"""[Ⓐ-ⓩ🄰-🅉🅐-🅩🅰-🆉]+""")
-    r"""These characters are in Symbol other (So) but are not in `\p{Punctuation}`
-    However, I began excluding them again, because it turns out that some sequences of latin alphabet emoji
-
-    """
+    r"""These characters are in Symbol other (So) but are not in
+    `\p{Punctuation}` However, I began excluding them again, because it turns
+    out that some sequences of latin alphabet emoji."""
 
     # NOTE: There are many characters which look like writing characters but are in the punctuation character class. Examples:
     # - kangxi radicals from ⺀ to ⿕ which are for demonstration, not writing
@@ -77,13 +75,8 @@ def regen_unicode_data():
     def get_character(data: List[str]):
         return chr(int(data[0], 16))
 
-    # def is_exception(c: str):
-    #     return not not re.fullmatch(EXCEPTIONS_RE, c)
-
-    # http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-    unicode_punctuation = ""
-
     unicode_data = download(UNICODE_DATA)
+    unicode_punctuation = ""
     for line in unicode_data.split("\n"):
         if not line:  # damn you, trailing newline
             continue
@@ -96,14 +89,14 @@ def regen_unicode_data():
             continue
 
         char = get_character(unicode_data)
-        # if is_exception(char):
-        #     continue
 
         unicode_punctuation += char
 
+    unicode_punctuation = emoji.replace_emoji(unicode_punctuation)
+
     unicode_ranges = find_unicode_ranges(unicode_punctuation)
     unicode_ranges.extend(UCSUR_PUNCT_RANGES)
-    unicode_ranges.extend(EMOJI_VARIATION_SELECTOR_RANGES)
+    # unicode_ranges.extend(EMOJI_VARIATION_SELECTOR_RANGES)  # made unnecessary by emoji library
     unicode_ranges = sorted(unicode_ranges)
     # sorted in case my manual additions are out of order
 

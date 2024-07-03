@@ -6,7 +6,7 @@ from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
 import regex
-from typing_extensions import override
+from typing_extensions import override, deprecated
 
 # LOCAL
 from sonatoki.utils import prep_dictionary
@@ -26,6 +26,7 @@ from sonatoki.constants import (
     FALSE_POS_SYLLABIC,
     NIMI_LINKU_OBSCURE,
     NIMI_LINKU_SANDBOX,
+    NOT_IN_PUNCT_CLASS,
     NIMI_LINKU_UNCOMMON,
     ALL_PUNCT_RANGES_STR,
     FALSE_POS_ALPHABETIC,
@@ -288,7 +289,7 @@ class PunctuationRe1(Regex1Filter):
     punctuation."""
 
     pattern = regex.compile(
-        rf"[\p{{Punctuation}}\p{{posix_punct}}{UCSUR_PUNCT_RANGES_STR}{EMOJI_VARIATION_SELECTOR_RANGES_STR}]+"
+        rf"[\p{{Punctuation}}\p{{posix_punct}}{NOT_IN_PUNCT_CLASS}{UCSUR_PUNCT_RANGES_STR}{EMOJI_VARIATION_SELECTOR_RANGES_STR}]+"
     )
 
 

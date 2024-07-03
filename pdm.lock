@@ -5,7 +5,7 @@
 groups = ["default", "doc", "lint", "test"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:a3082bfa91366cf2dca3d9bb841c72f9edb3c431b1e6b9b97ba09a3b62fd68e1"
+content_hash = "sha256:b90f6ed1eebf2a3fb2cde72c8e1c6e866ec44d52c1ccf6f09137017023e5eee8"
 
 [[package]]
 name = "alabaster"
@@ -417,6 +417,20 @@ groups = ["doc"]
 files = [
     {file = "docutils-0.20.1-py3-none-any.whl", hash = "sha256:96f387a2c5562db4476f09f13bbab2192e764cac08ebbf3a34a95d9b1e4a59d6"},
     {file = "docutils-0.20.1.tar.gz", hash = "sha256:f08a4e276c3a1583a86dce3e34aba3fe04d02bba2dd51ed16106244e8a923e3b"},
+]
+
+[[package]]
+name = "emoji"
+version = "2.12.1"
+requires_python = ">=3.7"
+summary = "Emoji for Python"
+groups = ["default"]
+dependencies = [
+    "typing-extensions>=4.7.0",
+]
+files = [
+    {file = "emoji-2.12.1-py3-none-any.whl", hash = "sha256:a00d62173bdadc2510967a381810101624a2f0986145b8da0cffa42e29430235"},
+    {file = "emoji-2.12.1.tar.gz", hash = "sha256:4aa0488817691aa58d83764b6c209f8a27c0b3ab3f89d1b8dceca1a62e4973eb"},
 ]
 
 [[package]]

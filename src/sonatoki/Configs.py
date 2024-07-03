@@ -35,9 +35,9 @@ from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
 from sonatoki.Tokenizers import Tokenizer
 from sonatoki.Preprocessors import (
     URLs,
+    Emoji,
     Backticks,
     Reference,
-    ZeroWidths,
     Preprocessor,
     AngleBracketObject,
 )
@@ -67,7 +67,7 @@ BaseConfig: IloConfig = {
 
 
 PrefConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, Reference, ZeroWidths],
+    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -81,7 +81,7 @@ PrefConfig: IloConfig = {
 }
 
 CorpusConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
+    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -92,7 +92,7 @@ CorpusConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
             NimiUCSUR,
-            # Miscellaneous,
+            Miscellaneous,
         ),
         And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
@@ -103,7 +103,7 @@ CorpusConfig: IloConfig = {
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
+    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [Alphabetic, NimiUCSUR, ProperName, Miscellaneous],
@@ -112,7 +112,7 @@ LazyConfig: IloConfig = {
 }
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
+    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -133,7 +133,7 @@ IsipinEpikuConfig: IloConfig = {
 
 
 DiscordConfig: IloConfig = {
-    "preprocessors": [Backticks, URLs, AngleBracketObject, Reference, ZeroWidths],
+    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
