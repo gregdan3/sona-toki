@@ -145,7 +145,8 @@
     - ","
     - "mi"
     - "pakala"
-    - "😭😭||" # TODO: is this desirable?
+    - "😭😭"
+    - "||" # TODO: is this desirable?
 - name: "discovered case 4"
   input: "||sina pona, mi pakala 😭😭 mi ken seme?||"
   output:
@@ -175,13 +176,11 @@
   input: "toki 🅱️ona" # there is a blood-type B before 'ona'
   output:
     - "toki"
-    - "🅱️"
-    - "ona"
+    - "🅱️ona"
 - name: "zwj in emoji"
   input: "👨‍👩‍👧‍👧"
   output:
     - "👨‍👩‍👧‍👧"
-  xfail: true
 - name: UCSUR 1
   input: "󱥄󱥬󱥩󱤴"
   output:

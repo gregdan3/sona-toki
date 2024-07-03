@@ -503,6 +503,8 @@ SENTENCE_PUNCT = """.?!:;'"()[-]“”·…"""
 
 LINKU = Path(__file__).resolve().parent / Path("linku.json")
 SANDBOX = Path(__file__).resolve().parent / Path("sandbox.json")
+SYLLABICS = Path(__file__).resolve().parent / Path("syllabic.txt")
+ALPHABETICS = Path(__file__).resolve().parent / Path("alphabetic.txt")
 
 VOWELS = "aeiou"
 CONSONANTS = "jklmnpstw"
@@ -520,18 +522,68 @@ ALLOWABLES = {
 }
 
 FALSE_POS_SYLLABIC = {
-    "non",
-    "nope",
-    "some",
+    # ordered by frequency in previous TPT data
     "like",
+    "same",
+    "nope",
+    "uwu",  # TODO: emoticon?? uhh?
+    "non",
+    "owo",  # TODO: emoticon??
+    "one",
+    "to",
+    "i",
+    "awesome",
     "use",
-    "imo",
+    "name",
     "time",
+    "imo",  # "in my opinion"
     "man",
-    "also",
+    # "son",  # sona typo?
+    "joke",
+    "so",
+    "ten",
+    "make",
+    "pin",
+    "note",
+    # "aka" # in sandbox
+    "into",
+    "in",
+    "some",
+    "on",
+    "me",
+    "ipa",
+    "sun",
+    "sense",
+    "none",
+    "meme",
+    "wise",
+    # "ono", # TODO: what is this
+    "mon",
+    "take",
+    "luna",
+    "anti",
+    "elo",
+    "an",
+    "win",
+    "won",
+    "we",
+    "men",
+    "ton",
+    "woke",
+    "semi",
+    "male",
 }
 
-FALSE_POS_ALPHABETIC: Set[str] = set()
+FALSE_POS_ALPHABETIC: Set[str] = {
+    "t",
+    "is",
+    "not",
+    "lol",
+    "also",
+    "isn",  # TODO: tokenizer....
+    "mean",
+    "means",
+}
 
 UCSUR_RANGES = [
     "\\U000F1900-\\U000F1977",  # pu
@@ -565,6 +617,12 @@ with open(LINKU) as f:
 with open(SANDBOX) as f:
     sandbox: Dict[str, Dict[str, str]] = json.loads(f.read())
     NIMI_LINKU_SANDBOX = {d["word"] for d in sandbox.values()}
+
+# with open(SYLLABICS) as f:
+#     FALSE_POS_SYLLABIC = {line.strip() for line in f}
+#
+# with open(ALPHABETICS) as f:
+#     FALSE_POS_ALPHABETIC = {line.strip() for line in f}
 
 del linku
 del sandbox
