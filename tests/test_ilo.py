@@ -73,7 +73,7 @@ SYLLABIC_MATCHES = [
 
 ALPHABETIC_MATCHES = [
     "mi mtue o kama sona",
-    "mi mute o kma son",
+    "mi mute o kama kne snoa a",
     "ni li tptpt",
     "mi wile pana lon sptp",
     "tmo tawa mi li pona mute la mi kepeken ona lon tenpo mute",
@@ -177,6 +177,7 @@ KNOWN_BAD = (
 FALSE_NEGATIVES = [
     # emoticon should not be a problem
     # a token that is one edit off a known word should be allowed
+    "mi mute o kma son",  # this one is obnoxious because `son` did match phonetically before
     "mi pnoa",
     "tok",
     "mut",
