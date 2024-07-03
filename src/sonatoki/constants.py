@@ -519,8 +519,10 @@ ALLOWABLES = {
     "kxk",  # ken ala ken
     "wxw",  # wile ala wile
     "msa",
+    "anusem",
 }
 
+# NOTE: This is being tracked manually rather than fetched from syllabics.txt until I am convinced that solution is appropriate
 FALSE_POS_SYLLABIC = {
     # ordered by frequency in previous TPT data
     "like",
@@ -540,6 +542,7 @@ FALSE_POS_SYLLABIC = {
     "man",
     # "son",  # sona typo?
     "joke",
+    # pon would go here
     "so",
     "ten",
     "make",
@@ -548,11 +551,14 @@ FALSE_POS_SYLLABIC = {
     # "aka" # in sandbox
     "into",
     "in",
+    "no",
     "some",
+    # "papa",
     "on",
     "me",
     "ipa",
     "sun",
+    "mine",
     "sense",
     "none",
     "meme",
@@ -561,28 +567,101 @@ FALSE_POS_SYLLABIC = {
     "mon",
     "take",
     "luna",
-    "anti",
     "elo",
+    "japanese",
     "an",
+    "anti",
     "win",
     "won",
-    "we",
+    "we",  # word in sandbox
     "men",
     "ton",
     "woke",
+    "sen",  # seen
+    "se",  # see
     "semi",
     "male",
+    # "pen",  # borderline
+    "woman",
+    "line",
+    "meta",
+    "mini",
+    "sine",
+    # "min",  # borderline
+    "oposite",
+    "anime",
+    "potato",
+    # "japan",
+    "nose",
+    "kilo",
+    "alone",
+    "minute",
+    "late",
+    "women",
+    "leson",
+    "amen",
+    "tote",
+    "lame",
+    "online",
+    "tone",
+    "ate",
+    "mile",
+    "melon",
+    "tense",
+    "nonsense",
+    "nine",
+    "emo",
+    "unlike",
+    "lone",
+    # manual additions
+    "alike",
+    "amuse",
+    "antelope",
+    "antena",
+    "apetite",
+    "asasin",
+    "asasinate",
+    "asinine",
+    "asinine",
+    "asume",
+    "atone",
+    "awake",
+    "awaken",
+    "eliminate",
+    "elite",
+    "misuse",
+    "emanate",
+    "iluminate",
+    "imense",
+    "imitate",
+    "insane",
+    "insolate",
+    "insulate",
+    "intense",
+    "lemon",
+    "manipulate",
 }
 
 FALSE_POS_ALPHABETIC: Set[str] = {
     "t",
     "is",
+    "as",
     "not",
+    "link",
+    "wait",
     "lol",
+    "new",
     "also",
     "isn",  # TODO: tokenizer....
     "mean",
     "means",
+    "it",
+    "moment",
+    "its",
+    "lmao",
+    "new",
+    "wel",
+    "makes",
 }
 
 UCSUR_RANGES = [

@@ -73,6 +73,7 @@ SYLLABIC_MATCHES = [
 
 ALPHABETIC_MATCHES = [
     "mi mtue o kama sona",
+    "mi mute o kma son",  # this one is odd because `son` is an unintended phonetic match
     "mi mute o kama kne snoa a",
     "ni li tptpt",
     "mi wile pana lon sptp",
@@ -120,6 +121,7 @@ EXCESSIVE_SYLLABICS = [
     "a ton of insolate puke. make no amen, no joke.",
     "I elope so, to an elite untaken tune, some unwise tone",
     "insane asinine lemon awesome atone joke",
+    "insane asinine lemon awesome atone",  # i got more clever
 ]
 
 EXCESSIVE_ALPHABETICS = [
@@ -177,7 +179,6 @@ KNOWN_BAD = (
 FALSE_NEGATIVES = [
     # emoticon should not be a problem
     # a token that is one edit off a known word should be allowed
-    "mi mute o kma son",  # this one is obnoxious because `son` did match phonetically before
     "mi pnoa",
     "tok",
     "mut",
@@ -187,7 +188,6 @@ FALSE_NEGATIVES = [
 ]
 
 FALSE_POSITIVES = [
-    "insane asinine lemon awesome atone",
     "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
 ]
 

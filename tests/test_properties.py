@@ -25,9 +25,11 @@ from sonatoki.constants import (
     NIMI_LINKU_CORE,
     NIMI_PU_SYNONYMS,
     NIMI_LINKU_COMMON,
+    FALSE_POS_SYLLABIC,
     NIMI_LINKU_OBSCURE,
     NIMI_LINKU_SANDBOX,
     NIMI_LINKU_UNCOMMON,
+    FALSE_POS_ALPHABETIC,
 )
 
 
@@ -76,3 +78,10 @@ def test_nimi_linku_properties(s: str):
     assert Syllabic.filter(s), repr(s)
     assert Phonotactic.filter(s), repr(s)
     # Passing phonotactic implies all of the above
+
+
+@given(st.sampled_from(list(FALSE_POS_ALPHABETIC)))
+def test_false_pos_properties(s: str):
+    res_syllabic = Syllabic.filter(s)
+    res_alphabetic = Alphabetic.filter(s)
+    assert res_alphabetic and not res_syllabic
