@@ -10,6 +10,7 @@ from sonatoki.Preprocessors import (
     Backticks,
     Reference,
     ArrowQuote,
+    ColonEmotes,
     DoubleQuotes,
     SingleQuotes,
     DiscordEmotes,
@@ -140,4 +141,13 @@ def test_AllQuotes(s: str):
 @example("[[Yahoo!]]")
 def test_Reference(s: str):
     res = Reference.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(st.from_regex(ColonEmotes.pattern.pattern, fullmatch=True))
+@example(":owe::owe:")
+@example(":suffering:")
+@example(":presid65despair:")
+def test_ColonEmotes(s: str):
+    res = ColonEmotes.process(s).strip()
     assert res == "", (repr(s), repr(res))

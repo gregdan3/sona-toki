@@ -90,6 +90,12 @@ class DiscordEmotes(RegexPreprocessor):
     pattern = re.compile(r"<a?:[a-zA-Z0-9_]{2,}:[0-9]{2,}>")
 
 
+class ColonEmotes(RegexPreprocessor):
+    """Remove colon-marked emotes `:name:`"""
+
+    pattern = re.compile(r":[a-zA-Z0-9_]{2,}:")
+
+
 class DiscordMentions(RegexPreprocessor):
     pattern = re.compile(r"<@[\!\&]?[0-9]{2,}>")
 
