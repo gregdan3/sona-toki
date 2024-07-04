@@ -28,6 +28,7 @@ from sonatoki.Filters import (
     PunctuationRe1,
     LongPhonotactic,
     NimiLinkuCommon,
+    FalsePosSyllabic,
     NimiLinkuObscure,
     NimiLinkuSandbox,
     NimiLinkuUncommon,
@@ -39,6 +40,7 @@ from sonatoki.constants import (
     NIMI_KU_SULI,
     NIMI_LINKU_CORE,
     NIMI_LINKU_COMMON,
+    FALSE_POS_SYLLABIC,
     NIMI_LINKU_OBSCURE,
     NIMI_LINKU_SANDBOX,
     NIMI_LINKU_UNCOMMON,
@@ -257,3 +259,24 @@ def test_AndFilter(s: str):
 def test_NotFilter(s: str):
     f = Not(NimiPu)
     assert not f.filter(s)
+
+
+@given(
+    st.sampled_from(list(FALSE_POS_SYLLABIC))
+    | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)
+    | st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True)
+)
+def test_AndNotFilter(s: str):
+    AndNotFilter = And(Syllabic, Not(FalsePosSyllabic))
+
+    res_syl = Syllabic.filter(s)
+    res_fp = FalsePosSyllabic.filter(s)
+    res_composed = AndNotFilter.filter(s)
+
+    if not res_syl:
+        # if it isn't syllabic in the first place, it shouldn't match anything
+        assert not res_fp and not res_syl and not res_composed
+
+    if res_fp:
+        # syl matched- but if fp matches, then the composed filter should not match
+        assert not res_composed
