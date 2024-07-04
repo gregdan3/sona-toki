@@ -46,6 +46,7 @@ IGNORABLES = [
     "https://example.com/",
     "mi wile e ni: <https://example.com> li pona",
     "lipu https://example.com li kama pona",
+    "<:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778>",
     "...",
     " ⟨·⟩, a",
     "·····",
@@ -88,6 +89,7 @@ NAME_MATCHES = [
     "toki Lojban li nasa e lawa mi",
     "ilo Firefox",
     "mi musi Space Station 13",
+    "jan Tepo en jan Salo en jan Lakuse en pipi Kewapi en soweli Eweke en mi li musi",
 ]
 
 SOME_INVALID = [
@@ -113,15 +115,20 @@ CORPUS_SPECIFIC_XFAIL = [
 
 
 EXCESSIVE_SYLLABICS = [
-    # NOTE: these are actually harder to spot bc of the EnglishIgnorables filter
-    # it simply stops counting all the short english phonomatches
-    # so you can use any number of them...
+    # NOTE: this is sometimes hard to distinguish from EXCESSIVE_ENGLISH
     "manama manama namana namana majani makala",
     "I manipulate a passe pile so a ton emulate, akin to intake",
     "a ton of insolate puke. make no amen, no joke.",
     "I elope so, to an elite untaken tune, some unwise tone",
     "insane asinine lemon awesome atone joke",
     "insane asinine lemon awesome atone",  # i got more clever
+    "nope, no, joke",
+    "insane",
+    "woman",
+    "man",
+    "opposite",
+    "nine emo women see anime alone",
+    "i like mini potato",
 ]
 
 EXCESSIVE_ALPHABETICS = [
@@ -148,6 +155,7 @@ EXCESSIVE_ENGLISH = [
     "Maybe I’m too nasa",  # previous false positive; fixed by LongSyllabic and LongAlphabetic
     "I see :)",
     "I wanna see",  # same down to here
+    "i'm online all the time",
 ]
 
 NON_MATCHES = [
