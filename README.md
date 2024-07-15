@@ -13,9 +13,9 @@ This library, "Language Knowledge," helps you identify whether a message is in T
 
 I wrote this library with a variety of scraps and lessons learned from a prior project, [ilo pi toki pona taso, "toki-pona-only tool"](https://github.com/gregdan3/ilo-pi-toki-pona-taso). That tool now uses this library to great success!
 
-If you've ever worked on a similar project, you know the question "is this message in [language]" is not a consistent one- the environment, time, preferences of the speaker, and much more, can all alter whether a given message is "in" any specific language. This complexity applies to Toki Pona too.
+If you've ever worked on a similar project, you know the question "is this message in [language]" is not a consistent one- the environment, topic, preferences of the speaker, and much more, can all alter whether a given message is "in" any specific language. This complexity applies to Toki Pona too.
 
-So, this project "solves" that complex problem by offering an opinionated tokenizer and a configurable parser, allowing you to tune its output to your preferences and goals. [Even silly ones.](https://sona.pona.la/wiki/isipin_epiku).
+So, this project "solves" that complex problem by offering an opinionated tokenizer and a configurable parser, allowing you to tune its output to your preferences and goals. [Even silly ones.](https://sona.pona.la/wiki/isipin_epiku)
 
 ## Quick Start
 
@@ -48,12 +48,12 @@ Or if you'd prefer to configure on your own:
 from copy import deepcopy
 from sonatoki.ilo import Ilo
 from sonatoki.Configs import BaseConfig
-from sonatoki.Filters import NimiLinkuCore, Phonotactic, ProperName
+from sonatoki.Filters import NimiLinkuCore, NimiLinkuCommon, Phonotactic, ProperName, Or
 from sonatoki.Scorers import SoftPassFail
 
 def main():
     config = deepcopy(BaseConfig)
-    config["scoring_filters"].extend([NimiLinkuCore, Phonotactic, ProperName])
+    config["scoring_filters"].extend([Or(NimiLinkuCore, NimiLinkuCommon), Phonotactic, ProperName])
     config["scorer"] = SoftPassFail
 
     ilo = Ilo(**config)
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     main()
 ```
 
-`Ilo` is highly configurable by necessity, so I recommend looking through the premade configs in `Configs` as well as the individual `Preprocessors`, `Filters`, and `Scorers`. The `Cleaners` module only contains one cleaner, which I recommend always using. Similarly, the `Tokenizers` module contains several other word tokenizers, but their performance will be worse than the dedicated Toki Pona tokenizer `WordTokenizerTok`.
+`Ilo` is highly configurable by necessity, so I recommend looking through the premade configs in `Configs` as well as the individual `Preprocessors`, `Filters`, and `Scorers`. In `Cleaners`, all you need is `ConsecutiveDuplicates`. In `Tokenizers`, the preferred tokenizers `WordTokenizer` and `SentTokenizer` are already the default in `Ilo`.
 
 ## Development
 
@@ -79,25 +79,26 @@ if __name__ == "__main__":
 
 The intent is to show our methodology to the Unicode Consortium, particularly to the Script Encoding Working Group (previously the Script Ad Hoc Group). As far as we're aware, zero members of the committee know Toki Pona, which unfortunately means we fall back on English.
 
-After our proposal has been examined and a result given by the committee, I will translate this file and library into Toki Pona, with a note left behind for those who do not understand it.
+I originally intended to translate this file and library into Toki Pona once Unicode had reviewed our proposal, but this library has picked up some interest outside of the Toki Pona community, so this library and README will remain accessible to them.
 
 ### What's the deal with the tokenizers?
 
-The Toki Pona tokenizer `sonatoki.Tokenizers.WordTokenizer` has the goal of tokenizing statements such that every token either represents a word candidate ("toki", "mumumu") or a complete non-candidate ("..!", "123").
-This design is highly undesirable for NLTK's English tokenizer because English words can have "punctuation" characters in them.
-But Toki Pona doesn't have any mid-word symbols when rendered in the Latin alphabet or in [Private Use Area Unicode characters](https://www.kreativekorp.com/ucsur/), so a more aggressive tokenizer is highly desirable.
+The Toki Pona tokenizer `sonatoki.Tokenizers.WordTokenizer` attempts to tokenize statements such that every token either represents a word candidate ("toki", "mumumu") or a complete non-candidate ("..!", "123").
+This design is highly undesirable for NLTK's English tokenizer because English words can have "punctuation" characters in them such as `'` or `-`.
+Toki Pona doesn't have any mid-word symbols when rendered in the Latin alphabet or in [Private Use Area Unicode characters](https://www.kreativekorp.com/ucsur/), so a more aggressive tokenizer is highly desirable.
 
 The goal of splitting into word candidates and non-candidates is important, because any [encoding of Toki Pona's logographic script](https://www.kreativekorp.com/ucsur/charts/sitelen.html) will require each character be split into its own token, where the default behavior would be to leave consecutive non-punctuation together.
 
 ### Aren't there a lot of false positives?
 
-Yes, depending on the filter you choose and how you apply it.
-It's up to you to use this tool responsibly on input you've done your best to clean, such as by using stronger filters before weaker ones.
-For now though, here's a list of relevant false positives:
+For any individual filter, yes. Here are some examples:
 
-- `ProperName` will errantly match text in languages without a capital/lowercase distinction, artificially increasing scores.
-- `Alphabetic` will match a _lot_ of undesirable text- it essentially allows 14 letters of the English alphabet. For example, "I'm well" would match as _three_ words: "i", "m", "well".
-- `NimiPu` and other sets containing `a`, `mute`, `open`, and others will unavoidably match those words in English text too.
+- `ProperName` will errantly match text in languages without a capital/lowercase distinction
+- `Alphabetic` matches words so long as they are only made of letters in Toki Pona's alphabet, which is 14 letters of the Latin alphabet.
+- `Syllabic` and `Phonetic`, despite imposing more structure than `Alphabetic`, will match a surprising amount of English words. For example, every word in "an awesome joke!" matches.
+- `NimiPu` and `NimiLinkuCore` will match `a`, `mute`, `open` regardless of the surrounding language.
+
+This is point of `Ilo` and the `Scorers`: None of these filters would _individually_ be able to correctly identify a Toki Pona statement, but all of them working together with some tuning are able to achieve a surprisingly high accuracy.
 
 ### Don't some of the cleaners/filters conflict?
 
