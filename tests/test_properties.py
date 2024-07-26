@@ -1,6 +1,6 @@
 # PDM
 import hypothesis.strategies as st
-from hypothesis import given
+from hypothesis import given, assume
 
 # LOCAL
 from sonatoki.Filters import (
@@ -54,11 +54,13 @@ def test_ku_filters_non_overlap(s: str):
             | NIMI_LINKU_COMMON
             | NIMI_LINKU_UNCOMMON
             | NIMI_LINKU_OBSCURE
-            | NIMI_LINKU_SANDBOX - {"su"}
+            | NIMI_LINKU_SANDBOX
         )
     )
 )
 def test_linku_filters_non_overlap(s: str):
+    _ = assume(s != "su")
+
     s = Lowercase.clean(s)
     s = ConsecutiveDuplicates.clean(s)
 
