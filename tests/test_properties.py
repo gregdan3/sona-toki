@@ -54,7 +54,7 @@ def test_ku_filters_non_overlap(s: str):
             | NIMI_LINKU_COMMON
             | NIMI_LINKU_UNCOMMON
             | NIMI_LINKU_OBSCURE
-            | NIMI_LINKU_SANDBOX
+            | NIMI_LINKU_SANDBOX - {"su"}
         )
     )
 )

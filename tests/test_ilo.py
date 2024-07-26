@@ -106,12 +106,9 @@ CORPUS_SPECIFIC = [
     'jasima omekapo, ki nimisin "jasima enko nimisin". ki enko alu linluwi Jutu alu epiku ki epiku baba is you. ki likujo "SINtelen pona", ki epiku alu "sitelen pona". ki kepen wawajete isipin, kin ki yupekosi alu lipamanka alu wawajete, kin ki enko isipin lipamanka linluwi alu wawajete',
     "kalamARRRR",
     "Pingo",
-    "we Luke",
+    "we Luke li alente wa",
 ]
-CORPUS_SPECIFIC_XFAIL = [
-    "How to Cut a Kiwi",
-    "a e i o u",
-]
+CORPUS_SPECIFIC_XFAIL = []
 
 
 EXCESSIVE_SYLLABICS = [
@@ -156,6 +153,8 @@ EXCESSIVE_ENGLISH = [
     "I see :)",
     "I wanna see",  # same down to here
     "i'm online all the time",
+    "How to Cut a Kiwi",
+    "a e i o u",
 ]
 
 NON_MATCHES = [

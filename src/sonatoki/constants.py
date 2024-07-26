@@ -553,7 +553,7 @@ FALSE_POS_SYLLABIC = {
     "in",
     "no",
     "some",
-    # "papa",
+    # "papa",  # now in sandbox
     "on",
     "me",
     "ipa",
@@ -591,7 +591,7 @@ FALSE_POS_SYLLABIC = {
     "oposite",
     "anime",
     "potato",
-    # "japan",
+    "japan",
     "nose",
     "kilo",
     "alone",
@@ -629,17 +629,20 @@ FALSE_POS_SYLLABIC = {
     "awaken",
     "eliminate",
     "elite",
-    "misuse",
     "emanate",
     "iluminate",
     "imense",
     "imitate",
+    "injoke",
     "insane",
     "insolate",
     "insulate",
     "intense",
     "lemon",
     "manipulate",
+    "misuse",
+    "ne",  # "no" in many other languages
+    "wana",
 }
 
 FALSE_POS_ALPHABETIC: Set[str] = {

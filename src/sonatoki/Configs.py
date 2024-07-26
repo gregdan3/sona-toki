@@ -1,6 +1,6 @@
 # STL
 from copy import deepcopy
-from typing import List, Type, TypedDict
+from typing import Set, List, Type, TypedDict, cast
 
 # PDM
 from typing_extensions import NotRequired
@@ -18,6 +18,7 @@ from sonatoki.Filters import (
     NimiKuLili,
     NimiKuSuli,
     ProperName,
+    Phonotactic,
     Punctuation,
     LongSyllabic,
     Miscellaneous,
@@ -101,6 +102,26 @@ CorpusConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
+}
+
+# TODO: create a mechanism to omit tokens from a filter with more granularity
+__corpus_tokens_dict: Set[str] = cast(
+    Set[str],
+    CorpusConfig["scoring_filters"][
+        0
+    ].tokens,  # pyright: ignore[reportAttributeAccessIssue]
+)
+__corpus_tokens_dict -= {
+    "an",
+    "i",
+    "me",
+    "ne",
+    "se",
+    "take",
+    "ten",
+    "to",
+    "u",
+    "we",
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
