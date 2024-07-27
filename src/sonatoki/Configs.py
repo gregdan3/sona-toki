@@ -112,16 +112,30 @@ __corpus_tokens_dict: Set[str] = cast(
     ].tokens,  # pyright: ignore[reportAttributeAccessIssue]
 )
 __corpus_tokens_dict -= {
-    "an",
-    "i",
-    "me",
-    "ne",
-    "se",
-    "take",
-    "ten",
-    "to",
-    "u",
-    "we",
+    # Sandbox words are removed from the CorpusConfig if they appear more frequently in English than Toki Pona by a factor of at least 3.
+    # In this case, all of these appear more often in English by a factor of at least 10.
+    "aka",  # also known as
+    "an",  # article
+    "api",  # API
+    "i",  # 1st person
+    "kana",  # japanese script
+    "me",  # 1st person
+    "ne",  # "no" in several languages
+    "nu",  # "new", now in dutch
+    "se",  # spanish particle, "see"
+    "take",  # acquire, perhaps forcefully or without permission
+    "ten",  # 10
+    "to",  # to, too
+    "u",  # no u
+    "we",  # 1st person plural
+    "wi",  # wii and discussions of syllables
+    "sole",  # singular, of shoe
+    # unexplored candidates for removal
+    # "omen",  # ominous
+    # "papa",  # father
+    # "lo",  # "lo" and "loo"
+    # "ewe",  # sheep
+    # "pa",  # father- eh?
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
