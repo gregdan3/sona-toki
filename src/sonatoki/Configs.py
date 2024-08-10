@@ -72,7 +72,7 @@ PrefConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        Or(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
+        Or(NimiLinkuCore, NimiLinkuCommon, NimiLinkuUncommon, NimiUCSUR),
         And(LongSyllabic, Not(FalsePosSyllabic)),
         # NOTE: These are allowed to pass name and alphabetic below, because they *could* be wrong
         LongProperName,
@@ -94,7 +94,7 @@ CorpusConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
             NimiUCSUR,
-            Miscellaneous,
+            # Miscellaneous,
         ),
         And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
