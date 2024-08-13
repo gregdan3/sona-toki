@@ -501,6 +501,8 @@ ALL_PUNCT_RANGES_STR = "".join(find_unicode_ranges(ALL_PUNCT))
 SENTENCE_PUNCT = """.?!:;()[-]·…"""
 # NOTE: quotes were previously included, but in TP they are *not* reliably sentence boundaries
 
+INTRA_WORD_PUNCT = """-'"""
+
 
 LINKU = Path(__file__).resolve().parent / Path("linku.json")
 SANDBOX = Path(__file__).resolve().parent / Path("sandbox.json")

@@ -49,6 +49,15 @@ class WordTokenizer(SetTokenizer):
     delimiters = set(ALL_PUNCT)
 
     @classmethod
+    def is_delimiter(cls, c: str) -> bool:
+        return c in cls.delimiters or not c
+
+    @classmethod
+    def add_token(cls, s: str, tokens: List[str], last_match: int, i: int):
+        if i > last_match:
+            tokens.append(s[last_match:i])
+
+    @classmethod
     def to_tokens(cls, s: str) -> List[str]:
         tokens: List[str] = []
 
@@ -57,23 +66,20 @@ class WordTokenizer(SetTokenizer):
         while i < slen:
 
             last_match = i
-            while i < slen and s[i] in cls.delimiters:
+            while i < slen and cls.is_delimiter(s[i]):
                 # no special case
                 i += 1
-            if i > last_match:
-                tokens.append(s[last_match:i])
+            cls.add_token(s, tokens, last_match, i)
 
             last_match = i
-            while i < slen and s[i] not in cls.delimiters:
+            while i < slen and not cls.is_delimiter(s[i]):
                 if NimiUCSUR.filter(s[i]):
-                    if i > last_match:
-                        tokens.append(s[last_match:i])
+                    cls.add_token(s, tokens, last_match, i)
                     tokens.append(s[i])
                     last_match = i + 1
 
                 i += 1
-            if i > last_match:
-                tokens.append(s[last_match:i])
+            cls.add_token(s, tokens, last_match, i)
 
         return tokens
 
