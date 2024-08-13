@@ -30,6 +30,7 @@ from sonatoki.Filters import (
     NimiLinkuObscure,
     NimiLinkuSandbox,
     NimiLinkuUncommon,
+    FalsePosAlphabetic,
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
@@ -76,7 +77,7 @@ PrefConfig: IloConfig = {
         And(LongSyllabic, Not(FalsePosSyllabic)),
         # NOTE: These are allowed to pass name and alphabetic below, because they *could* be wrong
         LongProperName,
-        LongAlphabetic,
+        And(LongAlphabetic, Not(FalsePosAlphabetic)),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
@@ -94,11 +95,11 @@ CorpusConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
             NimiUCSUR,
-            # Miscellaneous,
+            Miscellaneous,
         ),
         And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
-        LongAlphabetic,
+        And(LongAlphabetic, Not(FalsePosAlphabetic)),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
@@ -161,7 +162,7 @@ IsipinEpikuConfig: IloConfig = {
         ),
         And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
-        LongAlphabetic,
+        And(LongAlphabetic, Not(FalsePosAlphabetic)),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
@@ -176,7 +177,7 @@ DiscordConfig: IloConfig = {
         Or(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
         And(LongSyllabic, Not(FalsePosSyllabic)),
         LongProperName,
-        LongAlphabetic,
+        And(LongAlphabetic, Not(FalsePosAlphabetic)),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
