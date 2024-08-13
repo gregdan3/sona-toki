@@ -540,6 +540,7 @@ FALSE_POS_SYLLABIC = {
     "name",
     "time",
     "imo",  # "in my opinion"
+    "ime",  # "in my experience"
     "man",
     # "son",  # sona typo?
     "joke",
@@ -617,6 +618,7 @@ FALSE_POS_SYLLABIC = {
     # manual additions
     "alike",
     "amuse",
+    "animate",
     "antelope",
     "antena",
     "apetite",
@@ -639,16 +641,21 @@ FALSE_POS_SYLLABIC = {
     "insolate",
     "insulate",
     "intense",
+    # "june",
     "lemon",
     "manipulate",
     "misuse",
     "ne",  # "no" in many other languages
+    "tape",
+    "onto",
     "wana",
+    "muse",
 }
 
 FALSE_POS_ALPHABETIC: Set[str] = {
     "t",
     "is",
+    "os",  # some command prefix...
     "as",
     "not",
     "link",
