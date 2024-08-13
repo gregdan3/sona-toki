@@ -49,9 +49,33 @@ class WordTokenizer(SetTokenizer):
     delimiters = set(ALL_PUNCT)
 
     @classmethod
-    def __helper(cls, s: str, tokens: List[str], last_match: int, i: int):
-        match = s[last_match:i].split()
-        [tokens.append(t) for t in match if t]
+    def to_tokens(cls, s: str) -> List[str]:
+        tokens: List[str] = []
+
+        slen = len(s)
+        i = 0
+        while i < slen:
+
+            last_match = i
+            while i < slen and s[i] in cls.delimiters:
+                # no special case
+                i += 1
+            if i > last_match:
+                tokens.append(s[last_match:i])
+
+            last_match = i
+            while i < slen and s[i] not in cls.delimiters:
+                if NimiUCSUR.filter(s[i]):
+                    if i > last_match:
+                        tokens.append(s[last_match:i])
+                    tokens.append(s[i])
+                    last_match = i + 1
+
+                i += 1
+            if i > last_match:
+                tokens.append(s[last_match:i])
+
+        return tokens
 
     @classmethod
     @override
@@ -60,33 +84,12 @@ class WordTokenizer(SetTokenizer):
             return []
 
         tokens: List[str] = []
+        candidates: List[str] = s.split()
 
-        i = 0  # ensure i is bound
-        last_match = 0
-        last_membership = s[0] in cls.delimiters
-        for i, char in enumerate(s):
-            mem = char in cls.delimiters
-            ucsur = NimiUCSUR.filter(char)
-            changed = (mem != last_membership) or ucsur
-            # this keeps contiguous words together, but splits UCSUR
-            if not changed:
-                continue
+        for candidate in candidates:
+            results = cls.to_tokens(candidate)
+            tokens.extend(results)
 
-            if ucsur:
-                if i > last_match:
-                    # Add the token before UCSUR character
-                    cls.__helper(s, tokens, last_match, i)
-                # Add UCSUR character itself as a token
-                tokens.append(char)
-                last_match = i + 1
-                last_membership = mem
-                continue
-
-            cls.__helper(s, tokens, last_match, i)
-            last_match = i
-            last_membership = mem
-
-        cls.__helper(s, tokens, last_match, i + 1)
         return tokens
 
 
