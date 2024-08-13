@@ -498,7 +498,8 @@ ALL_PUNCT = "".join(sorted(list(set(POSIX_PUNCT + UNICODE_PUNCT))))
 ALL_PUNCT_RANGES_STR = "".join(find_unicode_ranges(ALL_PUNCT))
 # combined bc the result could be simpler
 
-SENTENCE_PUNCT = """.?!:;'"()[-]“”·…"""
+SENTENCE_PUNCT = """.?!:;()[-]·…"""
+# NOTE: quotes were previously included, but in TP they are *not* reliably sentence boundaries
 
 
 LINKU = Path(__file__).resolve().parent / Path("linku.json")

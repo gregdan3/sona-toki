@@ -46,13 +46,17 @@
   input: "mi mu tawa sina, mi wawa e sina."
   output:
     - "mi mu tawa sina, mi wawa e sina."
-- name: "quotes"
+- name: "singlequotes"
   input: "toki li tan kulupu Kuko li ni: 'o ike ala!'"
-  output: # expected; we split on right of all sentence-ending puncts
+  output:
     - "toki li tan kulupu Kuko li ni:"
+    - "'o ike ala!"
     - "'"
-    - "o ike ala!"
-    - "'"
+- name: "doublequotes"
+  input: 'ona li toki e ni: "mama sina"'
+  output:
+    - "ona li toki e ni:"
+    - '"mama sina"'
 - name: "discovered case 1"
   input: "ona li ken lukin e sitelen [_ike_nanpa_lete_ike]. ni li pona kin."
   output:
