@@ -10,7 +10,12 @@ from typing_extensions import override, deprecated
 # LOCAL
 from sonatoki.utils import regex_escape
 from sonatoki.Filters import NimiUCSUR  # seriously this sucks
-from sonatoki.constants import ALL_PUNCT, SENTENCE_PUNCT, ALL_PUNCT_RANGES_STR
+from sonatoki.constants import (
+    ALL_PUNCT,
+    SENTENCE_PUNCT,
+    INTRA_WORD_PUNCT,
+    ALL_PUNCT_RANGES_STR,
+)
 
 regex.DEFAULT_VERSION = regex.VERSION1
 
@@ -47,6 +52,7 @@ class Regex1Tokenizer(Tokenizer):
 
 class WordTokenizer(SetTokenizer):
     delimiters = set(ALL_PUNCT)
+    intra_word_punct = set(INTRA_WORD_PUNCT)
 
     @classmethod
     def is_delimiter(cls, c: str) -> bool:
@@ -63,22 +69,42 @@ class WordTokenizer(SetTokenizer):
 
         slen = len(s)
         i = 0
+        did_skip = False  # ensure exists
         while i < slen:
 
+            # contiguous punctuation chars
             last_match = i
             while i < slen and cls.is_delimiter(s[i]):
                 # no special case
                 i += 1
             cls.add_token(s, tokens, last_match, i)
 
+            # contiguous writing chars (much harder)
             last_match = i
             while i < slen and not cls.is_delimiter(s[i]):
+                did_skip = False
+                # we skip and see another writing char, or init
+
                 if NimiUCSUR.filter(s[i]):
                     cls.add_token(s, tokens, last_match, i)
                     tokens.append(s[i])
-                    last_match = i + 1
+                    i += 1
+                    last_match = i
+                    continue
+
+                next_char = s[i + 1] if i + 1 < slen else ""
+                if next_char in cls.intra_word_punct:
+                    did_skip = True
+                    i += 2
+                    continue
 
                 i += 1
+
+            if did_skip:
+                # we skipped, but there wasn't another writing character
+                cls.add_token(s, tokens, last_match, i - 1)
+                last_match = i - 1
+
             cls.add_token(s, tokens, last_match, i)
 
         return tokens
