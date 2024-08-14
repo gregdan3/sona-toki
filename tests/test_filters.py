@@ -280,3 +280,36 @@ def test_AndNotFilter(s: str):
     if res_fp:
         # syl matched- but if fp matches, then the composed filter should not match
         assert not res_composed
+
+
+@given(st.sampled_from(list(NIMI_PU | NIMI_KU_SULI)))
+def test_AddTokensToMemberFilter(s: str):
+    PuEnKuSuliFilter = NimiPu(add=NimiKuSuli.tokens)
+    assert PuEnKuSuliFilter.filter(s)
+
+
+@given(st.sampled_from(list(NIMI_LINKU_SANDBOX | NIMI_KU_LILI)))
+def test_AddTokensToMemberFilterNegative(s: str):
+    PuEnKuSuliFilter = NimiPu(add=NimiKuSuli.tokens)
+    assert not PuEnKuSuliFilter.filter(s)
+
+
+@given(
+    st.sampled_from(
+        list(
+            NIMI_PU
+            | NIMI_KU_SULI
+            | NIMI_KU_LILI
+            | NIMI_LINKU_UNCOMMON
+            | NIMI_LINKU_OBSCURE
+            | NIMI_LINKU_SANDBOX
+        ),
+    )
+    | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)
+)
+def test_SubTokensFromMemberFilter(s: str):
+    NimiAlaFilter = NimiLinkuCore(sub=NimiPu.tokens)
+    # core is a strict subset of pu
+    # if kin becomes core, needs to be corrected
+
+    assert not NimiAlaFilter.filter(s)

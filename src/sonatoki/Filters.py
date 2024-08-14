@@ -1,7 +1,8 @@
 # STL
 import re
 from abc import ABC, abstractmethod
-from typing import Set, List, Type
+from copy import deepcopy
+from typing import Set, List, Type, Optional
 from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
@@ -100,6 +101,20 @@ class MemberFilter(Filter):
     @cache(maxsize=None)
     def filter(cls, token: str) -> bool:
         return token.lower() in cls.tokens
+
+    def __new__(
+        cls, add: Optional[Set[str]] = None, sub: Optional[Set[str]] = None
+    ) -> Type[Filter]:
+        parent_tokens = deepcopy(cls.tokens)
+        if add:
+            parent_tokens = parent_tokens.union(add)
+        if sub:
+            parent_tokens -= sub
+
+        class AnonMemberFilter(MemberFilter):
+            tokens = parent_tokens
+
+        return AnonMemberFilter
 
 
 class SubsetFilter(Filter):

@@ -1,6 +1,6 @@
 # STL
 from copy import deepcopy
-from typing import Set, List, Type, TypedDict, cast
+from typing import List, Type, TypedDict
 
 # PDM
 from typing_extensions import NotRequired
@@ -12,13 +12,11 @@ from sonatoki.Filters import (
     Not,
     Filter,
     Numeric,
-    Syllabic,
     NimiUCSUR,
     Alphabetic,
     NimiKuLili,
     NimiKuSuli,
     ProperName,
-    Phonotactic,
     Punctuation,
     LongSyllabic,
     Miscellaneous,
@@ -43,6 +41,34 @@ from sonatoki.Preprocessors import (
     Preprocessor,
     AngleBracketObject,
 )
+
+__DICT_PHONOMATCHES = {
+    # Sandbox words are removed from the CorpusConfig if they appear more frequently in English than Toki Pona by a factor of at least 3.
+    # In this case, all of these appear more often in English by a factor of at least 10.
+    "aka",  # also known as
+    "an",  # article
+    "api",  # API
+    "i",  # 1st person
+    "kana",  # japanese script
+    "me",  # 1st person singular, english
+    "ne",  # "no" in several languages
+    "nu",  # "new" in english, "now" in dutch
+    "se",  # spanish particle, english "see"
+    "take",  # acquire, perhaps forcefully or without permission
+    "ten",  # 10
+    "to",  # to, too
+    "je",  # 1st person pronoun, french
+    "u",  # no u
+    "we",  # 1st person plural, english
+    "wi",  # wii and discussions of syllables
+    "sole",  # singular, of shoe
+    # unexplored candidates for removal
+    # "omen",  # ominous
+    # "papa",  # father
+    # "lo",  # "lo" and "loo"
+    # "ewe",  # sheep
+    # "pa",  # father- eh?
+}
 
 
 class IloConfig(TypedDict):
@@ -92,8 +118,8 @@ CorpusConfig: IloConfig = {
             NimiLinkuCore,
             NimiLinkuCommon,
             NimiLinkuUncommon,
-            NimiLinkuObscure,
-            NimiLinkuSandbox,
+            NimiLinkuObscure(sub=__DICT_PHONOMATCHES),
+            NimiLinkuSandbox(sub=__DICT_PHONOMATCHES),
             NimiUCSUR,
             Miscellaneous,
         ),
@@ -103,40 +129,6 @@ CorpusConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
-}
-
-# TODO: create a mechanism to omit tokens from a filter with more granularity
-__corpus_tokens_dict: Set[str] = cast(
-    Set[str],
-    CorpusConfig["scoring_filters"][
-        0
-    ].tokens,  # pyright: ignore[reportAttributeAccessIssue]
-)
-__corpus_tokens_dict -= {
-    # Sandbox words are removed from the CorpusConfig if they appear more frequently in English than Toki Pona by a factor of at least 3.
-    # In this case, all of these appear more often in English by a factor of at least 10.
-    "aka",  # also known as
-    "an",  # article
-    "api",  # API
-    "i",  # 1st person
-    "kana",  # japanese script
-    "me",  # 1st person
-    "ne",  # "no" in several languages
-    "nu",  # "new", now in dutch
-    "se",  # spanish particle, "see"
-    "take",  # acquire, perhaps forcefully or without permission
-    "ten",  # 10
-    "to",  # to, too
-    "u",  # no u
-    "we",  # 1st person plural
-    "wi",  # wii and discussions of syllables
-    "sole",  # singular, of shoe
-    # unexplored candidates for removal
-    # "omen",  # ominous
-    # "papa",  # father
-    # "lo",  # "lo" and "loo"
-    # "ewe",  # sheep
-    # "pa",  # father- eh?
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
