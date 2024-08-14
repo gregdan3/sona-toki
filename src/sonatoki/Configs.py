@@ -34,7 +34,7 @@ from sonatoki.Filters import (
 )
 from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
-from sonatoki.Tokenizers import Tokenizer
+from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
 from sonatoki.Preprocessors import (
     URLs,
     Emoji,
@@ -146,6 +146,7 @@ LazyConfig: IloConfig = {
     "scoring_filters": [Alphabetic, NimiUCSUR, ProperName, Miscellaneous],
     "scorer": SoftPassFail,
     "passing_score": 0.8,
+    "word_tokenizer": WordTokenizerRe,  # mimics old tokenizer
 }
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
