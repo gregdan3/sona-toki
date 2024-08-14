@@ -192,10 +192,11 @@ FALSE_NEGATIVES = [
     "poan",
     "mtue",
     "mi nasa B^)",  # emoticon
+    "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
 ]
 
 FALSE_POSITIVES = [
-    "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
+    "Knowing a little toki pona",
 ]
 
 
