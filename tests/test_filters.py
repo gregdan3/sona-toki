@@ -34,23 +34,13 @@ from sonatoki.Filters import (
     NimiLinkuUncommon,
 )
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
-from sonatoki.constants import (
-    NIMI_PU,
-    NIMI_KU_LILI,
-    NIMI_KU_SULI,
-    NIMI_LINKU_CORE,
-    NIMI_LINKU_COMMON,
-    FALSE_POS_SYLLABIC,
-    NIMI_LINKU_OBSCURE,
-    NIMI_LINKU_SANDBOX,
-    NIMI_LINKU_UNCOMMON,
-)
+from sonatoki.constants import FALSE_POS_SYLLABIC, words_by_tag
 
 # FILESYSTEM
 from .test_utils import PROPER_NAME_RE
 
 
-@given(st.sampled_from(list(NIMI_PU)))
+@given(st.sampled_from(list(words_by_tag("book", "pu"))))
 @example("lukin")
 @example("selo")
 @example("li")
@@ -59,14 +49,14 @@ def test_NimiPu(s: str):
     assert res, repr(s)
 
 
-@given(st.sampled_from(list(NIMI_LINKU_CORE)))
+@given(st.sampled_from(list(words_by_tag("usage_category", "core"))))
 @example("pona")
 def test_NimiLinkuCore(s: str):
     res = NimiLinkuCore.filter(s)
     assert res, repr(s)
 
 
-@given(st.sampled_from(list(NIMI_LINKU_COMMON)))
+@given(st.sampled_from(list(words_by_tag("usage_category", "common"))))
 @example("n")
 @example("tonsi")
 @example("kipisi")
@@ -75,19 +65,21 @@ def test_NimiLinkuCommon(s: str):
     assert res, repr(s)
 
 
-@given(st.sampled_from(list(NIMI_LINKU_UNCOMMON)))
+@given(st.sampled_from(list(words_by_tag("usage_category", "uncommon"))))
 def test_NimiLinkuUncommon(s: str):
     res = NimiLinkuUncommon.filter(s)
     assert res, repr(s)
 
 
-@given(st.sampled_from(list(NIMI_LINKU_OBSCURE)))
+@given(st.sampled_from(list(words_by_tag("usage_category", "obscure"))))
+@example("pake")
+@example("san")
 def test_NimiLinkuObscure(s: str):
     res = NimiLinkuObscure.filter(s)
     assert res, repr(s)
 
 
-@given(st.sampled_from(list(NIMI_LINKU_SANDBOX)))
+@given(st.sampled_from(list(words_by_tag("usage_category", "sandbox"))))
 @example("kalamARR")
 @example("Pingo")
 def test_NimiLinkuSandbox(s: str):
@@ -207,7 +199,11 @@ def test_OrFilter(s: str):
 # NOTE: No subset filter test because A | B is not the same as A combined with B.
 # e.g. "apple" passes Alphabetic, "..." passes Punctuation, "apple..." passes neither
 # but would incorrectly pass a combined filter.
-@given(st.sampled_from(list(NIMI_PU | NIMI_LINKU_OBSCURE)))
+@given(
+    st.sampled_from(
+        list(words_by_tag("book", "pu") | words_by_tag("usage_category", "obscure"))
+    )
+)
 def test_MemberFilters_OrFilter(s: str):
     filter = Or(NimiPu, NimiLinkuObscure)
     assert issubclass(filter, MemberFilter)
@@ -221,11 +217,11 @@ def test_MemberFilters_OrFilter(s: str):
 @given(
     st.sampled_from(
         list(
-            NIMI_KU_SULI
-            | NIMI_KU_LILI
-            | NIMI_LINKU_UNCOMMON
-            | NIMI_LINKU_OBSCURE
-            | NIMI_LINKU_SANDBOX
+            words_by_tag("book", "ku suli")
+            | words_by_tag("book", "ku lili")
+            | words_by_tag("usage_category", "uncommon")
+            | words_by_tag("usage_category", "obscure")
+            | words_by_tag("usage_category", "sandbox")
         ),
     )
 )
@@ -248,14 +244,14 @@ def test_OrFilter_IsipinEpiku(s: str):
     )
 
 
-@given(st.sampled_from(list(NIMI_PU)))
+@given(st.sampled_from(list(words_by_tag("book", "pu"))))
 def test_AndFilter(s: str):
     s = s.capitalize()
     f = And(ProperName, NimiPu)
     assert f.filter(s)
 
 
-@given(st.sampled_from(list(NIMI_PU)))
+@given(st.sampled_from(list(words_by_tag("book", "pu"))))
 def test_NotFilter(s: str):
     f = Not(NimiPu)
     assert not f.filter(s)
@@ -282,13 +278,21 @@ def test_AndNotFilter(s: str):
         assert not res_composed
 
 
-@given(st.sampled_from(list(NIMI_PU | NIMI_KU_SULI)))
+@given(
+    st.sampled_from(list(words_by_tag("book", "pu") | words_by_tag("book", "ku suli")))
+)
 def test_AddTokensToMemberFilter(s: str):
     PuEnKuSuliFilter = NimiPu(add=NimiKuSuli.tokens)
     assert PuEnKuSuliFilter.filter(s)
 
 
-@given(st.sampled_from(list(NIMI_LINKU_SANDBOX | NIMI_KU_LILI)))
+@given(
+    st.sampled_from(
+        list(
+            words_by_tag("usage_category", "sandbox") | words_by_tag("book", "ku lili")
+        )
+    )
+)
 def test_AddTokensToMemberFilterNegative(s: str):
     PuEnKuSuliFilter = NimiPu(add=NimiKuSuli.tokens)
     assert not PuEnKuSuliFilter.filter(s)
@@ -297,12 +301,12 @@ def test_AddTokensToMemberFilterNegative(s: str):
 @given(
     st.sampled_from(
         list(
-            NIMI_PU
-            | NIMI_KU_SULI
-            | NIMI_KU_LILI
-            | NIMI_LINKU_UNCOMMON
-            | NIMI_LINKU_OBSCURE
-            | NIMI_LINKU_SANDBOX
+            words_by_tag("book", "pu")
+            | words_by_tag("book", "ku suli")
+            | words_by_tag("book", "ku lili")
+            | words_by_tag("usage_category", "uncommon")
+            | words_by_tag("usage_category", "obscure")
+            | words_by_tag("usage_category", "sandbox")
         ),
     )
     | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)

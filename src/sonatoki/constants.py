@@ -1,7 +1,57 @@
 # STL
 import json
-from typing import Set, Dict
+from typing import Set, Dict, List, Union, Literal, Optional, TypedDict
 from pathlib import Path
+
+LinkuUsageDate = Union[
+    Literal["2020-04"],
+    Literal["2021-10"],
+    Literal["2022-08"],
+    Literal["2023-09"],
+    # Literal["2024-09"],
+]
+
+LinkuUsageCategory = Union[
+    Literal["core"],
+    Literal["common"],
+    Literal["uncommon"],
+    Literal["obscure"],
+    Literal["sandbox"],
+]
+
+LinkuBooks = Union[
+    Literal["pu"],
+    Literal["ku suli"],
+    Literal["ku lili"],
+    Literal["none"],
+]
+
+LATEST_DATE = "2023-09"
+# hardcoding this seems bad, but it means the parser is stable w.r.t. Linku!
+
+
+class LinkuWord(TypedDict):
+    id: str
+    author_verbatim: str
+    author_verbatim_source: str
+    book: str
+    coined_era: str
+    coined_year: str
+    creator: List[str]
+    ku_data: Dict[str, int]
+    see_also: List[str]
+    resources: Dict[str, str]
+    representations: Dict[str, Union[str, List[str]]]
+    source_language: str
+    usage_category: LinkuUsageCategory
+    word: str
+    deprecated: bool
+    etymology: List[Dict[str, str]]
+    audio: List[Dict[str, str]]
+    pu_verbatim: Dict[str, str]
+    usage: Dict[LinkuUsageDate, int]
+    translations: Dict[str, Dict[str, str]]
+
 
 # LOCAL
 from sonatoki.utils import find_unicode_chars, find_unicode_ranges
@@ -689,35 +739,48 @@ NIMI_UCSUR = find_unicode_chars(UCSUR_RANGES)
 # NIMI_PU_ALE_UCSUR_RANGES = NIMI_PU_UCSUR_RANGES + ["\\U000F1978-\\U000F197A"]
 
 
-def category_helper(data: Dict[str, Dict[str, str]], key: str, value: str) -> Set[str]:
-    return {d["word"] for d in data.values() if d[key] == value}
+def linku_data() -> Dict[str, LinkuWord]:
+    # NOTE: this does open+read+parse two files each time you construct a filter
+    # but i expect users to construct filters only at the start of runtime
+    # there is no reason to waste your RAM by leaving the linku data in it
+    with open(LINKU) as f:
+        linku: Dict[str, LinkuWord] = json.loads(f.read())
+    with open(SANDBOX) as f:
+        sandbox: Dict[str, LinkuWord] = json.loads(f.read())
+
+    return {**linku, **sandbox}
 
 
-with open(LINKU) as f:
-    linku: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_PU = category_helper(linku, "book", "pu")
-    NIMI_PU_SYNONYMS = {"namako", "kin", "oko"}
+def words_by_tag(tag: str, value: str) -> Set[str]:
+    data = linku_data()
+    return {d["word"] for d in data.values() if d[tag] == value}
 
-    NIMI_KU_SULI = category_helper(linku, "book", "ku suli")
-    NIMI_KU_LILI = category_helper(linku, "book", "ku lili")
 
-    NIMI_LINKU_CORE = category_helper(linku, "usage_category", "core")
-    NIMI_LINKU_COMMON = category_helper(linku, "usage_category", "common")
-    NIMI_LINKU_UNCOMMON = category_helper(linku, "usage_category", "uncommon")
-    NIMI_LINKU_OBSCURE = category_helper(linku, "usage_category", "obscure")
+def words_by_usage(
+    usage: int,
+    date: Optional[LinkuUsageDate] = None,
+) -> Set[str]:
+    if not date:
+        date = LATEST_DATE
+    data = linku_data()
 
-with open(SANDBOX) as f:
-    sandbox: Dict[str, Dict[str, str]] = json.loads(f.read())
-    NIMI_LINKU_SANDBOX = {d["word"] for d in sandbox.values()}
+    result: Set[str] = set()
+    for word in data.values():
+        usages = word["usage"]
+        if date in usages and usages[date] >= usage:
+            result.add(word["word"])
+
+    return result
+
+
+NIMI_PU_SYNONYMS = {"namako", "kin", "oko"}
+
 
 # with open(SYLLABICS) as f:
 #     FALSE_POS_SYLLABIC = {line.strip() for line in f}
 #
 # with open(ALPHABETICS) as f:
 #     FALSE_POS_ALPHABETIC = {line.strip() for line in f}
-
-del linku
-del sandbox
 
 __all__ = [
     "ALLOWABLES",
@@ -727,14 +790,6 @@ __all__ = [
     "CONSONANTS",
     "EMOJI_VARIATION_SELECTOR_RANGES",
     "EMOJI_VARIATION_SELECTOR_RANGES_STR",
-    "NIMI_KU_LILI",
-    "NIMI_KU_SULI",
-    "NIMI_LINKU_COMMON",
-    "NIMI_LINKU_CORE",
-    "NIMI_LINKU_OBSCURE",
-    "NIMI_LINKU_SANDBOX",
-    "NIMI_LINKU_UNCOMMON",
-    "NIMI_PU",
     "NIMI_PU_SYNONYMS",
     "POSIX_PUNCT",
     "POSIX_PUNCT_RANGES",

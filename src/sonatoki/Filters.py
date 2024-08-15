@@ -2,37 +2,34 @@
 import re
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Set, List, Type, Optional
+from typing import Set, List, Type, Union, Literal, Optional
 from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
 import regex
-from typing_extensions import override, deprecated
+from typing_extensions import override
 
 # LOCAL
 from sonatoki.utils import prep_dictionary
 from sonatoki.constants import (
     VOWELS,
-    NIMI_PU,
     ALPHABET,
     ALL_PUNCT,
     ALLOWABLES,
     CONSONANTS,
     NIMI_UCSUR,
-    NIMI_KU_LILI,
-    NIMI_KU_SULI,
-    NIMI_LINKU_CORE,
     NIMI_PU_SYNONYMS,
-    NIMI_LINKU_COMMON,
     FALSE_POS_SYLLABIC,
-    NIMI_LINKU_OBSCURE,
-    NIMI_LINKU_SANDBOX,
     NOT_IN_PUNCT_CLASS,
-    NIMI_LINKU_UNCOMMON,
     ALL_PUNCT_RANGES_STR,
     FALSE_POS_ALPHABETIC,
     UCSUR_PUNCT_RANGES_STR,
     EMOJI_VARIATION_SELECTOR_RANGES_STR,
+    LinkuBooks,
+    LinkuUsageDate,
+    LinkuUsageCategory,
+    words_by_tag,
+    words_by_usage,
 )
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -170,40 +167,46 @@ class LongProperName(MinLen, ProperName):
     length = 2  # reject "names" of length 1
 
 
-class NimiPu(MemberFilter):
-    tokens = prep_dictionary(NIMI_PU)
+class NimiLinkuByUsage:
+    def __new__(
+        cls,
+        usage: int,
+        date: Optional[LinkuUsageDate] = None,
+    ) -> Type[MemberFilter]:
+        words = words_by_usage(usage, date)
+
+        class AnonLinkuMemberFilter(MemberFilter):
+            tokens = prep_dictionary(words)
+
+        return AnonLinkuMemberFilter
+
+
+class NimiLinkuByTag:
+    def __new__(
+        cls,
+        tag: Union[Literal["usage_category"], Literal["book"]],
+        category: Union[LinkuUsageCategory, LinkuBooks],
+    ) -> Type[MemberFilter]:
+        words = words_by_tag(tag, category)
+
+        class AnonLinkuMemberFilter(MemberFilter):
+            tokens = prep_dictionary(words)
+
+        return AnonLinkuMemberFilter
+
+
+NimiPu = NimiLinkuByTag("book", "pu")
+NimiKuSuli = NimiLinkuByTag("book", "ku suli")
+NimiKuLili = NimiLinkuByTag("book", "ku lili")
+NimiLinkuCore = NimiLinkuByTag("usage_category", "core")
+NimiLinkuCommon = NimiLinkuByTag("usage_category", "common")
+NimiLinkuUncommon = NimiLinkuByTag("usage_category", "uncommon")
+NimiLinkuObscure = NimiLinkuByTag("usage_category", "obscure")
+NimiLinkuSandbox = NimiLinkuByTag("usage_category", "sandbox")
 
 
 class NimiPuSynonyms(MemberFilter):
     tokens = prep_dictionary(NIMI_PU_SYNONYMS)
-
-
-class NimiKuSuli(MemberFilter):
-    tokens = prep_dictionary(NIMI_KU_SULI)
-
-
-class NimiKuLili(MemberFilter):
-    tokens = prep_dictionary(NIMI_KU_LILI)
-
-
-class NimiLinkuCore(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU_CORE)
-
-
-class NimiLinkuCommon(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU_COMMON)
-
-
-class NimiLinkuUncommon(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU_UNCOMMON)
-
-
-class NimiLinkuObscure(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU_OBSCURE)
-
-
-class NimiLinkuSandbox(MemberFilter):
-    tokens = prep_dictionary(NIMI_LINKU_SANDBOX)
 
 
 class NimiUCSUR(MemberFilter):

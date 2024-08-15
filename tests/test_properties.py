@@ -19,28 +19,26 @@ from sonatoki.Filters import (
 )
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
 from sonatoki.constants import (
-    NIMI_PU,
-    NIMI_KU_LILI,
-    NIMI_KU_SULI,
-    NIMI_LINKU_CORE,
     NIMI_PU_SYNONYMS,
-    NIMI_LINKU_COMMON,
     FALSE_POS_SYLLABIC,
-    NIMI_LINKU_OBSCURE,
-    NIMI_LINKU_SANDBOX,
-    NIMI_LINKU_UNCOMMON,
     FALSE_POS_ALPHABETIC,
+    words_by_tag,
+    words_by_usage,
 )
 
 
-@given(st.sampled_from(list(NIMI_PU | NIMI_PU_SYNONYMS)))
+@given(st.sampled_from(list(words_by_tag("book", "pu") | NIMI_PU_SYNONYMS)))
 def test_pu_filters_non_overlap(s: str):
     res_pu = NimiPu.filter(s)
     res_synonyms = NimiPuSynonyms.filter(s)
     assert (res_pu + res_synonyms) == 1
 
 
-@given(st.sampled_from(list(NIMI_KU_SULI | NIMI_KU_LILI)))
+@given(
+    st.sampled_from(
+        list(words_by_tag("book", "ku suli") | words_by_tag("book", "ku lili"))
+    )
+)
 def test_ku_filters_non_overlap(s: str):
     s = Lowercase.clean(s)
     s = ConsecutiveDuplicates.clean(s)
@@ -49,17 +47,7 @@ def test_ku_filters_non_overlap(s: str):
     assert (res_ku_suli + res_ku_lili) == 1
 
 
-@given(
-    st.sampled_from(
-        list(
-            NIMI_LINKU_CORE
-            | NIMI_LINKU_COMMON
-            | NIMI_LINKU_UNCOMMON
-            | NIMI_LINKU_OBSCURE
-            | NIMI_LINKU_SANDBOX
-        )
-    )
-)
+@given(st.sampled_from(list(words_by_usage(0))))
 def test_linku_filters_non_overlap(s: str):
     _ = assume(s != "su")
 
@@ -75,7 +63,7 @@ def test_linku_filters_non_overlap(s: str):
     assert (res_core + res_common + res_uncommon + res_obscure + res_sandbox) == 1
 
 
-@given(st.sampled_from(list(NIMI_LINKU_CORE | NIMI_LINKU_COMMON | NIMI_LINKU_UNCOMMON)))
+@given(st.sampled_from(list(words_by_usage(30))))
 def test_nimi_linku_properties(s: str):
     assert ConsecutiveDuplicates.clean(s) == s, repr(s)
     assert Alphabetic.filter(s), repr(s)
