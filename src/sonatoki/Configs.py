@@ -6,6 +6,7 @@ from typing import List, Type, TypedDict
 from typing_extensions import NotRequired
 
 # LOCAL
+from sonatoki.types import Number
 from sonatoki.Filters import (
     Or,
     And,
@@ -30,7 +31,7 @@ from sonatoki.Filters import (
     NimiLinkuUncommon,
     FalsePosAlphabetic,
 )
-from sonatoki.Scorers import Number, Scorer, PassFail, SoftScaling, SoftPassFail
+from sonatoki.Scorers import Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
 from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
 from sonatoki.Preprocessors import (

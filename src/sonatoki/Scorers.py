@@ -1,16 +1,14 @@
 # STL
 import math
 from abc import ABC, abstractmethod
-from typing import Dict, List, Type, Union
+from typing import List, Type
 
 # PDM
 from typing_extensions import override
 
 # LOCAL
+from sonatoki.types import Number, Scorecard
 from sonatoki.Filters import Filter
-
-Number = Union[int, float]
-Weights = Dict[str, Number]
 
 
 class Scorer(ABC):

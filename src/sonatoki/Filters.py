@@ -10,6 +10,7 @@ import regex
 from typing_extensions import override
 
 # LOCAL
+from sonatoki.types import LinkuBooks, LinkuUsageDate, LinkuUsageCategory
 from sonatoki.utils import prep_dictionary
 from sonatoki.constants import (
     VOWELS,
@@ -25,9 +26,6 @@ from sonatoki.constants import (
     FALSE_POS_ALPHABETIC,
     UCSUR_PUNCT_RANGES_STR,
     EMOJI_VARIATION_SELECTOR_RANGES_STR,
-    LinkuBooks,
-    LinkuUsageDate,
-    LinkuUsageCategory,
     words_by_tag,
     words_by_usage,
 )

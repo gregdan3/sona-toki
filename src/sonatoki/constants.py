@@ -1,60 +1,15 @@
 # STL
 import json
-from typing import Set, Dict, List, Union, Literal, Optional, TypedDict
+from typing import Set, Dict, Optional
 from pathlib import Path
 
-LinkuUsageDate = Union[
-    Literal["2020-04"],
-    Literal["2021-10"],
-    Literal["2022-08"],
-    Literal["2023-09"],
-    # Literal["2024-09"],
-]
-
-LinkuUsageCategory = Union[
-    Literal["core"],
-    Literal["common"],
-    Literal["uncommon"],
-    Literal["obscure"],
-    Literal["sandbox"],
-]
-
-LinkuBooks = Union[
-    Literal["pu"],
-    Literal["ku suli"],
-    Literal["ku lili"],
-    Literal["none"],
-]
+# LOCAL
+from sonatoki.types import LinkuWord, LinkuUsageDate
+from sonatoki.utils import find_unicode_chars, find_unicode_ranges
 
 LATEST_DATE = "2023-09"
 # hardcoding this seems bad, but it means the parser is stable w.r.t. Linku!
 
-
-class LinkuWord(TypedDict):
-    id: str
-    author_verbatim: str
-    author_verbatim_source: str
-    book: str
-    coined_era: str
-    coined_year: str
-    creator: List[str]
-    ku_data: Dict[str, int]
-    see_also: List[str]
-    resources: Dict[str, str]
-    representations: Dict[str, Union[str, List[str]]]
-    source_language: str
-    usage_category: LinkuUsageCategory
-    word: str
-    deprecated: bool
-    etymology: List[Dict[str, str]]
-    audio: List[Dict[str, str]]
-    pu_verbatim: Dict[str, str]
-    usage: Dict[LinkuUsageDate, int]
-    translations: Dict[str, Dict[str, str]]
-
-
-# LOCAL
-from sonatoki.utils import find_unicode_chars, find_unicode_ranges
 
 # `\p{Punctuation}` character class
 # https://www.compart.com/en/unicode/category

@@ -1,16 +1,13 @@
 # STL
-from typing import List, Type, Tuple
+from typing import List, Type
 
 # LOCAL
+from sonatoki.types import Number, Scorecard
 from sonatoki.Filters import Filter
-from sonatoki.Scorers import Number, Scorer
+from sonatoki.Scorers import Scorer
 from sonatoki.Cleaners import Cleaner
 from sonatoki.Tokenizers import Tokenizer, SentTokenizer, WordTokenizer
 from sonatoki.Preprocessors import Preprocessor
-
-# tokenized, filtered, cleaned, score, result
-Scorecard = Tuple[List[str], List[str], List[str], Number, bool]
-# TODO: scorecard kinda sucks as a name
 
 
 class Ilo:
@@ -55,6 +52,7 @@ class Ilo:
         return self.__word_tokenizer.tokenize(msg)
 
     def sent_tokenize(self, msg: str) -> List[str]:
+        """It is *highly* recommended that you run `ilo.preprocess` first."""
         return self.__sent_tokenizer.tokenize(msg)
 
     def clean_token(self, token: str) -> str:
