@@ -8,6 +8,7 @@ from sonatoki.Preprocessors import (
     Spoilers,
     AllQuotes,
     Backticks,
+    Codeblock,
     Reference,
     ArrowQuote,
     ColonEmotes,
@@ -45,6 +46,25 @@ def test_Spoilers(s: str):
 @example("` ` ` `")
 def test_Backticks(s: str):
     res = Backticks.process(s).strip()
+    assert res == "", (repr(s), repr(res))
+
+
+@given(st.from_regex(Codeblock.pattern.pattern, fullmatch=True))
+@example(
+    """```
+```"""
+)
+@example(
+    """```
+blocky message
+```
+
+```
+second blocky message
+```"""
+)
+def test_Codeblock(s: str):
+    res = Codeblock.process(s).strip()
     assert res == "", (repr(s), repr(res))
 
 

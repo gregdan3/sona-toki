@@ -143,6 +143,15 @@ class Backticks(RegexPreprocessor):
     pattern = re.compile(r"`[^`]+`", flags=re.DOTALL)
 
 
+class Codeblock(RegexPreprocessor):
+    """Remove codeblocks marked by a set of three backticks on their own lines.
+
+    Subset of what would be removed by Backticks, but may be preferable.
+    """
+
+    pattern = re.compile(r"```\n(?:(?!```).*?)?```", flags=re.DOTALL)
+
+
 class Spoilers(RegexPreprocessor):
     """Remove paired double bars and their contents `||like this||`"""
 

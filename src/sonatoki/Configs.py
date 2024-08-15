@@ -38,6 +38,7 @@ from sonatoki.Preprocessors import (
     URLs,
     Emoji,
     Backticks,
+    Codeblock,
     Reference,
     Preprocessor,
     AngleBracketObject,
@@ -96,7 +97,7 @@ BaseConfig: IloConfig = {
 
 
 PrefConfig: IloConfig = {
-    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -111,7 +112,7 @@ PrefConfig: IloConfig = {
 }
 
 CorpusConfig: IloConfig = {
-    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -133,7 +134,7 @@ CorpusConfig: IloConfig = {
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
-    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [Alphabetic, NimiUCSUR, ProperName, Miscellaneous],
@@ -143,7 +144,7 @@ LazyConfig: IloConfig = {
 }
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
-    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
+    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
