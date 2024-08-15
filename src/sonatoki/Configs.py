@@ -1,5 +1,4 @@
 # STL
-from copy import deepcopy
 from typing import List, Type, TypedDict
 
 # PDM
@@ -37,7 +36,6 @@ from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
 from sonatoki.Preprocessors import (
     URLs,
     Emoji,
-    Backticks,
     Codeblock,
     Reference,
     Preprocessor,
@@ -164,31 +162,10 @@ IsipinEpikuConfig: IloConfig = {
 }
 
 
-DiscordConfig: IloConfig = {
-    "preprocessors": [Emoji, Backticks, URLs, AngleBracketObject, Reference],
-    "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation],
-    "scoring_filters": [
-        Or(NimiLinkuCore, NimiLinkuCommon, NimiUCSUR, Miscellaneous),
-        And(LongSyllabic, Not(FalsePosSyllabic)),
-        LongProperName,
-        And(LongAlphabetic, Not(FalsePosAlphabetic)),
-    ],
-    "scorer": SoftScaling,
-    "passing_score": 0.8,
-}
-
-TelegramConfig: IloConfig = deepcopy(PrefConfig)
-ForumConfig: IloConfig = deepcopy(PrefConfig)
-
-
 __all__ = [
     "BaseConfig",
     "CorpusConfig",
-    "DiscordConfig",
-    "ForumConfig",
     "IloConfig",
     "LazyConfig",
     "PrefConfig",
-    "TelegramConfig",
 ]
