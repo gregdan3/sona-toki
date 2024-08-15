@@ -20,11 +20,10 @@ from sonatoki.Filters import (
     Punctuation,
     LongSyllabic,
     Miscellaneous,
-    NimiLinkuCore,
     LongAlphabetic,
     LongProperName,
-    NimiLinkuCommon,
     FalsePosSyllabic,
+    NimiLinkuByUsage,
     NimiLinkuObscure,
     NimiLinkuSandbox,
     NimiLinkuUncommon,
@@ -99,7 +98,7 @@ PrefConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        Or(NimiLinkuCore, NimiLinkuCommon, NimiLinkuUncommon, NimiUCSUR),
+        Or(NimiLinkuByUsage(30), NimiUCSUR),
         And(LongSyllabic, Not(FalsePosSyllabic)),
         # NOTE: These are allowed to pass name and alphabetic below, because they *could* be wrong
         LongProperName,
@@ -115,11 +114,8 @@ CorpusConfig: IloConfig = {
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
         Or(
-            NimiLinkuCore,
-            NimiLinkuCommon,
-            NimiLinkuUncommon,
-            NimiLinkuObscure(sub=__DICT_PHONOMATCHES),
-            NimiLinkuSandbox(sub=__DICT_PHONOMATCHES),
+            # awkward but efficient syntax
+            NimiLinkuByUsage(0)(sub=__DICT_PHONOMATCHES),
             NimiUCSUR,
             Miscellaneous,
         ),
