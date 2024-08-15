@@ -42,6 +42,8 @@ def test_pu_filters_non_overlap(s: str):
 
 @given(st.sampled_from(list(NIMI_KU_SULI | NIMI_KU_LILI)))
 def test_ku_filters_non_overlap(s: str):
+    s = Lowercase.clean(s)
+    s = ConsecutiveDuplicates.clean(s)
     res_ku_suli = NimiKuSuli.filter(s)
     res_ku_lili = NimiKuLili.filter(s)
     assert (res_ku_suli + res_ku_lili) == 1
