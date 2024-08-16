@@ -4,7 +4,7 @@ from typing import List, Type
 # LOCAL
 from sonatoki.types import Number, Scorecard
 from sonatoki.Filters import Filter
-from sonatoki.Scorers import Scorer
+from sonatoki.Scorers import Scorer, SentNoOp, SentenceScorer
 from sonatoki.Cleaners import Cleaner
 from sonatoki.Tokenizers import Tokenizer, SentTokenizer, WordTokenizer
 from sonatoki.Preprocessors import Preprocessor
@@ -18,6 +18,7 @@ class Ilo:
     __ignoring_filters: List[Type[Filter]]
     __scoring_filters: List[Type[Filter]]
     __scorer: Type[Scorer]
+    __sentence_scorer: Type[SentenceScorer]
     __passing_score: Number
 
     def __init__(
@@ -28,6 +29,7 @@ class Ilo:
         scoring_filters: List[Type[Filter]],
         scorer: Type[Scorer],
         passing_score: Number,
+        sentence_scorer: Type[SentenceScorer] = SentNoOp,
         word_tokenizer: Type[Tokenizer] = WordTokenizer,
         sent_tokenizer: Type[Tokenizer] = SentTokenizer,
     ):
@@ -40,6 +42,7 @@ class Ilo:
         self.__ignoring_filters = [*ignoring_filters]
         self.__scoring_filters = [*scoring_filters]
         self.__scorer = scorer
+        self.__sentence_scorer = sentence_scorer
         self.__passing_score = passing_score
 
     def preprocess(self, msg: str) -> str:
@@ -91,6 +94,9 @@ class Ilo:
     def score_tokens(self, tokens: List[str]) -> float:
         return self.__scorer.score(tokens, self.__scoring_filters)
 
+    def score_sentences(self, scorecards: List[Scorecard]) -> List[Scorecard]:
+        return self.__sentence_scorer.score(scorecards)
+
     def _is_toki_pona(self, message: str) -> Scorecard:
         """Process a message into its tokens, then filters, cleans, and scores
         them. Message must already be preprocessed, normally done in
@@ -130,6 +136,7 @@ class Ilo:
         for sentence in self.sent_tokenize(message):
             result = self._is_toki_pona(sentence)
             scorecards.append(result)
+        scorecards = self.score_sentences(scorecards)
         return scorecards
 
     def are_toki_pona(self, message: str) -> List[bool]:

@@ -122,7 +122,64 @@ class SoftScaling(Soften, Scaling):
     scoring."""
 
 
-# class Logarithmic(Scorer): ...
+class SentenceScorer(ABC):
+    @classmethod
+    @abstractmethod
+    def score(cls, scorecards: List[Scorecard]) -> List[Scorecard]:
+        """Re-score a list of sentences (scorecards, sentences with all their
+        metadata) and return them."""
+        raise NotImplementedError
 
 
-__all__ = ["PassFail", "SoftPassFail", "Scaling", "SoftScaling"]
+class SentNoOp(SentenceScorer):
+    @classmethod
+    @override
+    def score(cls, scorecards: List[Scorecard]) -> List[Scorecard]:
+        return scorecards
+
+
+class SentAvg(SentenceScorer):
+    @classmethod
+    @override
+    def score(cls, scorecards: List[Scorecard]) -> List[Scorecard]:
+        if not scorecards:
+            return scorecards
+
+        total = sum(card["score"] for card in scorecards)
+        avg = total / len(scorecards)
+        for card in scorecards:
+            card["score"] = avg
+        return scorecards
+
+
+class SentWeightedAvg(SentenceScorer):
+    @classmethod
+    @override
+    def score(cls, scorecards: List[Scorecard]) -> List[Scorecard]:
+        if not scorecards:
+            return scorecards
+
+        weighted_total = 0
+        total_len = 0
+        for card in scorecards:
+            cardlen = len(card["cleaned"])
+            cardscore = card["score"]
+
+            weighted_total += cardlen * cardscore
+            total_len += cardlen
+
+        weighted_avg = weighted_total / total_len
+        for card in scorecards:
+            card["score"] = weighted_avg
+        return scorecards
+
+
+__all__ = [
+    "PassFail",
+    "Scaling",
+    "SoftPassFail",
+    "SoftScaling",
+    "Soften",
+    "SentAvg",
+    "SentWeightedAvg",
+]
