@@ -1,10 +1,17 @@
 # STL
-from typing import Dict, List, Tuple, Union, Literal, TypedDict
+from typing import Dict, List, Union, Literal, TypedDict
 
 Number = Union[int, float]
-# tokenized, filtered, cleaned, score, result
-Scorecard = Tuple[List[str], List[str], List[str], Number, bool]
+
+
 # TODO: scorecard kinda sucks as a name
+class Scorecard(TypedDict):
+    text: str
+    tokenized: List[str]
+    filtered: List[str]
+    cleaned: List[str]
+    score: Number
+
 
 LinkuUsageDate = Union[
     Literal["2020-04"],

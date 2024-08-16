@@ -93,42 +93,44 @@ class Ilo:
 
     def _is_toki_pona(self, message: str) -> Scorecard:
         """Process a message into its tokens, then filters, cleans, and scores
-        them. Returns all parts. Message must already be preprocessed, normally
-        done in `self.is_toki_pona(message)`.
+        them. Message must already be preprocessed, normally done in
+        `self.is_toki_pona(message)`.
 
-        Returns all components of the processing algorithm except preprocessing:
-        - Tokenized message (list[str])
-        - Filtered message (list[str])
-        - Cleaned message (list[str])
-        - Score (float)
-        - Result (bool)
+        Returns a `Scorecard` with all changes to the input text and a score.
         """
         tokenized = self.word_tokenize(message)
         filtered = self.filter_tokens(tokenized)
         cleaned = self.clean_tokens(filtered)
         score = self.score_tokens(cleaned)
-        result = score >= self.__passing_score
 
-        return tokenized, filtered, cleaned, score, result
+        scorecard: Scorecard = {
+            "text": message,
+            "tokenized": tokenized,
+            "filtered": filtered,
+            "cleaned": cleaned,
+            "score": score,
+        }
+
+        return scorecard
 
     def is_toki_pona(self, message: str) -> bool:
-        """Determines whether a single statement is or is not Toki Pona."""
+        """Determines whether a text is or is not Toki Pona."""
         message = self.preprocess(message)
-        *_, result = self._is_toki_pona(message)
-        return result
+        scorecard = self._is_toki_pona(message)
+        return scorecard["score"] >= self.__passing_score
 
     def _are_toki_pona(self, message: str) -> List[Scorecard]:
-        """Split a message into sentences, then return a list each sentence's
-        results via `self._is_toki_pona()`.
+        """Split a message into sentences, then return a list with each
+        sentence's scorecard from `self._is_toki_pona()`.
 
         Message must already be preprocessed, normally done in
         `self.are_toki_pona(message)`.
         """
-        results: List[Scorecard] = list()
+        scorecards: List[Scorecard] = list()
         for sentence in self.sent_tokenize(message):
             result = self._is_toki_pona(sentence)
-            results.append(result)
-        return results
+            scorecards.append(result)
+        return scorecards
 
     def are_toki_pona(self, message: str) -> List[bool]:
         """Splits a statement into sentences, then determines if each is or is not Toki Pona.
@@ -146,5 +148,5 @@ class Ilo:
         ```
         """
         message = self.preprocess(message)
-        results = self._are_toki_pona(message)
-        return [res[-1] for res in results]
+        scorecards = self._are_toki_pona(message)
+        return [card["score"] >= self.__passing_score for card in scorecards]
