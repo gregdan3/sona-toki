@@ -1,3 +1,6 @@
+# STL
+from typing import List, Tuple
+
 # PDM
 import pytest
 
@@ -108,7 +111,7 @@ CORPUS_SPECIFIC = [
     "Pingo",
     "we Luke li alente wa",
 ]
-CORPUS_SPECIFIC_XFAIL = []
+CORPUS_SPECIFIC_XFAIL: List[str] = []
 
 
 EXCESSIVE_SYLLABICS = [
@@ -199,6 +202,15 @@ FALSE_POSITIVES = [
     "Knowing a little toki pona",
 ]
 
+IGNORABLE_PAIRS: List[Tuple[str, str]] = [
+    ("o lukin e ni: https://example.com/", "o lukin e ni:"),
+    ("ni li nasa anu seme <:musiwawa:198591138591>", "ni li nasa anu seme"),
+    ("seme la ni li toki pona ala https://example.com/", "seme la ni li toki pona ala"),
+    ("```\ndef bad():\n    pass\n``` o lukin e ni", "o lukin e ni"),
+    ("mi tawa tomo telo 💦💦", "mi tawa tomo telo"),
+    ("o lukin e lipu ni: [[wp:Canvassing]]", "o lukin e lipu ni:"),
+]
+
 
 @pytest.mark.parametrize("text", KNOWN_GOOD)
 def test_known_good_pref(ilo: Ilo, text: str):
@@ -254,3 +266,33 @@ def test_false_negatives_pref(ilo: Ilo, text: str):
 @pytest.mark.parametrize("text", CORPUS_SPECIFIC_XFAIL)
 def test_false_positives_corpus(corpus_ilo: Ilo, text: str):
     assert not corpus_ilo.is_toki_pona(text)
+
+
+@pytest.mark.parametrize("pair", IGNORABLE_PAIRS)
+def test_pref_ignorable_doesnt_change_score(ilo: Ilo, pair: Tuple[str, str]):
+    with_ignorable, without_ignorable = pair
+    with_ignorable = ilo.preprocess(with_ignorable)
+    without_ignorable = ilo.preprocess(without_ignorable)
+    score_with = ilo._is_toki_pona(with_ignorable)[3]
+    score_without = ilo._is_toki_pona(without_ignorable)[3]
+    assert score_with == score_without
+
+
+@pytest.mark.parametrize("pair", IGNORABLE_PAIRS)
+def test_lazy_ignorable_doesnt_change_score(lazy_ilo: Ilo, pair: Tuple[str, str]):
+    with_ignorable, without_ignorable = pair
+    with_ignorable = lazy_ilo.preprocess(with_ignorable)
+    without_ignorable = lazy_ilo.preprocess(without_ignorable)
+    score_with = lazy_ilo._is_toki_pona(with_ignorable)[3]
+    score_without = lazy_ilo._is_toki_pona(without_ignorable)[3]
+    assert score_with == score_without
+
+
+@pytest.mark.parametrize("pair", IGNORABLE_PAIRS)
+def test_corpus_ignorable_doesnt_change_score(corpus_ilo: Ilo, pair: Tuple[str, str]):
+    with_ignorable, without_ignorable = pair
+    with_ignorable = corpus_ilo.preprocess(with_ignorable)
+    without_ignorable = corpus_ilo.preprocess(without_ignorable)
+    score_with = corpus_ilo._is_toki_pona(with_ignorable)[3]
+    score_without = corpus_ilo._is_toki_pona(without_ignorable)[3]
+    assert score_with == score_without
