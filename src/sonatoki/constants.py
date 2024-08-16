@@ -643,6 +643,7 @@ FALSE_POS_SYLLABIC = {
     "iluminate",
     "imense",
     "imitate",
+    "inanimate",
     "injoke",
     "insane",
     "insolate",
