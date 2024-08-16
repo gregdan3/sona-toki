@@ -38,6 +38,10 @@ ALL_VALID = [
     "󱥄󱥬󱥩󱤴",  # "o toki tawa mi" in UCSUR
     "󱤴󱤧󱤑󱥍󱦗󱤖󱥡󱦘󱤬󱥭‍󱥡󱥚",
     "󱤑󱦐󱥗󱦜󱦈󱦜󱥉󱦜󱦑󱥄󱤤󱤂󱤉󱥆󱤀",
+    "o lukin, 󱤴󱥬󱥩󱤴󱤧wawa",
+    "ni li sona kiwen",
+    "nimi namako li toki e ale",
+    "mi open mute a",  # mostly eng words
 ]
 
 IGNORABLES = [
@@ -58,10 +62,9 @@ IGNORABLES = [
     "❤️",  # heart
     "😊",
     "👨‍👩‍👧‍👧",  # family emoji with zwj
-    # every non-emoji in
+    # every non-emoji in the writables
     "🄀🄁🄂🄃🄄🄅🄆🄇🄈🄉🄊🄋🄌🄍🄎🄏🄐🄑🄒🄓🄔🄕🄖🄗🄘🄙🄚🄛🄜🄝🄞🄟🄠🄡🄢🄣🄤🄥🄦🄧🄨🄩🄪🄫🄬🄭🄮🄯🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🅊🅋🅌🅍🅎🅏🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅪🅫🅬🅭🅮🅯🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🆊🆋🆌🆍🆏🆐 🆛🆜🆝🆞🆟🆠🆡🆢🆣🆤🆥🆦🆧🆨🆩🆪🆫🆬🆭🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿",
     "🅰️🅱️🅾️🅱️🅰️",  # blood type emojis
-    # "😃⃢👍",  # sincerely, no idea, but it came up
 ]
 
 SYLLABIC_MATCHES = [
@@ -196,10 +199,11 @@ FALSE_NEGATIVES = [
     "mtue",
     "mi nasa B^)",  # emoticon
     "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
+    "😃⃢👍",  # sincerely, no idea, but it came up and it should be omitted by emojis but isn't
 ]
 
 FALSE_POSITIVES = [
-    "Knowing a little toki pona",
+    "Knowing a little toki pona",  # name, dict, alphabet, dict, dict- damn, that's hard.
 ]
 
 IGNORABLE_PAIRS: List[Tuple[str, str]] = [
