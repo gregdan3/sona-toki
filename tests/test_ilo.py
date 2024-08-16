@@ -273,8 +273,8 @@ def test_pref_ignorable_doesnt_change_score(ilo: Ilo, pair: Tuple[str, str]):
     with_ignorable, without_ignorable = pair
     with_ignorable = ilo.preprocess(with_ignorable)
     without_ignorable = ilo.preprocess(without_ignorable)
-    score_with = ilo._is_toki_pona(with_ignorable)[3]
-    score_without = ilo._is_toki_pona(without_ignorable)[3]
+    score_with = ilo._is_toki_pona(with_ignorable)["score"]
+    score_without = ilo._is_toki_pona(without_ignorable)["score"]
     assert score_with == score_without
 
 
@@ -283,8 +283,8 @@ def test_lazy_ignorable_doesnt_change_score(lazy_ilo: Ilo, pair: Tuple[str, str]
     with_ignorable, without_ignorable = pair
     with_ignorable = lazy_ilo.preprocess(with_ignorable)
     without_ignorable = lazy_ilo.preprocess(without_ignorable)
-    score_with = lazy_ilo._is_toki_pona(with_ignorable)[3]
-    score_without = lazy_ilo._is_toki_pona(without_ignorable)[3]
+    score_with = lazy_ilo._is_toki_pona(with_ignorable)["score"]
+    score_without = lazy_ilo._is_toki_pona(without_ignorable)["score"]
     assert score_with == score_without
 
 
@@ -293,6 +293,6 @@ def test_corpus_ignorable_doesnt_change_score(corpus_ilo: Ilo, pair: Tuple[str, 
     with_ignorable, without_ignorable = pair
     with_ignorable = corpus_ilo.preprocess(with_ignorable)
     without_ignorable = corpus_ilo.preprocess(without_ignorable)
-    score_with = corpus_ilo._is_toki_pona(with_ignorable)[3]
-    score_without = corpus_ilo._is_toki_pona(without_ignorable)[3]
+    score_with = corpus_ilo._is_toki_pona(with_ignorable)["score"]
+    score_without = corpus_ilo._is_toki_pona(without_ignorable)["score"]
     assert score_with == score_without
