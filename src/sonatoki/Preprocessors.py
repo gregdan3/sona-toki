@@ -150,8 +150,8 @@ class Codeblock(RegexPreprocessor):
     """
 
     pattern = re.compile(
-        r"^```(?:[\w\-]+)?$(?:(?!```).*?)^```$",
-        flags=re.MULTILINE | re.DOTALL,
+        r"```.+?```",
+        flags=re.DOTALL,
     )
 
 

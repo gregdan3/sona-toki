@@ -63,6 +63,12 @@ blocky message
 second blocky message
 ```"""
 )
+@example(
+    """```oisandm123-_mu
+arbitrary content
+```"""
+)
+@example("""```mu```""")
 def test_Codeblock(s: str):
     res = Codeblock.process(s).strip()
     assert res == "", (repr(s), repr(res))
