@@ -149,7 +149,10 @@ class Codeblock(RegexPreprocessor):
     Subset of what would be removed by Backticks, but may be preferable.
     """
 
-    pattern = re.compile(r"```\n(?:(?!```).*?)?```", flags=re.DOTALL)
+    pattern = re.compile(
+        r"^```(?:[\w\-]+)?$(?:(?!```).*?)^```$",
+        flags=re.MULTILINE | re.DOTALL,
+    )
 
 
 class Spoilers(RegexPreprocessor):
