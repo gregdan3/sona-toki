@@ -94,6 +94,9 @@ NAME_MATCHES = [
     "toki Kanse li lon",
     "toki Lojban li nasa e lawa mi",
     "ilo Firefox",
+    "ilo FaceBook li nasa",
+    "mi kepeken ilo MySQL",
+    "poki li nasin SQLite",
     "mi musi Space Station 13",
     "jan Tepo en jan Salo en jan Lakuse en pipi Kewapi en soweli Eweke en mi li musi",
 ]
