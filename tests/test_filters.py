@@ -90,7 +90,7 @@ def test_NimiLinkuSandbox(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(Phonotactic.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Phonotactic.pattern, fullmatch=True))
 @example("kijetesantakalu")
 @example("n")
 def test_Phonotactic(s: str):
@@ -98,28 +98,28 @@ def test_Phonotactic(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(Phonotactic.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Phonotactic.pattern, fullmatch=True))
 def test_LongPhonotactic(s: str):
     len_ok = len(s) >= LongPhonotactic.length
     res = LongPhonotactic.filter(s)
     assert res == len_ok, repr(s)  # will match given fullmatch
 
 
-@given(st.from_regex(Syllabic.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Syllabic.pattern, fullmatch=True))
 @example("wuwojitiwunwonjintinmanna")
 def test_Syllabic(s: str):
     res = Syllabic.filter(s)
     assert res, repr(s)
 
 
-@given(st.from_regex(Syllabic.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Syllabic.pattern, fullmatch=True))
 def test_LongSyllabic(s: str):
     len_ok = len(s) >= LongSyllabic.length
     res = LongSyllabic.filter(s)
     assert res == len_ok
 
 
-@given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))
+@given(st.from_regex(AlphabeticRe.pattern, fullmatch=True))
 @example("muems")
 @example("mpptp")
 @example("tptpt")
@@ -129,14 +129,14 @@ def test_Alphabetic(s: str):
     assert res_fn == res_re, repr(s)
 
 
-@given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))
+@given(st.from_regex(AlphabeticRe.pattern, fullmatch=True))
 def test_LongAlphabetic(s: str):
     len_ok = len(s) >= LongAlphabetic.length
     res = LongAlphabetic.filter(s)
     assert res == len_ok
 
 
-@given(st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True))
+@given(st.from_regex(AlphabeticRe.pattern, fullmatch=True))
 def test_AlphabeticRe(s: str):
     res_re = AlphabeticRe.filter(s)
     assert res_re, repr(s)
@@ -148,7 +148,7 @@ def test_ProperName(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True))
+@given(st.from_regex(PunctuationRe.pattern, fullmatch=True))
 @example("[]")
 @example(r"\\")
 @example(r"\"")
@@ -161,14 +161,14 @@ def test_PunctuationRe1(s: str):
     assert res, repr(s)
 
 
-@given(st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True))
+@given(st.from_regex(PunctuationRe.pattern, fullmatch=True))
 def test_PunctuationRe(s: str):
     res_re = PunctuationRe.filter(s)
     res_re1 = PunctuationRe1.filter(s)
     assert res_re == res_re1, repr(s)
 
 
-@given(st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True))
+@given(st.from_regex(PunctuationRe.pattern, fullmatch=True))
 @example("\U000f1990")  # UCSUR char
 def test_Punctuation(s: str):
     res_fn = Punctuation.filter(s)
@@ -185,7 +185,7 @@ def test_Numeric(s: str):
 
 
 @given(
-    st.from_regex(PunctuationRe.pattern.pattern, fullmatch=True)
+    st.from_regex(PunctuationRe.pattern, fullmatch=True)
     | st.from_regex(r"\d+", fullmatch=True),
 )
 def test_OrFilter(s: str):
@@ -259,8 +259,8 @@ def test_NotFilter(s: str):
 
 @given(
     st.sampled_from(list(FALSE_POS_SYLLABIC))
-    | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)
-    | st.from_regex(AlphabeticRe.pattern.pattern, fullmatch=True)
+    | st.from_regex(Syllabic.pattern, fullmatch=True)
+    | st.from_regex(AlphabeticRe.pattern, fullmatch=True)
 )
 def test_AndNotFilter(s: str):
     AndNotFilter = And(Syllabic, Not(FalsePosSyllabic))
@@ -309,7 +309,7 @@ def test_AddTokensToMemberFilterNegative(s: str):
             | words_by_tag("usage_category", "sandbox")
         ),
     )
-    | st.from_regex(Syllabic.pattern.pattern, fullmatch=True)
+    | st.from_regex(Syllabic.pattern, fullmatch=True)
 )
 def test_SubTokensFromMemberFilter(s: str):
     NimiAlaFilter = NimiLinkuCore(sub=NimiPu.tokens)

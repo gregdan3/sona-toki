@@ -22,7 +22,7 @@ from sonatoki.Preprocessors import (
 )
 
 
-@given(st.from_regex(URLs.pattern.pattern, fullmatch=True))
+@given(st.from_regex(URLs.pattern, fullmatch=True))
 @example("https://google.com")
 @example("https://mun.la")
 @example("https://discord.gg/")
@@ -32,7 +32,7 @@ def test_URLs(s: str):
     assert URLs.process(s).strip() == ""
 
 
-@given(st.from_regex(Spoilers.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Spoilers.pattern, fullmatch=True))
 @example("|| | ||")
 @example("|| content\n\n\ncontent ||")
 @example("||\n||")
@@ -42,14 +42,14 @@ def test_Spoilers(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(Backticks.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Backticks.pattern, fullmatch=True))
 @example("` ` ` `")
 def test_Backticks(s: str):
     res = Backticks.process(s).strip()
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(Codeblock.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Codeblock.pattern, fullmatch=True))
 @example(
     """```
 ```"""
@@ -68,7 +68,7 @@ def test_Codeblock(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(ArrowQuote.pattern.pattern, fullmatch=True))
+@given(st.from_regex(ArrowQuote.pattern, fullmatch=True))
 @example("> base")
 @example("> newline\n> newline")
 def test_ArrowQuote(s: str):
@@ -76,7 +76,7 @@ def test_ArrowQuote(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(DoubleQuotes.pattern.pattern, fullmatch=True))
+@given(st.from_regex(DoubleQuotes.pattern, fullmatch=True))
 @example('" "" "')
 @example('" "\n" "')
 @example('" \n "')
@@ -85,7 +85,7 @@ def test_DoubleQuotes(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(SingleQuotes.pattern.pattern, fullmatch=True))
+@given(st.from_regex(SingleQuotes.pattern, fullmatch=True))
 @example("' '' '")
 @example("' '\n' '")
 @example("' \n '")
@@ -94,7 +94,7 @@ def test_SingleQuotes(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(DiscordEmotes.pattern.pattern, fullmatch=True))
+@given(st.from_regex(DiscordEmotes.pattern, fullmatch=True))
 @example("<a:example:123123>")
 @example("<:example:123123>")
 def test_DiscordEmotes(s: str):
@@ -102,7 +102,7 @@ def test_DiscordEmotes(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(DiscordMentions.pattern.pattern, fullmatch=True))
+@given(st.from_regex(DiscordMentions.pattern, fullmatch=True))
 @example("<@497549183847497739>")
 @example("<@!457890000>")
 @example("<@&18398198981985>")
@@ -111,7 +111,7 @@ def test_DiscordMentions(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(DiscordChannels.pattern.pattern, fullmatch=True))
+@given(st.from_regex(DiscordChannels.pattern, fullmatch=True))
 @example("<#19858915>")
 @example("<#18591912589812985>")
 def test_DiscordChannels(s: str):
@@ -119,7 +119,7 @@ def test_DiscordChannels(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(DiscordSpecial.pattern.pattern, fullmatch=True))
+@given(st.from_regex(DiscordSpecial.pattern, fullmatch=True))
 @example("<id:guide>")
 @example("<id:browse>")
 def test_DiscordSpecial(s: str):
@@ -128,11 +128,11 @@ def test_DiscordSpecial(s: str):
 
 
 @given(
-    st.from_regex(DiscordEmotes.pattern.pattern, fullmatch=True)
-    | st.from_regex(DiscordMentions.pattern.pattern, fullmatch=True)
-    | st.from_regex(DiscordChannels.pattern.pattern, fullmatch=True)
-    | st.from_regex(DiscordSpecial.pattern.pattern, fullmatch=True)
-    | st.from_regex(AngleBracketObject.pattern.pattern, fullmatch=True)
+    st.from_regex(DiscordEmotes.pattern, fullmatch=True)
+    | st.from_regex(DiscordMentions.pattern, fullmatch=True)
+    | st.from_regex(DiscordChannels.pattern, fullmatch=True)
+    | st.from_regex(DiscordSpecial.pattern, fullmatch=True)
+    | st.from_regex(AngleBracketObject.pattern, fullmatch=True)
 )
 @example("<https://example.com>")
 @example("<#123124125125>")
@@ -142,11 +142,11 @@ def test_AngleBracketObject(s: str):
 
 
 @given(
-    st.from_regex(SingleQuotes.pattern.pattern, fullmatch=True)
-    | st.from_regex(DoubleQuotes.pattern.pattern, fullmatch=True)
-    | st.from_regex(Backticks.pattern.pattern, fullmatch=True)
-    | st.from_regex(ArrowQuote.pattern.pattern, fullmatch=True)
-    | st.from_regex(AllQuotes.pattern.pattern, fullmatch=True)
+    st.from_regex(SingleQuotes.pattern, fullmatch=True)
+    | st.from_regex(DoubleQuotes.pattern, fullmatch=True)
+    | st.from_regex(Backticks.pattern, fullmatch=True)
+    | st.from_regex(ArrowQuote.pattern, fullmatch=True)
+    | st.from_regex(AllQuotes.pattern, fullmatch=True)
 )
 @example("> bruh")
 @example("`bruh`")
@@ -155,7 +155,7 @@ def test_AllQuotes(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(Reference.pattern.pattern, fullmatch=True))
+@given(st.from_regex(Reference.pattern, fullmatch=True))
 @example("[[Brainstorm]]")
 @example("[[Phatic Phrases]]")
 @example("[[Yahoo!]]")
@@ -164,7 +164,7 @@ def test_Reference(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(ColonEmotes.pattern.pattern, fullmatch=True))
+@given(st.from_regex(ColonEmotes.pattern, fullmatch=True))
 @example(":owe::owe:")
 @example(":suffering:")
 @example(":presid65despair:")

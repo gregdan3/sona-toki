@@ -12,7 +12,7 @@ from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates, ConsecutiveDupli
 from .test_utils import PROPER_NAME_RE
 
 
-@given(st.from_regex(ConsecutiveDuplicatesRe.pattern.pattern))
+@given(st.from_regex(ConsecutiveDuplicatesRe.pattern))
 @example("tooooki a")
 @example("muuuuuu")
 @example("nnn")
@@ -25,7 +25,7 @@ def test_ConsecutiveDuplicatesRe(s: str):
         assert a.lower() != b.lower(), (s, res)
 
 
-@given(st.from_regex(ConsecutiveDuplicatesRe.pattern.pattern))
+@given(st.from_regex(ConsecutiveDuplicatesRe.pattern))
 @example("Aaa")
 @example("aAa")
 @example("aaA")
