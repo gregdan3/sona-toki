@@ -141,8 +141,27 @@ class FalsePosAlphabetic(MemberFilter):
 
 
 class ProperName(Filter):
-    """Determines if a given token is a valid name (also called a loan word).
-    When Toki Pona is written with the Latin alphabet, names are generally
+    """Determine if a given token is a valid name based on a reasonable weakening of
+    the rules given in Toki Pona: The Language of Good. A token matches if it has a capital
+    letter at its start and is **not** fully capitalized.
+
+    This corrects an issue with PuName, where scripts lacking a case distinction are
+    errantly counted"""
+
+    @classmethod
+    @override
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        first_capitalized = token[0].isupper()
+        all_caps = token.isupper()
+
+        return first_capitalized and not all_caps
+
+
+class PuName(Filter):
+    """Determine if a given token is a valid name (also called a loan word) based on
+    the rules given in Toki Pona: The Language of Good.
+    When Toki Pona is written with the Latin alphabet, names are
     capitalized at their start. This filter identifies those tokens.
 
     Note that this alone cannot determine if a token is a valid name,
@@ -156,6 +175,9 @@ class ProperName(Filter):
     @override
     @cache(maxsize=None)
     def filter(cls, token: str) -> bool:
+        # first_capitalized = token[0].isupper()
+        # rest_capitalized = token[1:] == token[1:].upper()
+        # return first_capitalized and not rest_capitalized
         return token == token.capitalize()
         # TODO:  If the token is in a script which doesn't have a case distinction,
         # this will errantly match.
@@ -445,6 +467,7 @@ __all__ = [
     "Or",
     "Phonotactic",
     "ProperName",
+    "PuName",
     "Punctuation",
     "Syllabic",
 ]

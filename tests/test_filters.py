@@ -11,12 +11,12 @@ from sonatoki.Filters import (
     And,
     Not,
     NimiPu,
+    PuName,
     Numeric,
     Syllabic,
     Alphabetic,
     NimiKuLili,
     NimiKuSuli,
-    ProperName,
     Phonotactic,
     Punctuation,
     AlphabeticRe,
@@ -144,7 +144,7 @@ def test_AlphabeticRe(s: str):
 
 @given(st.from_regex(PROPER_NAME_RE, fullmatch=True))
 def test_ProperName(s: str):
-    res = ProperName.filter(s)
+    res = PuName.filter(s)
     assert res, repr(s)
 
 
@@ -247,7 +247,7 @@ def test_OrFilter_IsipinEpiku(s: str):
 @given(st.sampled_from(list(words_by_tag("book", "pu"))))
 def test_AndFilter(s: str):
     s = s.capitalize()
-    f = And(ProperName, NimiPu)
+    f = And(PuName, NimiPu)
     assert f.filter(s)
 
 

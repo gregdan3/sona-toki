@@ -10,10 +10,10 @@ from hypothesis import given, example
 from sonatoki.Filters import (
     Filter,
     NimiPu,
+    PuName,
     Numeric,
     Syllabic,
     Alphabetic,
-    ProperName,
     Phonotactic,
     NimiLinkuCore,
     PunctuationRe,
@@ -31,7 +31,7 @@ FILTERS = [
     NimiLinkuCore,
     NimiLinkuCommon,
     Alphabetic,
-    ProperName,
+    PuName,
     Phonotactic,
     PunctuationRe,
 ]

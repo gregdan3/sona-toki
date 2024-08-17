@@ -135,7 +135,6 @@ EXCESSIVE_SYLLABICS = [
 ]
 
 EXCESSIVE_ALPHABETICS = [
-    "21st",  # candidate for xfails?
     "wen i tok usin onli notes in toki pona i look silli. ",
     "I wait, I sulk, as a tool I make stoops to ineptness.",
     "aaa i non-saw usa's most multiple element-set. it's as asinine as in `e`-less speak",
@@ -161,6 +160,7 @@ EXCESSIVE_ENGLISH = [
     "i'm online all the time",
     "How to Cut a Kiwi",
     "a e i o u",
+    "21st",  # previous false positive; fixed by ProperName change
 ]
 
 NON_MATCHES = [
