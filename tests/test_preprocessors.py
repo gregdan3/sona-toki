@@ -49,7 +49,8 @@ def test_Backticks(s: str):
     assert res == "", (repr(s), repr(res))
 
 
-@given(st.from_regex(Codeblock.pattern, fullmatch=True))
+@given(st.from_regex(r"```(?:(?!`).+?)```", fullmatch=True))
+@example("""```0```""")
 @example(
     """```
 ```"""
