@@ -56,7 +56,8 @@
   input: 'ona li toki e ni: "mama sina"'
   output:
     - "ona li toki e ni:"
-    - '"mama sina"'
+    - '"'
+    - 'mama sina"'
 - name: "discovered case 1"
   input: "ona li ken lukin e sitelen [_ike_nanpa_lete_ike]. ni li pona kin."
   output:
