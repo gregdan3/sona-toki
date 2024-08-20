@@ -1,3 +1,6 @@
+# STL
+from typing import Optional
+
 # PDM
 import hypothesis.strategies as st
 from hypothesis import given, example
@@ -13,6 +16,7 @@ from sonatoki.Preprocessors import (
     ArrowQuote,
     ColonEmotes,
     DoubleQuotes,
+    MarkdownURLs,
     SingleQuotes,
     DiscordEmotes,
     DiscordSpecial,
@@ -20,6 +24,18 @@ from sonatoki.Preprocessors import (
     DiscordMentions,
     AngleBracketObject,
 )
+
+
+def extract_bracket_content(markdown_text: str) -> Optional[str]:
+    start = markdown_text.find("[", 0)
+    if start == -1:
+        return None
+
+    end = markdown_text.rfind("]")
+    if end == -1 or end <= start:
+        return None
+
+    return markdown_text[start + 1 : end]
 
 
 @given(st.from_regex(URLs.pattern, fullmatch=True))
@@ -30,6 +46,17 @@ from sonatoki.Preprocessors import (
 @example("http://localhost:80")
 def test_URLs(s: str):
     assert URLs.process(s).strip() == ""
+
+
+@given(st.from_regex(MarkdownURLs.pattern, fullmatch=True))
+@example("[mu](https://google.com)")
+@example("[wawa wawa wawa](https://mun.la)")
+@example("[[] silly mode activated](https://discord.gg/)")
+@example("[https://example.com/](http://example.com)")
+@example("[192.168.0.255](http://localhost:80)")
+def test_MarkdownURLs(s: str):
+    bracket_content = extract_bracket_content(s)
+    assert MarkdownURLs.process(s) == bracket_content
 
 
 @given(st.from_regex(Spoilers.pattern, fullmatch=True))

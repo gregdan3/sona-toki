@@ -74,6 +74,14 @@ class URLs(RegexPreprocessor):
     pattern = re.compile(r"https?:\/\/\S+")
 
 
+class MarkdownURLs(RegexPreprocessor):
+    """Remove URLs in markdown format, replacing them with their corresponding
+    text."""
+
+    pattern = re.compile(r"\[(.+?)\]\(https?:\/\/\S+\)")
+    replace = r"\1"
+
+
 class Reference(RegexPreprocessor):
     """Remove text contained in double brackets.
 
@@ -219,6 +227,7 @@ __all__ = [
     "DiscordMentions",
     "DiscordSpecial",
     "DoubleQuotes",
+    "MarkdownURLs",
     "Reference",
     "SingleQuotes",
     "Spoilers",
