@@ -33,6 +33,7 @@ from sonatoki.Scorers import Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
 from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
 from sonatoki.Preprocessors import (
+    RECOMMENDED_PREPROCESSORS,
     URLs,
     Emoji,
     Codeblock,
@@ -94,7 +95,7 @@ BaseConfig: IloConfig = {
 
 
 PrefConfig: IloConfig = {
-    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
+    "preprocessors": RECOMMENDED_PREPROCESSORS,
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -109,7 +110,7 @@ PrefConfig: IloConfig = {
 }
 
 CorpusConfig: IloConfig = {
-    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
+    "preprocessors": RECOMMENDED_PREPROCESSORS,
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
@@ -128,7 +129,7 @@ CorpusConfig: IloConfig = {
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
-    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
+    "preprocessors": RECOMMENDED_PREPROCESSORS,
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [Alphabetic, NimiUCSUR, PuName, Miscellaneous],
@@ -138,7 +139,7 @@ LazyConfig: IloConfig = {
 }
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
-    "preprocessors": [Emoji, Codeblock, URLs, AngleBracketObject, Reference],
+    "preprocessors": RECOMMENDED_PREPROCESSORS,
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [

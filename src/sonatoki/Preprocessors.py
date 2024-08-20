@@ -19,6 +19,7 @@ It is up to the user to order them appropriately.
 # STL
 import re
 from abc import ABC, abstractmethod
+from typing import List, Type
 
 # PDM
 import emoji
@@ -217,6 +218,20 @@ class ZeroWidths(RegexPreprocessor):
     pattern = re.compile("[\\U0000200C-\\U0000200D]")
 
 
+RECOMMENDED_PREPROCESSORS: List[Type[Preprocessor]] = [
+    # These are sorted by the "strength" of their definition, which would be roughly
+    # "How confidently have we matched this object?"
+    # Additionally, MarkdownURLs must come before URLs, and Emoji must come last due to
+    # its ability to appear in all of the others.
+    Codeblock,
+    AngleBracketObject,
+    Reference,
+    MarkdownURLs,
+    URLs,
+    Emoji,
+]
+
+
 __all__ = [
     "AllQuotes",
     "AngleBracketObject",
@@ -227,11 +242,12 @@ __all__ = [
     "DiscordMentions",
     "DiscordSpecial",
     "DoubleQuotes",
+    "Emoji",
     "MarkdownURLs",
+    "RECOMMENDED_PREPROCESSORS",
     "Reference",
     "SingleQuotes",
     "Spoilers",
     "URLs",
     "ZeroWidths",
-    "Emoji",
 ]
