@@ -84,8 +84,9 @@ I originally intended to translate this file and library into Toki Pona once Uni
 ### What's the deal with the tokenizers?
 
 The Toki Pona tokenizer `sonatoki.Tokenizers.WordTokenizer` attempts to tokenize statements such that every token either represents a word candidate ("toki", "mumumu") or a complete non-candidate ("..!", "123").
-This design is highly undesirable for NLTK's English tokenizer because English words can have "punctuation" characters in them such as `'` or `-`.
+This design is highly undesirable for NLTK's English tokenizer because words in languages other than Toki Pona can have punctuation characters in or around them which are part of the word.
 Toki Pona doesn't have any mid-word symbols when rendered in the Latin alphabet or in [Private Use Area Unicode characters](https://www.kreativekorp.com/ucsur/), so a more aggressive tokenizer is highly desirable.
+However, this tokenizer doesn't ignore intra-word punctuation entirely. Instead, exactly one of `-` or `'` is allowed at a time, so long as both of its neighbors are writing characters. This increases the accuracy of the tokenizer significantly, and makes identifying Toki Pona sentences among arbitrary ones similarly more accurate.
 
 The goal of splitting into word candidates and non-candidates is important, because any [encoding of Toki Pona's logographic script](https://www.kreativekorp.com/ucsur/charts/sitelen.html) will require each character be split into its own token, where the default behavior would be to leave consecutive non-punctuation together.
 

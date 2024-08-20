@@ -62,7 +62,7 @@ jobs:
           restore-keys: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('pdm.lock') }}
       - name: Install Dev Dependencies
         run: |
-          pdm install --verbose --dev --group :all --without nltk
+          pdm install --verbose --dev --group :all
           pdm info
       - name: Run Tests
         run: pdm run pytest --verbose --cov=sonatoki --cov-config=pyproject.toml tests
