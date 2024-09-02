@@ -24,6 +24,7 @@ from sonatoki.Preprocessors import (
     DiscordMentions,
     AngleBracketObject,
 )
+from src.sonatoki.Preprocessors import Emails
 
 
 def extract_bracket_content(markdown_text: str) -> Optional[str]:
@@ -57,6 +58,13 @@ def test_URLs(s: str):
 def test_MarkdownURLs(s: str):
     bracket_content = extract_bracket_content(s)
     assert MarkdownURLs.process(s) == bracket_content
+
+
+@given(st.from_regex(Emails.pattern, fullmatch=True))
+@example("mun@pona.la")
+@example("tokipona@alinome.com")
+def test_Emails(s: str):
+    assert Emails.process(s).strip() == ""
 
 
 @given(st.from_regex(Spoilers.pattern, fullmatch=True))

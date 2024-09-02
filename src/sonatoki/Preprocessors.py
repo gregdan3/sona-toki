@@ -83,6 +83,19 @@ class MarkdownURLs(RegexPreprocessor):
     replace = r"\1"
 
 
+class Emails(RegexPreprocessor):
+    """Attempt to remove emails, for a particularly strong definition of
+    "email".
+
+    https://www.regular-expressions.info/email.html
+    """
+
+    pattern = re.compile(
+        r"\b[a-zA-Z0-9._%+-]{2,}@[a-zA-Z0-9.-]{2,}\.[a-zA-Z]{2,24}\b",
+        flags=re.IGNORECASE,
+    )
+
+
 class Reference(RegexPreprocessor):
     """Remove text contained in double brackets.
 
@@ -228,6 +241,7 @@ RECOMMENDED_PREPROCESSORS: List[Type[Preprocessor]] = [
     Reference,
     MarkdownURLs,
     URLs,
+    Emails,
     Emoji,
 ]
 
@@ -242,6 +256,7 @@ __all__ = [
     "DiscordMentions",
     "DiscordSpecial",
     "DoubleQuotes",
+    "Emails",
     "Emoji",
     "MarkdownURLs",
     "RECOMMENDED_PREPROCESSORS",
