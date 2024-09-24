@@ -648,6 +648,7 @@ FALSE_POS_SYLLABIC = {
     "insolate",
     "insulate",
     "intense",
+    "saluton",
     # "june",
     "lemon",
     "manipulate",
