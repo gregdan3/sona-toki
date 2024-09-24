@@ -8,7 +8,7 @@ from typing_extensions import override
 
 # LOCAL
 from sonatoki.types import Number, Scorecard
-from sonatoki.Filters import Filter
+from sonatoki.Filters import Pass, Filter
 
 
 class Scorer(ABC):
@@ -112,6 +112,67 @@ class Scaling(Scorer):
         return total_score / max_score if max_score else 0
 
 
+class Voting(Scaling):
+    """Derives from `Scaling` in assigning scores from 0 to 1 based on how soon
+    a filter matches, with the first filter scoring a 1. However, after all
+    scores are derived, each token scoring 0 is given a is given an opportunity
+    to score based on its nearest 3 neighbors.
+
+    If created with a Filter, tokens must also pass that filter to be
+    considered for voting.
+    """
+
+    prereq: Type[Filter] = Pass
+    threshold: int = 0
+
+    def __new__(cls, filter: Type[Filter], threshold_: int):
+        class AnonVoting(Voting):
+            prereq = filter
+            threshold = threshold_
+
+        return AnonVoting
+
+    @classmethod
+    @override
+    def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
+        if not tokens:
+            return 1
+
+        if len(tokens) < 4:
+            return super().score(tokens, filters)
+
+        len_filters = len(filters)
+        max_score = len(tokens) * len_filters
+
+        # score_token only emits ints
+        # but the averaging emits floats
+        # it doesn't really matter as long as no score exceeds len_filters
+        scores: List[Number] = []
+        for token in tokens:
+            score = cls.score_token(token, filters, len_filters)
+            scores.append(score)
+
+        # only consider scores from before voting
+        copied_scores = scores[:]
+        for i, (token, score) in enumerate(zip(tokens, copied_scores)):
+            if score > cls.threshold:
+                continue
+            if not cls.prereq.filter(token):
+                continue
+
+            # TODO: this is kinda dumb.
+            # we want to get exactly 3 neighbors, favoring 2 before and 1 after
+            # the way i'm doing this is both bad and slow as hell
+            start = max(i - 2, 0)
+            end = min(i + 1, len(scores) - 1)
+            neighbors = copied_scores[start:i] + copied_scores[i + 1 : end + 1]
+            scores[i] = sum(neighbors) / len(neighbors)
+
+        total_score = sum(scores)
+
+        return total_score / max_score if max_score else 0
+
+
 class SoftPassFail(Soften, PassFail):
     """Same as `PassFail`, but shorter messages are subject to less harsh
     scoring."""
@@ -119,6 +180,11 @@ class SoftPassFail(Soften, PassFail):
 
 class SoftScaling(Soften, Scaling):
     """Same as `Scaling`, but shorter messages are subject to less harsh
+    scoring."""
+
+
+class SoftVoting(Soften, Voting):
+    """Same as `Voting`, but shorter messages are subject to less harsh
     scoring."""
 
 

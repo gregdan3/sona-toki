@@ -19,7 +19,15 @@ from sonatoki.Filters import (
     PunctuationRe,
     NimiLinkuCommon,
 )
-from sonatoki.Scorers import Scorer, Scaling, PassFail, SoftScaling, SoftPassFail
+from sonatoki.Scorers import (
+    Scorer,
+    Voting,
+    Scaling,
+    PassFail,
+    SoftVoting,
+    SoftScaling,
+    SoftPassFail,
+)
 
 # FILESYSTEM
 from .test_utils import token_strategy
@@ -41,6 +49,8 @@ SCORERS = [
     SoftPassFail,
     Scaling,
     SoftScaling,
+    Voting,
+    SoftVoting,
 ]
 
 
