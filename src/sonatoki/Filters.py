@@ -448,6 +448,17 @@ class Not(Filter):
         return NotFilter
 
 
+class Pass(Filter):
+    @classmethod
+    @override
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        return True
+
+
+class Fail(Not, Pass): ...
+
+
 __all__ = [
     "Alphabetic",
     "And",
