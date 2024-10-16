@@ -51,6 +51,7 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 testpaths = [
     "tests/",
 ]
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.isort]
 length_sort = "1"
