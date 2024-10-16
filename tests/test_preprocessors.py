@@ -33,7 +33,7 @@ def extract_bracket_content(markdown_text: str) -> Optional[str]:
     if start == -1:
         return None
 
-    end = markdown_text.find("](")
+    end = markdown_text.rfind("](")
     if end == -1 or end <= start:
         return None
 
@@ -57,6 +57,7 @@ def test_URLs(s: str):
 @example("[https://example.com/](http://example.com)")
 @example("[192.168.0.255](http://localhost:80)")
 @example("[text](https://bad.worse]/)")
+@example("[](](http://0)")
 def test_MarkdownURLs(s: str):
     bracket_content = extract_bracket_content(s)
     assert MarkdownURLs.process(s) == bracket_content
