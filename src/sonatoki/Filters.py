@@ -7,7 +7,7 @@ from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
 import regex
-from typing_extensions import override
+from typing_extensions import override, deprecated
 
 # LOCAL
 from sonatoki.types import LinkuBooks, LinkuUsageDate, LinkuUsageCategory
@@ -41,6 +41,7 @@ class Filter(ABC):
         raise NotImplementedError
 
 
+@deprecated("Use sonatoki.Filters.Len instead")
 class MinLen(Filter):
     """
     Meta filter meant to be inherited by another filter to add a length requirement.
@@ -66,6 +67,48 @@ class MinLen(Filter):
             length = length_
 
         return MinLenFilter
+
+
+class Len(Filter):
+    """Meta filter to be inherited by another filter to add any length
+    requirement. A bound will only be considered if it is non-zero, so you may
+    omit a minimum length or a maximum length to bound only one of them.
+
+    If inherited when defining a class, `Len` must be the first argument so `super()` resolves correctly.
+
+    To add minimum or maximum length requirements when defining a class:
+    ```
+    class LongAlphabetic(Len, Alphabetic):
+        minlen = 3
+        maxlen = 20
+    ```
+
+    You may also construct any other filter with a minimum length filter like so:
+    ```
+    Len(Alphabetic, min=3, max=20)
+    ```
+    """
+
+    minlen = 0
+    maxlen = 0
+
+    @classmethod
+    @cache(maxsize=None)
+    def filter(cls, token: str) -> bool:
+        tokenlen = len(token)
+
+        if cls.minlen and tokenlen < cls.minlen:
+            return False
+        if cls.maxlen and tokenlen > cls.maxlen:
+            return False
+        return super().filter(token)
+
+    def __new__(cls, filter: Type[Filter], min: int = 0, max: int = 0) -> Type[Filter]:
+        class LenFilter(Len, filter):
+            minlen = min
+            maxlen = max
+
+        return LenFilter
 
 
 class RegexFilter(Filter):
@@ -183,8 +226,8 @@ class PuName(Filter):
         # this will errantly match.
 
 
-class LongProperName(MinLen, ProperName):
-    length = 2  # reject "names" of length 1
+class LongProperName(Len, ProperName):
+    minlen = 2  # reject "names" of length 1
 
 
 class NimiLinkuByUsage:
@@ -252,8 +295,8 @@ class Phonotactic(RegexFilter):
     )
 
 
-class LongPhonotactic(MinLen, Phonotactic):
-    length = 3
+class LongPhonotactic(Len, Phonotactic):
+    minlen = 3
 
 
 class Syllabic(RegexFilter):
@@ -271,8 +314,8 @@ class Syllabic(RegexFilter):
     )
 
 
-class LongSyllabic(MinLen, Syllabic):
-    length = 3
+class LongSyllabic(Len, Syllabic):
+    minlen = 3
 
 
 class Alphabetic(SubsetFilter):
@@ -283,8 +326,8 @@ class AlphabeticRe(RegexFilter):
     pattern = re.compile(rf"[{ALPHABET}]+", flags=re.IGNORECASE)
 
 
-class LongAlphabetic(MinLen, Alphabetic):
-    length = 3
+class LongAlphabetic(Len, Alphabetic):
+    minlen = 3
 
 
 class Numeric(Filter):
@@ -463,11 +506,11 @@ __all__ = [
     "Alphabetic",
     "And",
     "FalsePosSyllabic",
+    "Len",
     "LongAlphabetic",
     "LongPhonotactic",
     "LongProperName",
     "LongSyllabic",
-    "MinLen",
     "NimiLinkuCore",
     "NimiLinkuSandbox",
     "NimiPu",

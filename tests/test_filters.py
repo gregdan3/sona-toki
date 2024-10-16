@@ -9,6 +9,7 @@ from hypothesis import given, example
 from sonatoki.Filters import (
     Or,
     And,
+    Len,
     Not,
     NimiPu,
     PuName,
@@ -100,7 +101,7 @@ def test_Phonotactic(s: str):
 
 @given(st.from_regex(Phonotactic.pattern, fullmatch=True))
 def test_LongPhonotactic(s: str):
-    len_ok = len(s) >= LongPhonotactic.length
+    len_ok = len(s) >= LongPhonotactic.minlen
     res = LongPhonotactic.filter(s)
     assert res == len_ok, repr(s)  # will match given fullmatch
 
@@ -114,7 +115,7 @@ def test_Syllabic(s: str):
 
 @given(st.from_regex(Syllabic.pattern, fullmatch=True))
 def test_LongSyllabic(s: str):
-    len_ok = len(s) >= LongSyllabic.length
+    len_ok = len(s) >= LongSyllabic.minlen
     res = LongSyllabic.filter(s)
     assert res == len_ok
 
@@ -131,7 +132,7 @@ def test_Alphabetic(s: str):
 
 @given(st.from_regex(AlphabeticRe.pattern, fullmatch=True))
 def test_LongAlphabetic(s: str):
-    len_ok = len(s) >= LongAlphabetic.length
+    len_ok = len(s) >= LongAlphabetic.minlen
     res = LongAlphabetic.filter(s)
     assert res == len_ok
 
@@ -182,6 +183,37 @@ def test_Punctuation(s: str):
 def test_Numeric(s: str):
     res = Numeric.filter(s)
     assert res, repr(s)
+
+
+@given(st.from_regex(r"\d+", fullmatch=True))
+def test_Len_minimum(s: str):
+    minlen = 4
+    filter = Len(Numeric, min=minlen)
+
+    res = filter.filter(s)
+    exp = len(s) >= minlen
+    assert res == exp
+
+
+@given(st.from_regex(r"\d+", fullmatch=True))
+def test_Len_maximum(s: str):
+    maxlen = 6
+    filter = Len(Numeric, max=maxlen)
+
+    res = filter.filter(s)
+    exp = len(s) <= maxlen
+    assert res == exp
+
+
+@given(st.from_regex(r"\d+", fullmatch=True))
+def test_Len_min_and_max(s: str):
+    minlen = 3
+    maxlen = 7
+    filter = Len(Numeric, min=minlen, max=maxlen)
+
+    res = filter.filter(s)
+    exp = minlen <= len(s) <= maxlen
+    assert res == exp
 
 
 @given(
