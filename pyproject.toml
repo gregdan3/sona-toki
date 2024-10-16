@@ -38,9 +38,9 @@ lint = [
     "docformatter>=1.7.5",
 ]
 doc = [
-    "sphinx>=7.1.2",
-    "furo>=2023.9.10",
-    "sphinx-intl>=2.1.0"
+    # "sphinx>=7.1.2",
+    # "furo>=2023.9.10",
+    # "sphinx-intl>=2.1.0"
 ]
 
 [tool.pytest.ini_options]
