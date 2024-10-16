@@ -25,7 +25,7 @@ class TokenizerTest(TypedDict):
 
 
 def load_params_from_yaml(json_path: str) -> List[TokenizerTest]:
-    with open(json_path) as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 

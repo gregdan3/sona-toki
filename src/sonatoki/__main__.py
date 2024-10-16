@@ -60,11 +60,11 @@ def download_json(url: str) -> Dict[str, Any]:
 
 def regen_linku_data():
     data = download_json(LINKU_WORDS)
-    with open(os.path.join(HERE, "linku.json"), "w") as f:
+    with open(os.path.join(HERE, "linku.json"), "w", encoding="utf-8") as f:
         _ = f.write(json.dumps(data))
 
     data = download_json(LINKU_SANDBOX)
-    with open(os.path.join(HERE, "sandbox.json"), "w") as f:
+    with open(os.path.join(HERE, "sandbox.json"), "w", encoding="utf-8") as f:
         _ = f.write(json.dumps(data))
 
 
@@ -96,11 +96,11 @@ def regen_false_negatives():
             continue
 
     # TODO: include short matches or no?
-    with open(os.path.join(HERE, "syllabic.txt"), "w") as f:
+    with open(os.path.join(HERE, "syllabic.txt"), "w", encoding="utf-8") as f:
         syllabic_final = sorted([word + "\n" for word in syllabic_matches])
         f.writelines(syllabic_final)
 
-    with open(os.path.join(HERE, "alphabetic.txt"), "w") as f:
+    with open(os.path.join(HERE, "alphabetic.txt"), "w", encoding="utf-8") as f:
         alphabetic_final = sorted([word + "\n" for word in alphabetic_matches])
         f.writelines(alphabetic_final)
 

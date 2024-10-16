@@ -699,9 +699,9 @@ def linku_data() -> Dict[str, LinkuWord]:
     # NOTE: this does open+read+parse two files each time you construct a filter
     # but i expect users to construct filters only at the start of runtime
     # there is no reason to waste your RAM by leaving the linku data in it
-    with open(LINKU) as f:
+    with open(LINKU, "r", encoding="utf-8") as f:
         linku: Dict[str, LinkuWord] = json.loads(f.read())
-    with open(SANDBOX) as f:
+    with open(SANDBOX, "r", encoding="utf-8") as f:
         sandbox: Dict[str, LinkuWord] = json.loads(f.read())
 
     return {**linku, **sandbox}
@@ -732,10 +732,10 @@ def words_by_usage(
 NIMI_PU_SYNONYMS = {"namako", "kin", "oko"}
 
 
-# with open(SYLLABICS) as f:
+# with open(SYLLABICS, "r", encoding="utf-8") as f:
 #     FALSE_POS_SYLLABIC = {line.strip() for line in f}
 #
-# with open(ALPHABETICS) as f:
+# with open(ALPHABETICS, "r", encoding="utf-8") as f:
 #     FALSE_POS_ALPHABETIC = {line.strip() for line in f}
 
 __all__ = [
