@@ -62,7 +62,7 @@ class MinLen(Filter):
         return super().filter(token)
 
     def __new__(cls, filter: Type[Filter], length_: int) -> Type[Filter]:
-        class MinLenFilter(MinLen, Filter):
+        class MinLenFilter(MinLen, filter):
             length = length_
 
         return MinLenFilter
