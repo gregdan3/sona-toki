@@ -9,14 +9,17 @@ from sonatoki.types import Number
 from sonatoki.Filters import (
     Or,
     And,
+    Len,
     Not,
     Filter,
     PuName,
     Numeric,
+    Syllabic,
     NimiUCSUR,
     Alphabetic,
     NimiKuLili,
     NimiKuSuli,
+    ProperName,
     Punctuation,
     LongSyllabic,
     Miscellaneous,
@@ -29,7 +32,7 @@ from sonatoki.Filters import (
     NimiLinkuUncommon,
     FalsePosAlphabetic,
 )
-from sonatoki.Scorers import Scorer, PassFail, SoftScaling, SoftPassFail
+from sonatoki.Scorers import Scorer, Soften, Voting, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
 from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
 from sonatoki.Preprocessors import (
@@ -62,8 +65,8 @@ __DICT_PHONOMATCHES = {
     "we",  # 1st person plural, english
     "wi",  # wii and discussions of syllables
     "sole",  # singular, of shoe
+    "omen",  # ominous
     # unexplored candidates for removal
-    # "omen",  # ominous
     # "papa",  # father
     # "lo",  # "lo" and "loo"
     # "ewe",  # sheep
@@ -99,11 +102,11 @@ PrefConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        Or(NimiLinkuByUsage(30), NimiUCSUR),
-        And(LongSyllabic, Not(FalsePosSyllabic)),
+        Len(Or(NimiLinkuByUsage(30), NimiUCSUR), max=15),
+        Len(And(Syllabic, Not(FalsePosSyllabic)), min=3, max=24),
         # NOTE: These are allowed to pass name and alphabetic below, because they *could* be wrong
-        LongProperName,
-        And(LongAlphabetic, Not(FalsePosAlphabetic)),
+        Len(ProperName, min=2, max=24),
+        Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3, max=24),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
@@ -114,15 +117,18 @@ CorpusConfig: IloConfig = {
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
-        Or(
-            # awkward but efficient syntax
-            NimiLinkuByUsage(0)(sub=__DICT_PHONOMATCHES),
-            NimiUCSUR,
-            Miscellaneous,
+        Len(
+            Or(
+                # awkward but efficient syntax
+                NimiLinkuByUsage(0)(sub=__DICT_PHONOMATCHES),
+                NimiUCSUR,
+                Miscellaneous,
+            ),
+            max=19,
         ),
-        And(LongSyllabic, Not(FalsePosSyllabic)),
-        LongProperName,
-        And(LongAlphabetic, Not(FalsePosAlphabetic)),
+        Len(And(Syllabic, Not(FalsePosSyllabic)), min=3, max=24),
+        Len(ProperName, min=2, max=24),
+        Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3, max=24),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,

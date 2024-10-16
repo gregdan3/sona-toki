@@ -42,6 +42,7 @@ ALL_VALID = [
     "ni li sona kiwen",
     "nimi namako li toki e ale",
     "mi open mute a",  # mostly eng words
+    "mi pali ilo to",
 ]
 
 IGNORABLES = [
@@ -201,6 +202,7 @@ FALSE_NEGATIVES = [
     "poan",
     "mtue",
     "mi nasa B^)",  # emoticon
+    "musi :P",  # emoticon
     "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
     "😃⃢👍",  # sincerely, no idea, but it came up and it should be omitted by emojis but isn't
 ]
