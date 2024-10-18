@@ -113,13 +113,18 @@ class Scaling(Scorer):
 
 
 class Voting(Scaling):
-    """Derives from `Scaling` in assigning scores from 0 to 1 based on how soon
-    a filter matches, with the first filter scoring a 1. However, after all
-    scores are derived, each token scoring 0 is given a is given an opportunity
-    to score based on its nearest 3 neighbors.
+    """Derives from `Scaling` in assigning scores from 0 to 1 based on the
+    first matching filter out of the list of filters. However, after all scores
+    are derived, each token scoring less than the threshold is assigned the
+    average score of its nearest 3 neighbors. The default threshold is 0.
 
-    If created with a Filter, tokens must also pass that filter to be
-    considered for voting.
+    If there are 3 or fewer tokens, this scorer is identical to the
+    Scaling scorer.
+
+    If the Voting scorer is created with a Filter, tokens must also
+    match that filter to be considered for voting. For example, the
+    following Voting filter would only check words with a score of 0.3
+    or less that still match the Syllabic filter: `Voting(Syllabic, 0.3)`
     """
 
     prereq: Type[Filter] = Pass
