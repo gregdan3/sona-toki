@@ -668,10 +668,11 @@ FALSE_POS_ALPHABETIC: Set[str] = {
     "not",
     "link",
     "wait",
+    "just",
     "lol",
     "new",
     "also",
-    "isn",  # TODO: tokenizer....
+    "isnt",
     "mean",
     "means",
     "it",
@@ -681,6 +682,7 @@ FALSE_POS_ALPHABETIC: Set[str] = {
     "new",
     "wel",
     "makes",
+    "unles",
 }
 
 UCSUR_RANGES = [
