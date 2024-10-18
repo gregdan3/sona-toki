@@ -130,7 +130,7 @@ class Voting(Scaling):
     prereq: Type[Filter] = Pass
     threshold: int = 0
 
-    def __new__(cls, filter: Type[Filter], threshold_: int):
+    def __new__(cls, filter: Type[Filter], threshold_: int = 0) -> Type[Scorer]:
         class AnonVoting(Voting):
             prereq = filter
             threshold = threshold_
