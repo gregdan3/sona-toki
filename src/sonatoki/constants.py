@@ -724,6 +724,10 @@ def words_by_usage(
 
     result: Set[str] = set()
     for word in data.values():
+        if usage == 0:
+            result.add(word["word"])
+            continue
+
         usages = word["usage"]
         if date in usages and usages[date] >= usage:
             result.add(word["word"])
