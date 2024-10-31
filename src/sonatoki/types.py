@@ -18,7 +18,7 @@ LinkuUsageDate = Union[
     Literal["2021-10"],
     Literal["2022-08"],
     Literal["2023-09"],
-    # Literal["2024-09"],
+    Literal["2024-09"],
 ]
 
 LinkuUsageCategory = Union[

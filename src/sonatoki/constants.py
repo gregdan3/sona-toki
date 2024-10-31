@@ -7,7 +7,7 @@ from pathlib import Path
 from sonatoki.types import LinkuWord, LinkuUsageDate
 from sonatoki.utils import find_unicode_chars, find_unicode_ranges
 
-LATEST_DATE = "2023-09"
+LATEST_DATE = "2024-09"
 # hardcoding this seems bad, but it means the parser is stable w.r.t. Linku!
 
 
