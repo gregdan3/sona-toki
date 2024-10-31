@@ -52,20 +52,20 @@ __DICT_PHONOMATCHES = {
     "an",  # article
     "api",  # API
     "i",  # 1st person
+    "je",  # 1st person pronoun, french
     "kana",  # japanese script
     "me",  # 1st person singular, english
     "ne",  # "no" in several languages
     "nu",  # "new" in english, "now" in dutch
+    "omen",  # ominous
     "se",  # spanish particle, english "see"
+    "sole",  # singular, of shoe
     "take",  # acquire, perhaps forcefully or without permission
     "ten",  # 10
     "to",  # to, too
-    "je",  # 1st person pronoun, french
     "u",  # no u
     "we",  # 1st person plural, english
     "wi",  # wii and discussions of syllables
-    "sole",  # singular, of shoe
-    "omen",  # ominous
     # unexplored candidates for removal
     # "papa",  # father
     # "lo",  # "lo" and "loo"
