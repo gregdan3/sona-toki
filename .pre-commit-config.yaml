@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: check-ast
       - id: detect-private-key
@@ -13,25 +13,25 @@ repos:
       - id: check-toml
       - id: check-json
   - repo: https://github.com/psf/black
-    rev: 24.4.2
+    rev: 24.10.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/isort
     rev: 5.13.2
     hooks:
       - id: isort
-  - repo: https://github.com/PyCQA/docformatter
-    rev: v1.7.5
-    hooks:
-      - id: docformatter
-        args: ["--in-place", "--config", "./pyproject.toml"]
+  # - repo: https://github.com/PyCQA/docformatter
+  #   rev: v1.7.5
+  #   hooks:
+  #     - id: docformatter
+  #       args: ["--in-place", "--config", "./pyproject.toml"]
   # - repo: https://github.com/PyCQA/pydocstyle
   #   rev: 6.3.0
   #   hooks:
   #     - id: pydocstyle
   - repo: https://github.com/PyCQA/bandit
     # Cannot ignore tests dir
-    rev: 1.7.8
+    rev: 1.8.0
     hooks:
       - id: bandit
         args: ["--exclude", "tests"]
