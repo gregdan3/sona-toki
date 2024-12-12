@@ -165,6 +165,7 @@ EXCESSIVE_ENGLISH = [
     "I wanna see",  # same down to here
     "i'm online all the time",
     "How to Cut a Kiwi",
+    "ni li make e sense",
     "21st",  # previous false positive; fixed by ProperName change
     "a e i o u",  # voting brings this back to false positive zone...
 ]

@@ -104,6 +104,10 @@ class WordTokenizer(SetTokenizer):
                 # we skipped, but there wasn't another writing character
                 cls.add_token(s, tokens, last_match, i - 1)
                 last_match = i - 1
+                # there may be punctuation though
+                # TODO: this is duplicated
+                while i < slen and cls.is_delimiter(s[i]):
+                    i += 1
 
             cls.add_token(s, tokens, last_match, i)
 

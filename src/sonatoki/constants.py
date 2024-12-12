@@ -507,7 +507,7 @@ SENTENCE_PUNCT = """.?!:;"()[-]«»‹›“”‟„⹂‽·•…「」『』"
 # single quotes are word boundaries if not intra-word, but double quotes are sentence
 # boundaries
 
-INTRA_WORD_PUNCT = """-'’"""
+INTRA_WORD_PUNCT = """-'’."""
 
 
 LINKU = Path(__file__).resolve().parent / Path("linku.json")

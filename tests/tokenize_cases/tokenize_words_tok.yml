@@ -53,9 +53,7 @@
   output:
     - "i'm"
     - "an"
-    - "m"
-    - "."
-    - "d"
+    - "m.d"
     - "."
 - name: "english 4"
   input: "it's mind-numbing honestly"
@@ -142,15 +140,7 @@
 - name: periods every word
   input: "mi.unpa.e.mama.sina"
   output:
-    - "mi"
-    - "."
-    - "unpa"
-    - "."
-    - "e"
-    - "."
-    - "mama"
-    - "."
-    - "sina"
+    - "mi.unpa.e.mama.sina"
 - name: simple bold
   input: "**mi unpa e mama sina**"
   output:
@@ -313,6 +303,11 @@
   input: "isn't"
   output:
     - "isn't"
+- name: "simple intrapunct with punct"
+  input: "isn't."
+  output:
+    - "isn't"
+    - "."
 - name: "quoted with intrapunct"
   input: "'bother'"
   output:
@@ -337,3 +332,47 @@
   input: "whom's't'd've'n't"
   output:
     - "whom's't'd've'n't"
+- name: "just periods"
+  input: "..."
+  output:
+    - "..."
+- name: "just periods 2"
+  input: "... ..."
+  output:
+    - "..."
+    - "..."
+- name: "mixed periods spoilers"
+  input: "||...||"
+  output:
+    - "||...||"
+- name: "trailing periods"
+  input: "h.."
+  output:
+    - "h"
+    - ".."
+- name: "trailing periods"
+  input: "h.!"
+  output:
+    - "h"
+    - ".!"
+- name: "trailing period"
+  input: "h."
+  output:
+    - "h"
+    - "."
+- name: "trailing interpunctuation"
+  input: "h-.'"
+  output:
+    - "h"
+    - "-.'"
+- name: "trailing period 2"
+  input: "h. h."
+  output:
+    - "h"
+    - "."
+    - "h"
+    - "."
+- name: "sad face"
+  input: "q.q"
+  output:
+    - "q.q"
