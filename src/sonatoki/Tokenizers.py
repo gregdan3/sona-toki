@@ -12,8 +12,8 @@ from sonatoki.utils import regex_escape
 from sonatoki.Filters import NimiUCSUR  # seriously this sucks
 from sonatoki.constants import (
     ALL_PUNCT,
-    SENTENCE_PUNCT,
     INTRA_WORD_PUNCT,
+    ALL_SENTENCE_PUNCT,
     UNICODE_WHITESPACE,
     ALL_PUNCT_RANGES_STR,
 )
@@ -147,7 +147,7 @@ class WordTokenizerRe1(Regex1Tokenizer):
 
 
 class SentTokenizer(SetTokenizer):
-    delimiters = set(SENTENCE_PUNCT + "\n")  # regex does \n with a flag
+    delimiters: Set[str] = set(ALL_SENTENCE_PUNCT + "\n")  # regex does \n with a flag
     intra_word_punct: Set[str] = set(INTRA_WORD_PUNCT)
     all_punct: Set[str] = set(ALL_PUNCT + UNICODE_WHITESPACE)
 
@@ -198,7 +198,7 @@ class SentTokenizer(SetTokenizer):
 )
 class SentTokenizerRe(RegexTokenizer):
     pattern = re.compile(
-        rf"""(?<=[{regex_escape(SENTENCE_PUNCT)}])|$""", flags=re.MULTILINE
+        rf"""(?<=[{regex_escape(ALL_SENTENCE_PUNCT)}])|$""", flags=re.MULTILINE
     )
     # TODO: are <> or {} that common as *sentence* delims? [] are already a stretch
     # TODO: do the typography characters matter?
@@ -210,7 +210,7 @@ class SentTokenizerRe(RegexTokenizer):
 )
 class SentTokenizerRe1(Regex1Tokenizer):
     pattern = regex.compile(
-        rf"""(?<=[{regex_escape(SENTENCE_PUNCT)}]|$)""", flags=regex.MULTILINE
+        rf"""(?<=[{regex_escape(ALL_SENTENCE_PUNCT)}]|$)""", flags=regex.MULTILINE
     )
 
 

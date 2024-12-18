@@ -92,6 +92,10 @@
     - "."
     - "h"
 - name: "full width space"
+  input: "life-altering pseudo-science. and non-sense"
+  output:
+    - "life-altering pseudo-science."
+    - "and non-sense"
 - name: "discovered case 1"
   input: "ona li ken lukin e sitelen [_ike_nanpa_lete_ike]. ni li pona kin."
   output:
@@ -103,3 +107,9 @@
   input: "👨‍👩‍👧‍👧"
   output:
     - "👨‍👩‍👧‍👧"
+
+- name: UCSUR 1
+  input: "󱥄󱥬󱥩󱤴󱦜󱥄󱥬󱥩󱤴"
+  output:
+    - "󱥄󱥬󱥩󱤴󱦜"
+    - "󱥄󱥬󱥩󱤴"

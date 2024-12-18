@@ -376,3 +376,11 @@
   input: "q.q"
   output:
     - "q.q"
+- name: "full width space"
+  input: "life-altering pseudo-science. and non-sense"
+  output:
+    - "life-altering"
+    - "pseudo-science"
+    - "."
+    - "and"
+    - "non-sense"

@@ -485,6 +485,18 @@ UNICODE_PUNCT_RANGES = [
     "\\U0001fb94-\\U0001fbef",
     "\\U000f1990-\\U000f199d",
 ]
+UNICODE_PUNCT = find_unicode_chars(UNICODE_PUNCT_RANGES)
+# this is a large string.
+
+# `\p{posix_punct}` character class
+POSIX_PUNCT = r"""-!"#$%&'()*+,./:;<=>?@[\]^_`{|}~"""
+POSIX_PUNCT_RANGES = find_unicode_ranges(POSIX_PUNCT)
+
+ALL_PUNCT = "".join(sorted(list(set(POSIX_PUNCT + UNICODE_PUNCT))))
+ALL_PUNCT_RANGES_STR = "".join(find_unicode_ranges(ALL_PUNCT))
+# combined bc the result could be simpler
+
+
 UNICODE_WHITESPACE_RANGES = [
     "\\U00000020",
     "\\U000000a0",
@@ -505,9 +517,7 @@ EMOJI_VARIATION_SELECTOR_RANGES = ["\\U0000fe0e-\\U0000fe0f"]
 EMOJI_VARIATION_SELECTOR_RANGES_STR = "".join(EMOJI_VARIATION_SELECTOR_RANGES)
 """All variation selectors are in Nonspacing Mark (Mn), but it is more apt to
 mark these two as punctuation, since they are used exclusively for rendering
-emoji.
-
-But it's even better to use the Emoji filter.
+emoji. But it's best to use the Emoji filter.
 """
 
 UCSUR_PUNCT_RANGES = ["\\U000f1990-\\U000f199d"]
@@ -515,20 +525,11 @@ UCSUR_PUNCT_RANGES_STR = "".join(UCSUR_PUNCT_RANGES)
 """Private Use Area glyphs are given the apt but unhelpful 'Private Use'
 class."""
 
-UNICODE_PUNCT = find_unicode_chars(UNICODE_PUNCT_RANGES)
-# this is a large string.
-
-# `\p{posix_punct}` character class
-POSIX_PUNCT = r"""-!"#$%&'()*+,./:;<=>?@[\]^_`{|}~"""
-POSIX_PUNCT_RANGES = find_unicode_ranges(POSIX_PUNCT)
-
-ALL_PUNCT = "".join(sorted(list(set(POSIX_PUNCT + UNICODE_PUNCT))))
-ALL_PUNCT_RANGES_STR = "".join(find_unicode_ranges(ALL_PUNCT))
-# combined bc the result could be simpler
-
-SENTENCE_PUNCT = """.?!:;"()[-]«»‹›“”‟„⹂‽·•…「」『』"""
 # single quotes are word boundaries if not intra-word, but double quotes are sentence
 # boundaries
+BASIC_SENTENCE_PUNCT = """.?!:;"()[-]«»‹›“”‟„⹂‽·•…「」『』"""
+UCSUR_SENTENCE_PUNCT = """󱦜󱦝"""
+ALL_SENTENCE_PUNCT = BASIC_SENTENCE_PUNCT + UCSUR_SENTENCE_PUNCT
 
 INTRA_WORD_PUNCT = """-'’."""
 
@@ -780,7 +781,9 @@ __all__ = [
     "POSIX_PUNCT_RANGES",
     "UCSUR_PUNCT_RANGES",
     "UCSUR_PUNCT_RANGES_STR",
+    "UCSUR_SENTENCE_PUNCT",
     "UNICODE_PUNCT",
     "UNICODE_PUNCT_RANGES",
+    "UNICODE_WHITESPACE",
     "VOWELS",
 ]
