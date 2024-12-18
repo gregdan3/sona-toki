@@ -289,7 +289,20 @@
     - "「"
     - "Direct"
     - "」"
-
+- name: "UCSUR 4"
+  input: "󱤴󱤺󱦐󱤘󱦜󱤕󱦜󱤾󱦑󱦐󱤼󱦝󱦑"
+  output:
+    - "󱤴"
+    - "󱤺"
+    - "󱦐"
+    - "󱤘"
+    - "󱦜"
+    - "󱤕"
+    - "󱦜"
+    - "󱤾"
+    - "󱦑󱦐"
+    - "󱤼"
+    - "󱦝󱦑"
 - name: "simple intrapunct 1"
   input: "i'm"
   output:

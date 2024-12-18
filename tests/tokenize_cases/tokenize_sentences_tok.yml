@@ -122,3 +122,41 @@
   output:
     - "󱥄󱥬󱥩󱤴󱦜"
     - "󱥄󱥬󱥩󱤴"
+# - name: "UCSUR 2 (original)"
+#   input: "󱤴󱤺󱦐󱤘󱦜󱤕󱦜󱤾󱦑󱦐󱤼󱦝󱦑"
+#   output:
+#     - "󱤴󱤺󱦐󱤘󱦜"
+#     - "󱤕󱦜"
+#     - "󱤾󱦑󱦐󱤼󱦝"
+#     - "󱦑"
+- name: "UCSUR 2 (preferred)"
+  input: "󱤴󱤺󱦐󱤘󱦜󱤕󱦜󱤾󱦑󱦐󱤼󱦝󱦑"
+  output:
+    - "󱤴󱤺󱦐󱤘󱦜󱤕󱦜󱤾󱦑󱦐󱤼󱦝󱦑"
+- name: "UCSUR 3"
+  input: "󱤴󱦐󱦑󱦐󱦑"
+  output:
+    - "󱤴󱦐󱦑󱦐󱦑"
+- name: "UCSUR 4"
+  input: "󱤴󱦐󱦐"
+  output:
+    - "󱤴󱦐󱦐"
+- name: "UCSUR 5"
+  input: "󱦑󱤴󱦐󱦐"
+  output:
+    - "󱦑󱤴󱦐󱦐"
+- name: "UCSUR 6"
+  input: "󱦐nvidia shield. and other nvidia products.󱦑"
+  output:
+    - "󱦐nvidia shield."
+    - "and other nvidia products."
+    - "󱦑"
+- name: "UCSUR 7"
+  input: "󱤴󱤺󱦐󱤘󱦜󱦐󱤕󱦐󱦜󱤾󱦑󱦐󱤼󱦝󱦑"
+  output:
+    - "󱤴󱤺󱦐󱤘󱦜"
+    - "󱦐󱤕󱦐󱦜󱤾󱦑󱦐󱤼󱦝󱦑"
+- name: "UCSUR 8"
+  input: "󱤴󱤺󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦝󱦑"
+  output:
+    - "󱤴󱤺󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦐󱦝󱦑"

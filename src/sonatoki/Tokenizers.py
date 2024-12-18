@@ -16,6 +16,9 @@ from sonatoki.constants import (
     ALL_SENTENCE_PUNCT,
     UNICODE_WHITESPACE,
     ALL_PUNCT_RANGES_STR,
+    UCSUR_CARTOUCHE_LEFT,
+    UCSUR_CARTOUCHE_RIGHT,
+    UCSUR_MINUS_CARTOUCHE,
 )
 
 regex.DEFAULT_VERSION = regex.VERSION1
@@ -163,6 +166,16 @@ class SentTokenizer(SetTokenizer):
         last_match = 0
         i = 0
         while i < slen:
+            # if a cartouche appears, we do not want to split on its punctuation
+            if s[i] == UCSUR_CARTOUCHE_LEFT:
+                right_i = s.find(UCSUR_CARTOUCHE_RIGHT, i)
+                contained: set[str] = set()
+                if right_i > 0:
+                    contained = set(s[i + 1 : right_i])
+                # but it must contain only non-cartouche UCSUR chars
+                if contained and contained.issubset(UCSUR_MINUS_CARTOUCHE):
+                    i = right_i + 1
+                    continue
             if s[i] not in cls.delimiters:
                 i += 1
                 continue
