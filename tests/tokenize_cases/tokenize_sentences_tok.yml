@@ -56,8 +56,17 @@
   input: 'ona li toki e ni: "mama sina"'
   output:
     - "ona li toki e ni:"
+    - '"mama sina"'
+- name: "doublequotes 2"
+  input: 'this is a bit dumb, right? they said "where is the pacific ocean?"'
+  output:
+    - "this is a bit dumb, right?"
+    - 'they said "where is the pacific ocean?'
     - '"'
-    - 'mama sina"'
+- name: "doublequotes 3"
+  input: 'they said "wow, its made"'
+  output:
+    - they said "wow, its made"
 - name: "mixed periods spoilers"
   input: "||...||"
   output:

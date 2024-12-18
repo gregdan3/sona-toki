@@ -527,7 +527,8 @@ class."""
 
 # single quotes are word boundaries if not intra-word, but double quotes are sentence
 # boundaries
-BASIC_SENTENCE_PUNCT = """.?!:;"()[-]«»‹›“”‟„⹂‽·•…「」『』"""
+BASIC_SENTENCE_PUNCT = """.?!:;()[-]‽·•…"""
+QUOTATIVE_PUNCT = """"«»‹›“”‟„⹂「」『』"""
 UCSUR_SENTENCE_PUNCT = """󱦜󱦝"""
 ALL_SENTENCE_PUNCT = BASIC_SENTENCE_PUNCT + UCSUR_SENTENCE_PUNCT
 
