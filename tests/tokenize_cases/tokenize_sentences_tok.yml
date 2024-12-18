@@ -58,6 +58,40 @@
     - "ona li toki e ni:"
     - '"'
     - 'mama sina"'
+- name: "mixed periods spoilers"
+  input: "||...||"
+  output:
+    - "||."
+    - "."
+    - "."
+    - "||"
+- name: "trailing periods"
+  input: "h.."
+  output:
+    - "h."
+    - "."
+- name: "trailing periods 2"
+  input: "h.!"
+  output:
+    - "h."
+    - "!"
+- name: "intraword punctuation 1"
+  input: "e.g. monsuta"
+  output:
+    - "e.g."
+    - "monsuta"
+- name: "intraword punctuation 2"
+  input: "isn't that game-breaking? i think so"
+  output:
+    - "isn't that game-breaking?"
+    - "i think so"
+- name: "fake intraword punct 1"
+  input: "!.h"
+  output:
+    - "!"
+    - "."
+    - "h"
+- name: "full width space"
 - name: "discovered case 1"
   input: "ona li ken lukin e sitelen [_ike_nanpa_lete_ike]. ni li pona kin."
   output:

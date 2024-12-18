@@ -14,6 +14,7 @@ from sonatoki.constants import (
     ALL_PUNCT,
     SENTENCE_PUNCT,
     INTRA_WORD_PUNCT,
+    UNICODE_WHITESPACE,
     ALL_PUNCT_RANGES_STR,
 )
 
@@ -147,6 +148,8 @@ class WordTokenizerRe1(Regex1Tokenizer):
 
 class SentTokenizer(SetTokenizer):
     delimiters = set(SENTENCE_PUNCT + "\n")  # regex does \n with a flag
+    intra_word_punct: Set[str] = set(INTRA_WORD_PUNCT)
+    all_punct: Set[str] = set(ALL_PUNCT + UNICODE_WHITESPACE)
 
     @classmethod
     @override
@@ -155,16 +158,33 @@ class SentTokenizer(SetTokenizer):
             return []
 
         tokens: List[str] = []
+
+        slen = len(s)
         last_match = 0
-        for i, char in enumerate(s):
-            if char not in cls.delimiters:
+        i = 0
+        while i < slen:
+            if s[i] not in cls.delimiters:
+                i += 1
                 continue
+            if s[i] in cls.intra_word_punct:
+                prev = s[i - 1] if i > 0 else ""
+                next = s[i + 1] if i + 1 < slen else ""
+                if (
+                    prev
+                    and next
+                    and prev not in cls.all_punct
+                    and next not in cls.all_punct
+                ):
+                    i += 2
+                    continue
 
             match = s[last_match : i + 1].strip()
             last_match = i + 1  # newlines can strip but idc
             if not match:
+                i += 1
                 continue
             tokens.append(match)
+            i += 1
 
         match = s[last_match:].strip()
         if match:
@@ -173,6 +193,9 @@ class SentTokenizer(SetTokenizer):
         return tokens
 
 
+@deprecated(
+    "SentTokenizerRe is a previous reference implementation. Its behavior has diverged from SentTokenizer and it may not be restored."
+)
 class SentTokenizerRe(RegexTokenizer):
     pattern = re.compile(
         rf"""(?<=[{regex_escape(SENTENCE_PUNCT)}])|$""", flags=re.MULTILINE
@@ -182,6 +205,9 @@ class SentTokenizerRe(RegexTokenizer):
     # NOTE: | / and , are *not* sentence delimiters for my purpose
 
 
+@deprecated(
+    "SentTokenizerRe1 is a previous reference implementation. Its behavior has diverged from SentTokenizer and it may not be restored."
+)
 class SentTokenizerRe1(Regex1Tokenizer):
     pattern = regex.compile(
         rf"""(?<=[{regex_escape(SENTENCE_PUNCT)}]|$)""", flags=regex.MULTILINE

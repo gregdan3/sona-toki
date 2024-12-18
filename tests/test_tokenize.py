@@ -54,10 +54,11 @@ def test_SentTokenizer(test: TokenizerTest):
         pytest.xfail()
 
     fn_tokenized = SentTokenizer.tokenize(test["input"])
-    re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
-    assert fn_tokenized == re1_tokenized, test["name"]
+    # re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
+    assert fn_tokenized == test["output"], test["name"]
 
 
+@pytest.mark.skip("Deprecated")
 @pytest.mark.parametrize(
     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
 )
@@ -66,10 +67,22 @@ def test_SentTokenizerRe(test: TokenizerTest):
         pytest.xfail()
 
     re_tokenized = SentTokenizerRe.tokenize(test["input"])
+    assert re_tokenized == test["output"], test["name"]
+
+
+@pytest.mark.parametrize(
+    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
+)
+def test_SentTokenizerReCompare(test: TokenizerTest):
+    if test["xfail"]:
+        pytest.xfail()
+
+    re_tokenized = SentTokenizerRe.tokenize(test["input"])
     re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
     assert re_tokenized == re1_tokenized, test["name"]
 
 
+@pytest.mark.skip("Deprecated")
 @pytest.mark.parametrize(
     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
 )
