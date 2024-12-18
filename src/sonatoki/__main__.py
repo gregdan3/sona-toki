@@ -24,6 +24,7 @@ from sonatoki.Cleaners import ConsecutiveDuplicates
 from sonatoki.constants import (
     UCSUR_PUNCT_RANGES,
     UNICODE_PUNCT_RANGES,
+    UNICODE_WHITESPACE_RANGES,
     EMOJI_VARIATION_SELECTOR_RANGES,
 )
 
@@ -121,6 +122,11 @@ def regen_unicode_data():
         "Sc",  # Currency
         "So",  # Other
     }
+    WHITESPACE_CATEGORIES = {
+        "Zl",  # Line Separator
+        "Zp",  # Paragraph Separator
+        "Zs",  # Space Separator
+    }
     r"""These characters are in Symbol other (So) but are not in
     `\p{Punctuation}` However, I began excluding them again, because it turns
     out that some sequences of latin alphabet emoji."""
@@ -134,11 +140,15 @@ def regen_unicode_data():
     def is_punctuation(data: List[str]):
         return data[2] in PUNCT_CATEGORIES
 
+    def is_whitespace(data: List[str]):
+        return data[2] in WHITESPACE_CATEGORIES
+
     def get_character(data: List[str]):
         return chr(int(data[0], 16))
 
     unicode_data = download(UNICODE_DATA)
     unicode_punctuation = ""
+    unicode_whitespace = ""
     for line in unicode_data.split("\n"):
         if not line:  # damn you, trailing newline
             continue
@@ -147,24 +157,35 @@ def regen_unicode_data():
         # This does not apply to any currently defined punctuation category.
 
         unicode_data = line.split(";")
-        if not is_punctuation(unicode_data):
+        if is_punctuation(unicode_data):
+            char = get_character(unicode_data)
+            unicode_punctuation += char
             continue
-
-        char = get_character(unicode_data)
-
-        unicode_punctuation += char
+        if is_whitespace((unicode_data)):
+            char = get_character(unicode_data)
+            unicode_whitespace += char
+            continue
 
     unicode_punctuation = emoji.replace_emoji(unicode_punctuation)
 
-    unicode_ranges = find_unicode_ranges(unicode_punctuation)
-    unicode_ranges.extend(UCSUR_PUNCT_RANGES)
-    # unicode_ranges.extend(EMOJI_VARIATION_SELECTOR_RANGES)  # made unnecessary by emoji library
-    unicode_ranges = sorted(unicode_ranges)
+    unicode_punct_ranges = find_unicode_ranges(unicode_punctuation)
+    unicode_punct_ranges.extend(UCSUR_PUNCT_RANGES)
+    unicode_punct_ranges = sorted(unicode_punct_ranges)
     # sorted in case my manual additions are out of order
 
-    if unicode_ranges != UNICODE_PUNCT_RANGES:
-        output = json.dumps(unicode_ranges, indent=4, ensure_ascii=True)
-        print(output)
+    # TODO: can i push these outputs directly into the constants.py file?
+
+    if unicode_punct_ranges != UNICODE_PUNCT_RANGES:
+        output = json.dumps(unicode_punct_ranges, indent=4, ensure_ascii=True)
+        with open("updated_unicode_punct_ranges.txt", "w") as f:
+            f.write(output)
+
+    unicode_whitespace_ranges = find_unicode_ranges(unicode_whitespace)
+    unicode_whitespace_ranges = sorted(unicode_whitespace_ranges)
+    if unicode_whitespace_ranges != UNICODE_WHITESPACE_RANGES:
+        output = json.dumps(unicode_whitespace_ranges, indent=4, ensure_ascii=True)
+        with open("updated_unicode_whitespace_ranges.txt", "w") as f:
+            f.write(output)
 
 
 def main(argv: argparse.Namespace):
