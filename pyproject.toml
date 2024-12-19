@@ -1,6 +1,6 @@
 [project]
 name = "sonatoki"
-version = "0.10.0"
+version = "0.10.1"
 description = "ilo li moku e toki li pana e sona ni: ni li toki ala toki pona?"
 authors = [
   { name = "jan Kekan San (@gregdan3)", email = "gregory.danielson3@gmail.com" },
