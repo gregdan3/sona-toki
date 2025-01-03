@@ -63,3 +63,15 @@ SCORERS = [
 def test_score_bounds(scorer: Scorer, filters: List[Type[Filter]], text: List[str]):
     score = scorer.score(text, filters)
     assert 0 <= score <= 1, (score, filters, text)
+
+
+@pytest.mark.parametrize("scorer", SCORERS)  # test each scorer
+@given(
+    st.lists(st.sampled_from(FILTERS), min_size=1, unique=True),
+    st.lists(token_strategy, min_size=0, max_size=0),
+)
+def test_scoring_empty(scorer: Scorer, filters: List[Type[Filter]], text: List[str]):
+    score = scorer.score(text, filters)
+    assert not text
+    assert 0 <= score <= 1, (score, filters, text)
+    assert score == 1, (score, filters, text)
