@@ -86,9 +86,10 @@ I originally intended to translate this file and library into Toki Pona once Uni
 The Toki Pona tokenizer `sonatoki.Tokenizers.WordTokenizer` attempts to tokenize statements such that every token either represents a word candidate ("toki", "mumumu") or a complete non-candidate ("..!", "123").
 This design is highly undesirable for NLTK's English tokenizer because words in languages other than Toki Pona can have punctuation characters in or around them which are part of the word.
 Toki Pona doesn't have any mid-word symbols when rendered in the Latin alphabet or in [Private Use Area Unicode characters](https://www.kreativekorp.com/ucsur/), so a more aggressive tokenizer is highly desirable.
-However, this tokenizer doesn't ignore intra-word punctuation entirely. Instead, exactly one of `-` or `'` is allowed at a time, so long as both of its neighbors are writing characters. This increases the accuracy of the tokenizer significantly, and makes identifying Toki Pona sentences among arbitrary ones similarly more accurate.
+However, this tokenizer doesn't ignore intra-word punctuation entirely. Instead, exactly one of `-`, `'`, or `.` is allowed at a time, so long as both of its neighbors are writing characters. This increases the accuracy of the tokenizer significantly, which increases the scoring accuracy of the library, ultimately making it easier to correctly identify Toki Pona sentences among arbitrary ones.
+The reason for this is that, while Toki Pona itself does not have intra-word punctuation, Toki Pona may be written in mixed language environments; a more accurate tokenizer is less likely to produce sentence fragments, and accurately captured sentences are more likely to be identified as the actual language they are written in.
 
-The goal of splitting into word candidates and non-candidates is important, because any [encoding of Toki Pona's logographic script](https://www.kreativekorp.com/ucsur/charts/sitelen.html) will require each character be split into its own token, where the default behavior would be to leave consecutive non-punctuation together.
+Another note: The intent of splitting into word candidates and non-candidates is important, because any [encoding of Toki Pona's logographic script](https://www.kreativekorp.com/ucsur/charts/sitelen.html) will require each character be split into its own token, where the default behavior would be to leave consecutive non-punctuation together.
 
 ### Aren't there a lot of false positives?
 
