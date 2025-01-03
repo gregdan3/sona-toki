@@ -81,6 +81,7 @@ class IloConfig(TypedDict):
     scoring_filters: List[Type[Filter]]
     scorer: Type[Scorer]
     passing_score: Number
+    empty_passes: bool
     word_tokenizer: NotRequired[Type[Tokenizer]]
     sent_tokenizer: NotRequired[Type[Tokenizer]]
 
@@ -94,6 +95,7 @@ BaseConfig: IloConfig = {
     "scoring_filters": [],
     "scorer": PassFail,
     "passing_score": 0.8,
+    "empty_passes": True,
 }
 
 
@@ -110,6 +112,7 @@ PrefConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
+    "empty_passes": True,
 }
 
 CorpusConfig: IloConfig = {
@@ -132,6 +135,7 @@ CorpusConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
+    "empty_passes": True,  # my client doesn't fail empty sentences; it just omits them
 }
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
@@ -142,6 +146,7 @@ LazyConfig: IloConfig = {
     "scorer": SoftPassFail,
     "passing_score": 0.8,
     "word_tokenizer": WordTokenizerRe,  # mimics old tokenizer
+    "empty_passes": True,
 }
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
@@ -162,6 +167,7 @@ IsipinEpikuConfig: IloConfig = {
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
+    "empty_passes": True,
 }
 
 

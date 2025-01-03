@@ -20,6 +20,7 @@ class Ilo:
     __scorer: Type[Scorer]
     __sentence_scorer: Type[SentenceScorer]
     __passing_score: Number
+    __empty_passes: bool
 
     def __init__(
         self,
@@ -29,6 +30,7 @@ class Ilo:
         scoring_filters: List[Type[Filter]],
         scorer: Type[Scorer],
         passing_score: Number,
+        empty_passes: bool = True,
         sentence_scorer: Type[SentenceScorer] = SentNoOp,
         word_tokenizer: Type[Tokenizer] = WordTokenizer,
         sent_tokenizer: Type[Tokenizer] = SentTokenizer,
@@ -44,6 +46,7 @@ class Ilo:
         self.__scorer = scorer
         self.__sentence_scorer = sentence_scorer
         self.__passing_score = passing_score
+        self.__empty_passes = empty_passes
 
     def preprocess(self, msg: str) -> str:
         for p in self.__preprocessors:
@@ -108,6 +111,10 @@ class Ilo:
         filtered = self.filter_tokens(tokenized)
         cleaned = self.clean_tokens(filtered)
         score = self.score_tokens(cleaned)
+        if not self.__empty_passes and not cleaned:
+            # NOTE: filtered will already be empty
+            # but clean_tokens can *technically* omit tokens too
+            score = 0
 
         scorecard: Scorecard = {
             "text": message,
