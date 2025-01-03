@@ -45,27 +45,32 @@ ALL_VALID = [
     "mi pali ilo to",
 ]
 
-IGNORABLES = [
+EMPTY = [
     "",
     " ",
     "2+2=5",
-    "kiwen moli 42",
     "https://mun.la/sona",
     "https://example.com/",
-    "mi wile e ni: <https://example.com> li pona",
-    "lipu https://example.com li kama pona",
     "<:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778>",
     "...",
-    " ⟨·⟩, a",
     "·····",
-    "o lukin: [[w:QWERTY]]",
-    "nasa la mi ken pana e ni: <unrelated_words_that_are_illegal>",
     "❤️",  # heart
     "😊",
     "👨‍👩‍👧‍👧",  # family emoji with zwj
     # every non-emoji in the writables
     "🄀🄁🄂🄃🄄🄅🄆🄇🄈🄉🄊🄋🄌🄍🄎🄏🄐🄑🄒🄓🄔🄕🄖🄗🄘🄙🄚🄛🄜🄝🄞🄟🄠🄡🄢🄣🄤🄥🄦🄧🄨🄩🄪🄫🄬🄭🄮🄯🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🅊🅋🅌🅍🅎🅏🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅪🅫🅬🅭🅮🅯🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🆊🆋🆌🆍🆏🆐 🆛🆜🆝🆞🆟🆠🆡🆢🆣🆤🆥🆦🆧🆨🆩🆪🆫🆬🆭🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿",
     "🅰️🅱️🅾️🅱️🅰️",  # blood type emojis
+]
+
+IGNORABLES = [
+    "kiwen moli 42",
+    "mi wile e ni: <https://example.com> li pona",
+    "lipu https://example.com li kama pona",
+    " ⟨·⟩, a",
+    "o lukin: [[w:QWERTY]]",
+    "nasa la mi ken pana e ni: <unrelated_words_that_are_illegal>",
+    "o tawa [lipu ni](https://example.com) a",
+    "mi pana e lipu ni: [[Borborygmos]]",
 ]
 
 SYLLABIC_MATCHES = [
@@ -185,6 +190,7 @@ KNOWN_GOOD = (
     + NAME_MATCHES
     + SOME_INVALID
     + IGNORABLES
+    + EMPTY
 )
 
 KNOWN_BAD = (
