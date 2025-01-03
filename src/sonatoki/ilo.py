@@ -126,10 +126,15 @@ class Ilo:
 
         return scorecard
 
+    def make_scorecard(self, message: str) -> Scorecard:
+        """Preprocess a message, then create and return a `Scorecard` for that
+        message."""
+        message = self.preprocess(message)
+        return self._is_toki_pona(message)
+
     def is_toki_pona(self, message: str) -> bool:
         """Determines whether a text is or is not Toki Pona."""
-        message = self.preprocess(message)
-        scorecard = self._is_toki_pona(message)
+        scorecard = self.make_scorecard(message)
         return scorecard["score"] >= self.__passing_score
 
     def _are_toki_pona(self, message: str) -> List[Scorecard]:
@@ -145,6 +150,12 @@ class Ilo:
             scorecards.append(result)
         scorecards = self.score_sentences(scorecards)
         return scorecards
+
+    def make_scorecards(self, message: str) -> List[Scorecard]:
+        """Preprocess a message, then create and return a `Scorecard` for each
+        sentence in that message."""
+        message = self.preprocess(message)
+        return self._are_toki_pona(message)
 
     def are_toki_pona(self, message: str) -> List[bool]:
         """Splits a statement into sentences, then determines if each is or is not Toki Pona.
