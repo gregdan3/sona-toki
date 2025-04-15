@@ -498,7 +498,10 @@ ALL_PUNCT_RANGES_STR = "".join(find_unicode_ranges(ALL_PUNCT))
 
 
 UNICODE_WHITESPACE_RANGES = [
-    "\\U00000020",
+    "\\U00000009",  # tab
+    "\\U0000000A",  # line feed
+    "\\U0000000D",  # carriage return
+    "\\U00000020",  # space
     "\\U000000a0",
     "\\U00001680",
     "\\U00002000-\\U0000200a",
