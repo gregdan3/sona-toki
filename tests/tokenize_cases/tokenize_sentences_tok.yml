@@ -94,6 +94,29 @@
   output:
     - "isn't that game-breaking?"
     - "i think so"
+- name: "intraword punctuation 3"
+  input: "e.g.\n- monsuta\n- monsi\n- ma"
+  output:
+    - "e.g."
+    - "-"
+    - "monsuta"
+    - "-"
+    - "monsi"
+    - "-"
+    - "ma"
+- name: "multiline with fake intraword"
+  input: >
+    toki!
+    sitelen pini ni li tu ala e toki.
+    ni kin.
+    taso ni li pini e toki anu seme:
+    pini la ni li toki sin.
+  output:
+    - "toki!"
+    - "sitelen pini ni li tu ala e toki."
+    - "ni kin."
+    - "taso ni li pini e toki anu seme:"
+    - "pini la ni li toki sin."
 - name: "fake intraword punct 1"
   input: "!.h"
   output:
