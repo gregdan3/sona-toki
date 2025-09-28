@@ -91,7 +91,7 @@ class WordTokenizer(SetTokenizer):
 
                 if NimiUCSUR.filter(s[i]):
                     cls.add_token(s, tokens, last_match, i)
-                    tokens.append(s[i])
+                    cls.add_token(s, tokens, i, i + 1)
                     i += 1
                     last_match = i
                     continue
