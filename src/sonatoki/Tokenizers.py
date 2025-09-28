@@ -1,6 +1,7 @@
 # STL
 import re
 from abc import ABC, abstractmethod
+from sys import intern
 from typing import Set, List
 
 # PDM
@@ -40,7 +41,11 @@ class RegexTokenizer(Tokenizer):
     @classmethod
     @override
     def tokenize(cls, s: str) -> List[str]:
-        return [clean for word in re.split(cls.pattern, s) if (clean := word.strip())]
+        return [
+            intern(clean)
+            for word in re.split(cls.pattern, s)
+            if (clean := word.strip())
+        ]
 
 
 class Regex1Tokenizer(Tokenizer):
@@ -50,7 +55,9 @@ class Regex1Tokenizer(Tokenizer):
     @override
     def tokenize(cls, s: str) -> List[str]:
         return [
-            clean for word in regex.split(cls.pattern, s) if (clean := word.strip())
+            intern(clean)
+            for word in regex.split(cls.pattern, s)
+            if (clean := word.strip())
         ]
 
 
@@ -65,7 +72,8 @@ class WordTokenizer(SetTokenizer):
     @classmethod
     def add_token(cls, s: str, tokens: List[str], last_match: int, i: int):
         if i > last_match:
-            tokens.append(s[last_match:i])
+            token = intern(s[last_match:i])
+            tokens.append(token)
 
     @classmethod
     def to_tokens(cls, s: str) -> List[str]:

@@ -1,6 +1,7 @@
 # STL
 import re
 from abc import ABC, abstractmethod
+from sys import intern
 
 # PDM
 from typing_extensions import override
@@ -21,7 +22,7 @@ class RegexCleaner(Cleaner):
     @classmethod
     @override
     def clean(cls, token: str) -> str:
-        return re.sub(cls.pattern, cls.replace, token)
+        return intern(re.sub(cls.pattern, cls.replace, token))
 
 
 class ConsecutiveDuplicates(Cleaner):
@@ -44,29 +45,30 @@ class ConsecutiveDuplicates(Cleaner):
             return token
 
         output = token[0]
-
         last_output = output.lower()  # ignore case in comparison
         for i in range(1, len(token)):
-            cur_char = token[i].lower()
-            if cur_char == last_output:
+            cur_char = intern(token[i])
+            lower_cur_char = intern(cur_char.lower())
+            if lower_cur_char == last_output:
                 continue
-            output += token[i]  # preserve case of string
-            last_output = cur_char
+            output += cur_char  # preserve case of string
+            last_output = lower_cur_char
+        output = intern(output)
         return output
 
 
 class ConsecutiveDuplicatesRe(RegexCleaner):
     """Reference implementation for `ConsecutiveDuplicates`."""
 
-    pattern = re.compile(r"(.)\1+", flags=re.IGNORECASE)
-    replace = r"\1"
+    pattern: "re.Pattern[str]" = re.compile(r"(.)\1+", flags=re.IGNORECASE)
+    replace: str = r"\1"
 
 
 class Lowercase(Cleaner):
     @classmethod
     @override
     def clean(cls, token: str) -> str:
-        return token.lower()
+        return intern(token.lower())
 
 
 __all__ = [
