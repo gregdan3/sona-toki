@@ -5,7 +5,7 @@ import hypothesis.strategies as st
 from hypothesis import given, assume, example
 
 # LOCAL
-from sonatoki.utils import overlapping_pairs
+from sonatoki.utils import overlapping_ntuples
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates, ConsecutiveDuplicatesRe
 
 # FILESYSTEM
@@ -21,7 +21,7 @@ from .test_utils import PROPER_NAME_RE
 def test_ConsecutiveDuplicatesRe(s: str):
     _ = assume("\n" not in s)
     res = ConsecutiveDuplicatesRe.clean(s)
-    for a, b in overlapping_pairs(res):
+    for a, b in overlapping_ntuples(res, 2):
         assert a.lower() != b.lower(), (s, res)
 
 

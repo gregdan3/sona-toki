@@ -1,6 +1,6 @@
 # STL
 import itertools
-from typing import Set, List, TypeVar, Iterable
+from typing import Set, List, Tuple, TypeVar, Iterable
 
 # LOCAL
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
@@ -72,12 +72,7 @@ def find_unicode_chars(ranges: List[str]) -> str:
     return "".join(result)
 
 
-def overlapping_pairs(iterable: Iterable[T]) -> Iterable[T]:
-    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
-    return overlapping_ntuples(iterable, n=2)
-
-
-def overlapping_ntuples(iterable: Iterable[T], n: int) -> Iterable[T]:
+def overlapping_ntuples(iterable: Iterable[T], n: int) -> Iterable[Tuple[T, ...]]:
     teed = itertools.tee(iterable, n)
     for i in range(1, n):
         for j in range(i):
