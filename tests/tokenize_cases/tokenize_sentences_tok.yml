@@ -104,6 +104,11 @@
     - "monsi"
     - "-"
     - "ma"
+- name: "intraword punctuation 4"
+  input: "look at this variable: leaf_node_right"
+  output:
+    - "look at this variable:"
+    - "leaf_node_right"
 - name: "multiline with fake intraword"
   input: >
     toki!

@@ -538,7 +538,7 @@ QUOTATIVE_PUNCT = """"«»‹›“”‟„⹂「」『』"""
 UCSUR_SENTENCE_PUNCT = """󱦜󱦝"""
 ALL_SENTENCE_PUNCT = BASIC_SENTENCE_PUNCT + UCSUR_SENTENCE_PUNCT
 
-INTRA_WORD_PUNCT = """-'’."""
+INTRA_WORD_PUNCT = """-'’._"""
 
 
 LINKU = Path(__file__).resolve().parent / Path("linku.json")
