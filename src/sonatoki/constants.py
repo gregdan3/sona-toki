@@ -572,6 +572,7 @@ FALSE_POS_SYLLABIC = {
     "one",
     "to",
     "i",
+    "ja",  # "yes" in some langs
     "awesome",
     "use",
     "name",
@@ -579,7 +580,7 @@ FALSE_POS_SYLLABIC = {
     "imo",  # "in my opinion"
     "ime",  # "in my experience"
     "man",
-    # "son",  # sona typo?
+    "son",  # sona typo, but also "son" and "soon"
     "joke",
     # pon would go here
     "so",

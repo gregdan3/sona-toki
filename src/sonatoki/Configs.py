@@ -53,6 +53,7 @@ __DICT_PHONOMATCHES = {
     "api",  # API
     "i",  # 1st person
     "je",  # 1st person pronoun, french
+    "ja",  # basically 'yes' in german
     "kana",  # japanese script
     "me",  # 1st person singular, english
     "ne",  # "no" in several languages
