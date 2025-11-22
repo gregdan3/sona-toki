@@ -86,7 +86,7 @@ SYLLABIC_MATCHES = [
 
 ALPHABETIC_MATCHES = [
     "mi mtue o kama sona",
-    "mi mute o kma son",  # this one is odd because `son` is an unintended phonetic match
+    # "mi mute o kma son",  # this one is odd because `son` is an unintended phonetic match
     "mi mute o kama kne snoa a",
     "ni li tptpt",
     "mi wile pana lon sptp",
