@@ -54,6 +54,7 @@ __DICT_PHONOMATCHES = {
     "i",  # 1st person
     "je",  # 1st person pronoun, french
     "ja",  # basically 'yes' in german
+    "ka",  # tuki tiki 'being'
     "kana",  # japanese script
     "me",  # 1st person singular, english
     "ne",  # "no" in several languages

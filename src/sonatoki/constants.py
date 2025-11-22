@@ -571,6 +571,7 @@ FALSE_POS_SYLLABIC = {
     "owo",  # TODO: emoticon??
     "one",
     "to",
+    "ka",  # tuki tiki mostly
     "i",
     "ja",  # "yes" in some langs
     "awesome",
@@ -729,6 +730,50 @@ UCSUR_MINUS_CARTOUCHE = set(ALL_UCSUR).difference(
 )
 # NIMI_PU_UCSUR_RANGES = ["\\U000F1900-\\U000F1977"]
 # NIMI_PU_ALE_UCSUR_RANGES = NIMI_PU_UCSUR_RANGES + ["\\U000F1978-\\U000F197A"]
+
+EMOTICONS = [
+    # mix of writing, punct, and/or numerals
+    "o7",
+    "o.o",
+    "o_o",
+    "q.q",
+    "q_q",
+    "t_t",
+    "x3",
+    # writing chars only
+    "owo",
+    "twt",
+    "uwu",
+    "xd",  # XD
+    # others that will be harder to identify
+    "d:",  # D:
+    ":d",  # :D
+    "d:<",  # D:<
+    ">:d",  # >:D
+    "d=",  # D=
+    "=d",  # =D
+    "d=<",  # D=<
+    ">=d",  # >=D
+    "d-:",  # D-:
+    ":-d",  # :-D
+    "d-:<",  # D-:<
+    ">:-d",  # >:-D
+    "d-=",  # D-=
+    "=-d",  # =-D
+    "d-=<",  # D-=<
+    ">=-d",  # >=-D
+    ":o",  # :O
+    ":p",  # :P
+    "=o",  # =O
+    "=p",  # :P
+    ":o",  # :O
+    ":p",  # :P
+    "=o",  # =O
+    "=p",  # :P
+    # anything made with only puncts like :)
+    # or made with puncts and numerals like :3
+    # is already ignored appropriately by my parser
+]
 
 
 def linku_data() -> Dict[str, LinkuWord]:
