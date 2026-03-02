@@ -565,6 +565,7 @@ FALSE_POS_SYLLABIC = {
     "alike",
     "alone",
     "amen",
+    "amo",  # love in spanish, ammo in english
     "amuse",
     "an",
     "animate",
@@ -648,6 +649,7 @@ FALSE_POS_SYLLABIC = {
     "mono",
     "muse",
     "name",
+    "nani",  # romanization of japanese "what"
     "ne",  # "no" in some languages
     "nepali",
     "nine",
@@ -721,15 +723,19 @@ FALSE_POS_SYLLABIC = {
     "women",
     "won",
     # tuki tiki
-    "tuki",
-    "tiki",
-    "taka",
-    "pula",
-    "kiku",
-    "ilu",
     "iku",
+    "ilu",
     "kati",
+    "kiku",
     "lapi",
+    "pula",
+    "taka",
+    "tiki",
+    "tila",
+    "timi",
+    "titi",
+    "tuki",
+    "tula",
     # "aka" # in sandbox
     # "min",  # borderline
     # "papa",  # now in sandbox
