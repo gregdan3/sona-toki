@@ -46,8 +46,8 @@ from sonatoki.Preprocessors import (
 )
 
 __DICT_PHONOMATCHES = {
-    # Sandbox words are removed from the CorpusConfig if they appear more frequently in English than Toki Pona by a factor of at least 3.
-    # In this case, all of these appear more often in English by a factor of at least 10.
+    # Sandbox words are removed from the CorpusConfig if they appear more frequently in languages other than Toki Pona by a factor of at least 3.
+    # In this case, all of these appear more often in other languages by a factor of at least 10.
     "aka",  # also known as
     "an",  # article
     "api",  # API
@@ -56,6 +56,8 @@ __DICT_PHONOMATCHES = {
     "ja",  # basically 'yes' in german
     "ka",  # tuki tiki 'being'
     "kana",  # japanese script
+    "ki",  # mostly noise
+    "lu",  # preposition in tuki tiki
     "me",  # 1st person singular, english
     "ne",  # "no" in several languages
     "nu",  # "new" in english, "now" in dutch
@@ -117,6 +119,7 @@ PrefConfig: IloConfig = {
     "empty_passes": True,
 }
 
+"""Intended for use in collecting data with ilo Muni."""
 CorpusConfig: IloConfig = {
     "preprocessors": RECOMMENDED_PREPROCESSORS,
     "cleaners": [ConsecutiveDuplicates],
