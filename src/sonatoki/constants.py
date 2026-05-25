@@ -558,6 +558,7 @@ ALLOWABLES = {
     "wxw",  # wile ala wile
     "msa",
     "anusem",
+    "pon",  # pona
 }
 
 # NOTE: This is being tracked manually rather than fetched from syllabics.txt until I am convinced that solution is appropriate
