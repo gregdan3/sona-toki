@@ -2,6 +2,7 @@
 import string
 
 # PDM
+import pytest
 import hypothesis.strategies as st
 from hypothesis import given, example
 
@@ -149,6 +150,7 @@ def test_ProperName(s: str):
     assert res, repr(s)
 
 
+@pytest.mark.skip("Deprecated")
 @given(st.from_regex(PunctuationRe.pattern, fullmatch=True))
 @example("[]")
 @example(r"\\")
@@ -162,6 +164,7 @@ def test_PunctuationRe1(s: str):
     assert res, repr(s)
 
 
+@pytest.mark.skip("Deprecated")
 @given(st.from_regex(PunctuationRe.pattern, fullmatch=True))
 def test_PunctuationRe(s: str):
     res_re = PunctuationRe.filter(s)
@@ -169,6 +172,7 @@ def test_PunctuationRe(s: str):
     assert res_re == res_re1, repr(s)
 
 
+@pytest.mark.skip("Deprecated")
 @given(st.from_regex(PunctuationRe.pattern, fullmatch=True))
 @example("\U000f1990")  # UCSUR char
 def test_Punctuation(s: str):

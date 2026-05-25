@@ -121,6 +121,8 @@ def regen_unicode_data():
         "Sk",  # Modifier (kModifier)
         "Sc",  # Currency
         "So",  # Other
+        # Format. We want to keep but ignore these... I think?
+        "Cf",  # Format
     }
     WHITESPACE_CATEGORIES = {
         "Zl",  # Line Separator

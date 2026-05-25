@@ -43,6 +43,11 @@ ALL_VALID = [
     "nimi namako li toki e ale",
     "mi open mute a",  # mostly eng words
     "mi pali ilo to",
+    "󱤴​󱥌​󱤉​󱥡​󱥍​󱥬​󱥔​󱥩​󱤱​󱤴",
+    "󱤴󱥷󱦕󱤴",
+    "󱥬‍󱥔​󱥬󱦕󱥔",
+    "󱤴​󱤊​󱥞​󱤧​󱤻‍󱥔. 󱥁​󱤧​󱥙​󱥩​󱥞?",
+    "󱤴󱤊󱥞󱤧󱤻‍󱥔. 󱥁󱤧󱥙󱥩󱥞",
 ]
 
 EMPTY = [

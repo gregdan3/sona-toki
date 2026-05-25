@@ -356,6 +356,9 @@ class Punctuation(SubsetFilter):
     tokens = set(ALL_PUNCT)
 
 
+@deprecated(
+    "PunctuationRe is a previous reference implementation. Its behavior has diverged from Punctuation and it may not be restored."
+)
 class PunctuationRe(RegexFilter):
     """Faster implementation of `PunctuationRe1`.
 
@@ -365,6 +368,9 @@ class PunctuationRe(RegexFilter):
     pattern = re.compile(rf"[{ALL_PUNCT_RANGES_STR}]+")
 
 
+@deprecated(
+    "PunctuationRe1 is a previous reference implementation. Its behavior has diverged from Punctuation and it may not be restored."
+)
 class PunctuationRe1(Regex1Filter):
     """Reference implementation for identifying tokens made entirely of
     punctuation."""

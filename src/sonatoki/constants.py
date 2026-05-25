@@ -21,7 +21,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U0000005b-\\U00000060",
     "\\U0000007b-\\U0000007e",
     "\\U000000a1-\\U000000a8",
-    "\\U000000ab-\\U000000ac",
+    "\\U000000ab-\\U000000ad",
     "\\U000000af-\\U000000b1",
     "\\U000000b4",
     "\\U000000b6-\\U000000b8",
@@ -48,20 +48,22 @@ UNICODE_PUNCT_RANGES = [
     "\\U000005c3",
     "\\U000005c6",
     "\\U000005f3-\\U000005f4",
-    "\\U00000606-\\U0000060f",
-    "\\U0000061b",
-    "\\U0000061d-\\U0000061f",
+    "\\U00000600-\\U0000060f",
+    "\\U0000061b-\\U0000061f",
     "\\U0000066a-\\U0000066d",
     "\\U000006d4",
-    "\\U000006de",
+    "\\U000006dd-\\U000006de",
     "\\U000006e9",
     "\\U000006fd-\\U000006fe",
     "\\U00000700-\\U0000070d",
+    "\\U0000070f",
     "\\U000007f6-\\U000007f9",
     "\\U000007fe-\\U000007ff",
     "\\U00000830-\\U0000083e",
     "\\U0000085e",
     "\\U00000888",
+    "\\U00000890-\\U00000891",
+    "\\U000008e2",
     "\\U00000964-\\U00000965",
     "\\U00000970",
     "\\U000009f2-\\U000009f3",
@@ -103,6 +105,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U000017d4-\\U000017d6",
     "\\U000017d8-\\U000017db",
     "\\U00001800-\\U0000180a",
+    "\\U0000180e",
     "\\U00001940",
     "\\U00001944-\\U00001945",
     "\\U000019de-\\U000019ff",
@@ -123,13 +126,16 @@ UNICODE_PUNCT_RANGES = [
     "\\U00001fdd-\\U00001fdf",
     "\\U00001fed-\\U00001fef",
     "\\U00001ffd-\\U00001ffe",
-    "\\U00002010-\\U00002027",
+    "\\U0000200b-\\U00002027",  # zws, zwnj, and zwj are here
+    "\\U0000202a-\\U0000202e",
     "\\U00002030-\\U0000203b",
     "\\U0000203d-\\U00002048",
     "\\U0000204a-\\U0000205e",
+    "\\U00002060-\\U00002064",
+    "\\U00002066-\\U0000206f",
     "\\U0000207a-\\U0000207e",
     "\\U0000208a-\\U0000208e",
-    "\\U000020a0-\\U000020c0",
+    "\\U000020a0-\\U000020c1",
     "\\U00002100-\\U00002101",
     "\\U00002103-\\U00002106",
     "\\U00002108-\\U00002109",
@@ -228,8 +234,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U00002b1d-\\U00002b4f",
     "\\U00002b51-\\U00002b54",
     "\\U00002b56-\\U00002b73",
-    "\\U00002b76-\\U00002b95",
-    "\\U00002b97-\\U00002bff",
+    "\\U00002b76-\\U00002bff",
     "\\U00002ce5-\\U00002cea",
     "\\U00002cf9-\\U00002cfc",
     "\\U00002cfe-\\U00002cff",
@@ -287,21 +292,23 @@ UNICODE_PUNCT_RANGES = [
     "\\U0000ab6a-\\U0000ab6b",
     "\\U0000abeb",
     "\\U0000fb29",
-    "\\U0000fbb2-\\U0000fbc2",
+    "\\U0000fbb2-\\U0000fbd2",
     "\\U0000fd3e-\\U0000fd4f",
-    "\\U0000fdcf",
+    "\\U0000fd90-\\U0000fd91",
+    "\\U0000fdc8-\\U0000fdcf",
     "\\U0000fdfc-\\U0000fdff",
     "\\U0000fe10-\\U0000fe19",
     "\\U0000fe30-\\U0000fe52",
     "\\U0000fe54-\\U0000fe66",
     "\\U0000fe68-\\U0000fe6b",
+    "\\U0000feff",
     "\\U0000ff01-\\U0000ff0f",
     "\\U0000ff1a-\\U0000ff20",
     "\\U0000ff3b-\\U0000ff40",
     "\\U0000ff5b-\\U0000ff65",
     "\\U0000ffe0-\\U0000ffe6",
     "\\U0000ffe8-\\U0000ffee",
-    "\\U0000fffc-\\U0000fffd",
+    "\\U0000fff9-\\U0000fffd",
     "\\U00010100-\\U00010102",
     "\\U00010137-\\U0001013f",
     "\\U00010179-\\U00010189",
@@ -325,11 +332,12 @@ UNICODE_PUNCT_RANGES = [
     "\\U00010d6e",
     "\\U00010d8e-\\U00010d8f",
     "\\U00010ead",
+    "\\U00010ed0-\\U00010ed8",
     "\\U00010f55-\\U00010f59",
     "\\U00010f86-\\U00010f89",
     "\\U00011047-\\U0001104d",
-    "\\U000110bb-\\U000110bc",
-    "\\U000110be-\\U000110c1",
+    "\\U000110bb-\\U000110c1",
+    "\\U000110cd",
     "\\U00011140-\\U00011143",
     "\\U00011174-\\U00011175",
     "\\U000111c5-\\U000111c8",
@@ -365,6 +373,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U00011fff",
     "\\U00012470-\\U00012474",
     "\\U00012ff1-\\U00012ff2",
+    "\\U00013430-\\U0001343f",
     "\\U00016a6e-\\U00016a6f",
     "\\U00016af5",
     "\\U00016b37-\\U00016b3f",
@@ -373,14 +382,18 @@ UNICODE_PUNCT_RANGES = [
     "\\U00016e97-\\U00016e9a",
     "\\U00016fe2",
     "\\U0001bc9c",
-    "\\U0001bc9f",
+    "\\U0001bc9f-\\U0001bca3",
     "\\U0001cc00-\\U0001ccef",
+    "\\U0001ccfa-\\U0001ccfc",
     "\\U0001cd00-\\U0001ceb3",
+    "\\U0001ceba-\\U0001ced0",
+    "\\U0001cee0-\\U0001cef0",
     "\\U0001cf50-\\U0001cfc3",
     "\\U0001d000-\\U0001d0f5",
     "\\U0001d100-\\U0001d126",
     "\\U0001d129-\\U0001d164",
     "\\U0001d16a-\\U0001d16c",
+    "\\U0001d173-\\U0001d17a",
     "\\U0001d183-\\U0001d184",
     "\\U0001d18c-\\U0001d1a9",
     "\\U0001d1ae-\\U0001d1ea",
@@ -467,8 +480,7 @@ UNICODE_PUNCT_RANGES = [
     "\\U0001f6e6-\\U0001f6e8",
     "\\U0001f6ea",
     "\\U0001f6f1-\\U0001f6f2",
-    "\\U0001f700-\\U0001f776",
-    "\\U0001f77b-\\U0001f7d9",
+    "\\U0001f700-\\U0001f7d9",
     "\\U0001f800-\\U0001f80b",
     "\\U0001f810-\\U0001f847",
     "\\U0001f850-\\U0001f859",
@@ -476,13 +488,17 @@ UNICODE_PUNCT_RANGES = [
     "\\U0001f890-\\U0001f8ad",
     "\\U0001f8b0-\\U0001f8bb",
     "\\U0001f8c0-\\U0001f8c1",
+    "\\U0001f8d0-\\U0001f8d8",
     "\\U0001f900-\\U0001f90b",
     "\\U0001f93b",
     "\\U0001f946",
-    "\\U0001fa00-\\U0001fa53",
+    "\\U0001fa00-\\U0001fa57",
     "\\U0001fa60-\\U0001fa6d",
     "\\U0001fb00-\\U0001fb92",
     "\\U0001fb94-\\U0001fbef",
+    "\\U0001fbfa",
+    "\\U000e0001",
+    "\\U000e0020-\\U000e007f",
     "\\U000f1990-\\U000f199d",
 ]
 UNICODE_PUNCT = find_unicode_chars(UNICODE_PUNCT_RANGES)
@@ -496,19 +512,25 @@ ALL_PUNCT = "".join(sorted(list(set(POSIX_PUNCT + UNICODE_PUNCT))))
 ALL_PUNCT_RANGES_STR = "".join(find_unicode_ranges(ALL_PUNCT))
 # combined bc the result could be simpler
 
-
 UNICODE_WHITESPACE_RANGES = [
     "\\U00000009",  # tab
     "\\U0000000A",  # line feed
     "\\U0000000D",  # carriage return
     "\\U00000020",  # space
-    "\\U000000a0",
-    "\\U00001680",
-    "\\U00002000-\\U0000200a",
-    "\\U00002028-\\U00002029",
-    "\\U0000202f",
-    "\\U0000205f",
-    "\\U00003000",
+    "\\U000000a0",  # no break space
+    "\\U00001680",  # ogham space
+    "\\U00002000-\\U0000200a",  # various spaces
+    # NOTE: three weird cases.
+    # ZWS doesn't create visual word boundaries, only text processor boundaries.
+    # ZWNJ creates word boundaries and indicates them to text processors
+    # ZWJ does not make word boundaries and tends to connect them even
+    "\\U0000200b",  # zero width space
+    "\\U0000200c",  # zero width non-joiner
+    # "\\U0000200d",  # zero width joiner
+    "\\U00002028-\\U00002029",  # line, paragraph seps
+    "\\U0000202f",  # narrow no break space
+    "\\U0000205f",  # math space
+    "\\U00003000",  # ideographic space
 ]
 UNICODE_WHITESPACE = find_unicode_chars(UNICODE_WHITESPACE_RANGES)
 UNICODE_WHITESPACE_RANGES_STR = "".join(UNICODE_WHITESPACE_RANGES)
@@ -538,7 +560,7 @@ QUOTATIVE_PUNCT = """"«»‹›“”‟„⹂「」『』"""
 UCSUR_SENTENCE_PUNCT = """󱦜󱦝"""
 ALL_SENTENCE_PUNCT = BASIC_SENTENCE_PUNCT + UCSUR_SENTENCE_PUNCT
 
-INTRA_WORD_PUNCT = """-'’._"""
+INTRA_WORD_PUNCT = """-'’._‍"""  # ZWJ at the end
 
 
 LINKU = Path(__file__).resolve().parent / Path("linku.json")
