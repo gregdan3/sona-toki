@@ -55,6 +55,7 @@ __DICT_PHONOMATCHES = {
     "je",  # 1st person pronoun, french
     "ja",  # basically 'yes' in german
     "ka",  # tuki tiki 'being'
+    # "ke" # NOTE: this is here commented so i don't investigate again. it needs to stay.
     "kana",  # japanese script
     "ki",  # mostly noise
     "lu",  # preposition in tuki tiki
@@ -62,6 +63,7 @@ __DICT_PHONOMATCHES = {
     "ne",  # "no" in several languages
     "nu",  # "new" in english, "now" in dutch
     "omen",  # ominous
+    "pa",  # variety of non-tp languages
     "se",  # spanish particle, english "see"
     "sole",  # singular, of shoe
     "take",  # acquire, perhaps forcefully or without permission
@@ -74,7 +76,6 @@ __DICT_PHONOMATCHES = {
     # "papa",  # father
     # "lo",  # "lo" and "loo"
     # "ewe",  # sheep
-    # "pa",  # father- eh?
 }
 
 

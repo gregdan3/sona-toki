@@ -606,6 +606,10 @@ FALSE_POS_SYLLABIC = {
     "into",
     "ipa",
     "isolate",
+    "jaja",
+    "jajaja",
+    "jajajaja",
+    "jajajajaja",
     "japan",
     "japanese",
     "japon",
@@ -640,6 +644,7 @@ FALSE_POS_SYLLABIC = {
     "menu",
     "meta",
     "mile",
+    "min",  # borderline
     "mine",
     "mini",
     "minute",
@@ -657,6 +662,7 @@ FALSE_POS_SYLLABIC = {
     "no",
     "non",
     "none",
+    "nono",
     "nonsense",
     "nope",
     "nose",
@@ -676,6 +682,7 @@ FALSE_POS_SYLLABIC = {
     "polite",
     "pope",
     "potato",
+    "puta",  # spanish 'bitch'
     "salami",
     "saluton",
     "same",
@@ -728,16 +735,20 @@ FALSE_POS_SYLLABIC = {
     "kati",
     "kiku",
     "lapi",
+    "paka",
     "pula",
     "taka",
     "tiki",
+    "tiku",
     "tila",
+    "tilu",
     "timi",
+    "muti",
     "titi",
     "tuki",
     "tula",
+    "upi",
     # "aka" # in sandbox
-    # "min",  # borderline
     # "papa",  # now in sandbox
 }
 
@@ -833,10 +844,6 @@ EMOTICONS = [
     "=-d",  # =-D
     "d-=<",  # D-=<
     ">=-d",  # >=-D
-    ":o",  # :O
-    ":p",  # :P
-    "=o",  # =O
-    "=p",  # :P
     ":o",  # :O
     ":p",  # :P
     "=o",  # =O
