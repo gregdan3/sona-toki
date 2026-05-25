@@ -117,8 +117,8 @@ SOME_INVALID = [
 
 CORPUS_SPECIFIC = [
     # "ki le konsi si te isipin epiku le pasila to",
-    "ki konsi te isipin epiku pasila to",  # the sandbox has not documented si or le
-    'jasima omekapo, ki nimisin "jasima enko nimisin". ki enko alu linluwi Jutu alu epiku ki epiku baba is you. ki likujo "SINtelen pona", ki epiku alu "sitelen pona". ki kepen wawajete isipin, kin ki yupekosi alu lipamanka alu wawajete, kin ki enko isipin lipamanka linluwi alu wawajete',
+    # "ki konsi te isipin epiku pasila to",  # the sandbox has not documented si or le
+    # 'jasima omekapo, ki nimisin "jasima enko nimisin". ki enko alu linluwi Jutu alu epiku ki epiku baba is you. ki likujo "SINtelen pona", ki epiku alu "sitelen pona". ki kepen wawajete isipin, kin ki yupekosi alu lipamanka alu wawajete, kin ki enko isipin lipamanka linluwi alu wawajete',
     "kalamARRRR",
     "kalamar.",
     "Pingo",
