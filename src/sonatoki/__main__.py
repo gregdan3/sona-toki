@@ -32,8 +32,8 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 
 UNICODE_DATA = "https://unicode.org/Public/UNIDATA/UnicodeData.txt"
 
-LINKU_WORDS = "https://api.linku.la/v1/words?lang=en"
-LINKU_SANDBOX = "https://api.linku.la/v1/sandbox?lang=en"
+LINKU_WORDS = "https://api.linku.la/v2/words?lang=en"
+LINKU_SANDBOX = "https://api.linku.la/v2/sandbox/words?lang=en"
 
 WORDS_10K = "https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt"
 WORDS_25K = "https://raw.githubusercontent.com/dolph/dictionary/master/popular.txt"

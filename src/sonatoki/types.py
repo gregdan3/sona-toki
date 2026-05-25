@@ -19,6 +19,7 @@ LinkuUsageDate = Union[
     Literal["2022-08"],
     Literal["2023-09"],
     Literal["2024-09"],
+    Literal["2025-09"],
 ]
 
 LinkuUsageCategory = Union[
@@ -40,11 +41,11 @@ LinkuBooks = Union[
 class LinkuWord(TypedDict):
     id: str
     author_verbatim: str
-    author_verbatim_source: str
+    author_source: str
     book: str
     coined_era: str
-    coined_year: str
-    creator: List[str]
+    creation_date: str
+    author: List[str]
     ku_data: Dict[str, int]
     see_also: List[str]
     resources: Dict[str, str]
@@ -53,8 +54,11 @@ class LinkuWord(TypedDict):
     usage_category: LinkuUsageCategory
     word: str
     deprecated: bool
-    etymology: List[Dict[str, str]]
     audio: List[Dict[str, str]]
     pu_verbatim: Dict[str, str]
     usage: Dict[LinkuUsageDate, int]
-    translations: Dict[str, Dict[str, str]]
+    glyph_ids: List[str]
+    primary_glyph_id: str
+    image: str
+    svg: str
+    translations: Dict[str, str]
