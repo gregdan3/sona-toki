@@ -32,51 +32,11 @@ from sonatoki.Filters import (
     NimiLinkuUncommon,
     FalsePosAlphabetic,
 )
-from sonatoki.Scorers import Scorer, Soften, Voting, PassFail, SoftScaling, SoftPassFail
+from sonatoki.Scorers import Scorer, PassFail, SoftScaling, SoftPassFail
 from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
+from sonatoki.constants import DICT_PHONOMATCHES
 from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
-from sonatoki.Preprocessors import (
-    RECOMMENDED_PREPROCESSORS,
-    URLs,
-    Emoji,
-    Codeblock,
-    Reference,
-    Preprocessor,
-    AngleBracketObject,
-)
-
-__DICT_PHONOMATCHES = {
-    # Sandbox words are removed from the CorpusConfig if they appear more frequently in languages other than Toki Pona by a factor of at least 3.
-    # In this case, all of these appear more often in other languages by a factor of at least 10.
-    "aka",  # also known as
-    "an",  # article
-    "api",  # API
-    "i",  # 1st person
-    "je",  # 1st person pronoun, french
-    "ja",  # basically 'yes' in german
-    "ka",  # tuki tiki 'being'
-    # "ke" # NOTE: this is here commented so i don't investigate again. it needs to stay.
-    "kana",  # japanese script
-    "ki",  # mostly noise
-    "lu",  # preposition in tuki tiki
-    "me",  # 1st person singular, english
-    "ne",  # "no" in several languages
-    "nu",  # "new" in english, "now" in dutch
-    "omen",  # ominous
-    "pa",  # variety of non-tp languages
-    "se",  # spanish particle, english "see"
-    "sole",  # singular, of shoe
-    "take",  # acquire, perhaps forcefully or without permission
-    "ten",  # 10
-    "to",  # to, too
-    "u",  # no u
-    "we",  # 1st person plural, english
-    "wi",  # wii and discussions of syllables
-    # unexplored candidates for removal
-    # "papa",  # father
-    # "lo",  # "lo" and "loo"
-    # "ewe",  # sheep
-}
+from sonatoki.Preprocessors import RECOMMENDED_PREPROCESSORS, URLs, Preprocessor
 
 
 class IloConfig(TypedDict):
@@ -129,7 +89,7 @@ CorpusConfig: IloConfig = {
         Len(
             Or(
                 # awkward but efficient syntax
-                NimiLinkuByUsage(0)(sub=__DICT_PHONOMATCHES),
+                NimiLinkuByUsage(0)(sub=DICT_PHONOMATCHES),
                 NimiUCSUR,
                 Miscellaneous,
             ),

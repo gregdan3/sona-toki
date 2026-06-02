@@ -25,7 +25,6 @@ from sonatoki.constants import (
     UCSUR_PUNCT_RANGES,
     UNICODE_PUNCT_RANGES,
     UNICODE_WHITESPACE_RANGES,
-    EMOJI_VARIATION_SELECTOR_RANGES,
 )
 
 HERE = os.path.dirname(os.path.realpath(__file__))
