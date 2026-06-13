@@ -148,6 +148,16 @@ EXCESSIVE_SYLLABICS = [
     "opposite",
     "nine emo women see anime alone",
     "i like mini potato",
+    "sanwi pi amu e tili",
+    "te amo <3",
+    "Laura, te amo <3",
+    "jajaja",
+    "ja ja ja ja",
+    "ja ja",
+    "ja",
+    "mi le kujo nenka ta pi ta",
+    "o lo sun titan peko",
+    "usa usa",
 ]
 
 EXCESSIVE_ALPHABETICS = [
@@ -155,11 +165,15 @@ EXCESSIVE_ALPHABETICS = [
     "I wait, I sulk, as a tool I make stoops to ineptness.",
     "aaa i non-saw usa's most multiple element-set. it's as asinine as in `e`-less speak",
     "so, to atone like papa—an awesome anon (no-name) sin man—i ate an asinine lemon-limelike tomato jalapeno isotope. 'nonsense!' amen. note to Oman: take mine katana to imitate a ninja in pantomime. atomise one nuke? 'insane misuse!' same. likewise, Susan, awaken a pepino melon in a linen pipeline. (penile) emanate semen. joke: manipulate a tame toneme to elope online tonite",
+    "jes mi estas.",
+    "jes ja, unu momento",
+    "kiku tiki tuki tiki",
 ]
 
 EXCESSIVE_TYPOES = [
     "mi pakla ln tepo mtue ls mi kn ala tok poan aun seem",
     "sina poan",
+    "ona lu pnoa",
 ]
 
 EXCESSIVE_NAMES = [
@@ -178,6 +192,9 @@ EXCESSIVE_ENGLISH = [
     "ni li make e sense",
     "21st",  # previous false positive; fixed by ProperName change
     "a e i o u",  # voting brings this back to false positive zone...
+    "ni li make e sense tawa mi",
+    "ni li make e sense",
+    "does 'mi wile pana e sona' make sense?",
 ]
 
 NON_MATCHES = [
