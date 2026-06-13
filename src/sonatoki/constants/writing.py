@@ -8,6 +8,7 @@ external token."""
 ALLOWABLES = {
     "anusem",  # clipping of anu seme
     "kxk",  # ken ala ken
+    "kx",  # ken ala
     "msa",  # mi sona ala
     "pon",  # pona
     # these may be short enough to be an issue
@@ -16,5 +17,9 @@ ALLOWABLES = {
     "sp",  # sina pona, sitelen pona
     "tpt",  # toki pona taso
     "wxw",  # wile ala wile
+    "wx",  # wile ala
     "mptp",  # ma pona pi toki pona
+    "stln",  # sitelen
+    "stpn",  # sitelen pona
+    "tptpt",  # tenpo pi toki pona taso
 }

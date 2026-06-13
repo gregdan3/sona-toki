@@ -1,38 +1,45 @@
 EMOTICONS = [
     # mix of writing, punct, and/or numerals
-    "o7",
-    "o.o",
     "o_o",
-    "q.q",
     "q_q",
     "t_t",
-    "x3",
-    # writing chars only
+    "u_u",
+    "x_x",
+    #
+    "o.o",
+    "q.q",
+    "t.t",
+    "u.u",
+    "x.x",
+    #
     "owo",
-    "twt",
     "uwu",
-    "xd",  # XD
+    "twt",
+    #
+    "o7",
+    "x3",
+    "xd",
     # others that will be harder to identify
-    "d:",  # D:
-    ":d",  # :D
-    "d:<",  # D:<
-    ">:d",  # >:D
-    "d=",  # D=
-    "=d",  # =D
-    "d=<",  # D=<
-    ">=d",  # >=D
-    "d-:",  # D-:
-    ":-d",  # :-D
-    "d-:<",  # D-:<
-    ">:-d",  # >:-D
-    "d-=",  # D-=
-    "=-d",  # =-D
-    "d-=<",  # D-=<
-    ">=-d",  # >=-D
-    ":o",  # :O
-    ":p",  # :P
-    "=o",  # =O
-    "=p",  # :P
+    # "d:",  # D:
+    # ":d",  # :D
+    # "d:<",  # D:<
+    # ">:d",  # >:D
+    # "d=",  # D=
+    # "=d",  # =D
+    # "d=<",  # D=<
+    # ">=d",  # >=D
+    # "d-:",  # D-:
+    # ":-d",  # :-D
+    # "d-:<",  # D-:<
+    # ">:-d",  # >:-D
+    # "d-=",  # D-=
+    # "=-d",  # =-D
+    # "d-=<",  # D-=<
+    # ">=-d",  # >=-D
+    # ":o",  # :O
+    # ":p",  # :P
+    # "=o",  # =O
+    # "=p",  # :P
     # anything made with only puncts like :)
     # or made with puncts and numerals like :3
     # is already ignored appropriately by my parser

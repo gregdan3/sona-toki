@@ -2,6 +2,7 @@
 import re
 from abc import ABC, abstractmethod
 from sys import intern
+from typing import List, Type
 
 # PDM
 from typing_extensions import override
@@ -71,7 +72,12 @@ class Lowercase(Cleaner):
         return intern(token.lower())
 
 
+RECOMMENDED_CLEANERS: List[Type[Cleaner]] = [
+    ConsecutiveDuplicates,
+]
+
 __all__ = [
     "ConsecutiveDuplicates",
     "Lowercase",
+    "RECOMMENDED_CLEANERS",
 ]

@@ -16,6 +16,7 @@ from sonatoki.constants import (
     VOWELS,
     ALPHABET,
     ALL_PUNCT,
+    EMOTICONS,
     ALLOWABLES,
     CONSONANTS,
     NIMI_UCSUR,
@@ -167,6 +168,10 @@ class SubsetFilter(Filter):
 
 class Miscellaneous(MemberFilter):
     tokens = prep_dictionary(ALLOWABLES)
+
+
+class Emoticon(MemberFilter):
+    tokens = prep_dictionary(EMOTICONS)
 
 
 class FalsePosSyllabic(MemberFilter):
@@ -508,6 +513,13 @@ class Pass(Filter):
 class Fail(Not, Pass): ...
 
 
+RECOMMENDED_IGNORING_FILTERS: List[Type[Filter]] = [
+    Numeric,
+    Punctuation,
+    Emoticon,
+]
+
+
 __all__ = [
     "Alphabetic",
     "And",
@@ -529,5 +541,6 @@ __all__ = [
     "ProperName",
     "PuName",
     "Punctuation",
+    "RECOMMENDED_IGNORING_FILTERS",
     "Syllabic",
 ]

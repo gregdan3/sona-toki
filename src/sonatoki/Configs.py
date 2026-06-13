@@ -7,25 +7,20 @@ from typing_extensions import NotRequired
 # LOCAL
 from sonatoki.types import Number
 from sonatoki.Filters import (
+    RECOMMENDED_IGNORING_FILTERS,
     Or,
     And,
     Len,
     Not,
     Filter,
     PuName,
-    Numeric,
-    Syllabic,
     NimiUCSUR,
     Alphabetic,
     NimiKuLili,
     NimiKuSuli,
     ProperName,
     Phonotactic,
-    Punctuation,
-    LongSyllabic,
     Miscellaneous,
-    LongAlphabetic,
-    LongProperName,
     FalsePosSyllabic,
     NimiLinkuByUsage,
     NimiLinkuObscure,
@@ -34,7 +29,7 @@ from sonatoki.Filters import (
     FalsePosAlphabetic,
 )
 from sonatoki.Scorers import Scorer, PassFail, SoftScaling, SoftPassFail
-from sonatoki.Cleaners import Cleaner, ConsecutiveDuplicates
+from sonatoki.Cleaners import RECOMMENDED_CLEANERS, Cleaner
 from sonatoki.constants import DICT_PHONOMATCHES
 from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
 from sonatoki.Preprocessors import RECOMMENDED_PREPROCESSORS, URLs, Preprocessor
@@ -56,8 +51,8 @@ class IloConfig(TypedDict):
 
 BaseConfig: IloConfig = {
     "preprocessors": [URLs],
-    "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation],
+    "cleaners": RECOMMENDED_CLEANERS,
+    "ignoring_filters": RECOMMENDED_IGNORING_FILTERS,
     "scoring_filters": [],
     "scorer": PassFail,
     "passing_score": 0.8,
@@ -67,8 +62,8 @@ BaseConfig: IloConfig = {
 
 PrefConfig: IloConfig = {
     "preprocessors": RECOMMENDED_PREPROCESSORS,
-    "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation],
+    "cleaners": RECOMMENDED_CLEANERS,
+    "ignoring_filters": RECOMMENDED_IGNORING_FILTERS,
     "scoring_filters": [
         Len(Or(NimiLinkuByUsage(30), NimiUCSUR), max=15),
         Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3, max=24),
@@ -88,8 +83,8 @@ PrefConfig: IloConfig = {
 """Intended for use in collecting data with ilo Muni."""
 CorpusConfig: IloConfig = {
     "preprocessors": RECOMMENDED_PREPROCESSORS,
-    "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation],
+    "cleaners": RECOMMENDED_CLEANERS,
+    "ignoring_filters": RECOMMENDED_IGNORING_FILTERS,
     "scoring_filters": [
         Len(
             Or(
@@ -115,8 +110,8 @@ CorpusConfig: IloConfig = {
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
     "preprocessors": RECOMMENDED_PREPROCESSORS,
-    "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation],
+    "cleaners": RECOMMENDED_CLEANERS,
+    "ignoring_filters": RECOMMENDED_IGNORING_FILTERS,
     "scoring_filters": [Alphabetic, NimiUCSUR, PuName, Miscellaneous],
     "scorer": SoftPassFail,
     "passing_score": 0.8,
@@ -126,8 +121,8 @@ LazyConfig: IloConfig = {
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
     "preprocessors": RECOMMENDED_PREPROCESSORS,
-    "cleaners": [ConsecutiveDuplicates],
-    "ignoring_filters": [Numeric, Punctuation],
+    "cleaners": RECOMMENDED_CLEANERS,
+    "ignoring_filters": RECOMMENDED_IGNORING_FILTERS,
     "scoring_filters": [
         Or(
             NimiKuSuli,
@@ -136,9 +131,9 @@ IsipinEpikuConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
         ),
-        And(LongSyllabic, Not(FalsePosSyllabic)),
-        LongProperName,
-        And(LongAlphabetic, Not(FalsePosAlphabetic)),
+        Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3),
+        Len(ProperName, min=2),
+        Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
