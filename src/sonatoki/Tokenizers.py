@@ -31,7 +31,7 @@ class Tokenizer(ABC):
     def tokenize(cls, s: str) -> List[str]: ...
 
 
-class SetTokenizer(Tokenizer):
+class SetTokenizer(Tokenizer, ABC):
     delimiters: Set[str]
 
 
@@ -62,8 +62,8 @@ class Regex1Tokenizer(Tokenizer):
 
 
 class WordTokenizer(SetTokenizer):
-    delimiters = set(ALL_PUNCT)
-    intra_word_punct = set(INTRA_WORD_PUNCT)
+    delimiters: Set[str] = set(ALL_PUNCT)
+    intra_word_punct: Set[str] = set(INTRA_WORD_PUNCT)
 
     @classmethod
     def is_delimiter(cls, c: str) -> bool:
@@ -145,7 +145,7 @@ class WordTokenizer(SetTokenizer):
     "WordTokenizerRe is a previous reference implementation. Its behavior has diverged from WordTokenizer and it may not be restored."
 )
 class WordTokenizerRe(RegexTokenizer):
-    pattern = re.compile(rf"""([{ALL_PUNCT_RANGES_STR}]+|\s+)""")
+    pattern: "re.Pattern[str]" = re.compile(rf"""([{ALL_PUNCT_RANGES_STR}]+|\s+)""")
 
 
 @deprecated(
@@ -154,7 +154,9 @@ class WordTokenizerRe(RegexTokenizer):
 class WordTokenizerRe1(Regex1Tokenizer):
     """Reference implementation for WordTokenizer."""
 
-    pattern = regex.compile(r"""([\p{posix_punct}\p{Punctuation}]+|\s+)""")
+    pattern: "regex.Pattern[str]" = regex.compile(
+        r"""([\p{posix_punct}\p{Punctuation}]+|\s+)"""
+    )
 
 
 class SentTokenizer(SetTokenizer):
@@ -218,7 +220,7 @@ class SentTokenizer(SetTokenizer):
     "SentTokenizerRe is a previous reference implementation. Its behavior has diverged from SentTokenizer and it may not be restored."
 )
 class SentTokenizerRe(RegexTokenizer):
-    pattern = re.compile(
+    pattern: "re.Pattern[str]" = re.compile(
         rf"""(?<=[{regex_escape(ALL_SENTENCE_PUNCT)}])|$""", flags=re.MULTILINE
     )
     # TODO: are <> or {} that common as *sentence* delims? [] are already a stretch
@@ -230,7 +232,7 @@ class SentTokenizerRe(RegexTokenizer):
     "SentTokenizerRe1 is a previous reference implementation. Its behavior has diverged from SentTokenizer and it may not be restored."
 )
 class SentTokenizerRe1(Regex1Tokenizer):
-    pattern = regex.compile(
+    pattern: "regex.Pattern[str]" = regex.compile(
         rf"""(?<=[{regex_escape(ALL_SENTENCE_PUNCT)}]|$)""", flags=regex.MULTILINE
     )
 

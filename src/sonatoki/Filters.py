@@ -42,7 +42,7 @@ class Filter(ABC):
         raise NotImplementedError
 
 
-@deprecated("Use sonatoki.Filters.Len instead")
+@deprecated("Use `sonatoki.Filters.Len` instead")
 class MinLen(Filter):
     """
     Meta filter meant to be inherited by another filter to add a length requirement.
@@ -54,7 +54,7 @@ class MinLen(Filter):
     ```
     """
 
-    length = 0
+    length: int = 0
 
     @classmethod
     @cache(maxsize=None)
@@ -65,7 +65,7 @@ class MinLen(Filter):
 
     def __new__(cls, filter: Type[Filter], length_: int) -> Type[Filter]:
         class MinLenFilter(MinLen, filter):
-            length = length_
+            length: int = length_
 
         return MinLenFilter
 
@@ -90,8 +90,8 @@ class Len(Filter):
     ```
     """
 
-    minlen = 0
-    maxlen = 0
+    minlen: int = 0
+    maxlen: int = 0
 
     @classmethod
     @cache(maxsize=None)
@@ -106,8 +106,8 @@ class Len(Filter):
 
     def __new__(cls, filter: Type[Filter], min: int = 0, max: int = 0) -> Type[Filter]:
         class LenFilter(Len, filter):
-            minlen = min
-            maxlen = max
+            minlen: int = min
+            maxlen: int = max
 
         return LenFilter
 
@@ -151,7 +151,7 @@ class MemberFilter(Filter):
             parent_tokens -= sub
 
         class AnonMemberFilter(MemberFilter):
-            tokens = parent_tokens
+            tokens: Set[str] = parent_tokens
 
         return AnonMemberFilter
 
@@ -167,25 +167,25 @@ class SubsetFilter(Filter):
 
 
 class Miscellaneous(MemberFilter):
-    tokens = prep_dictionary(ALLOWABLES)
+    tokens: Set[str] = prep_dictionary(ALLOWABLES)
 
 
 class Emoticon(MemberFilter):
-    tokens = prep_dictionary(EMOTICONS)
+    tokens: Set[str] = prep_dictionary(EMOTICONS)
 
 
 class FalsePosSyllabic(MemberFilter):
     """A MemberFilter of words which would match Syllabic (and often Phonetic),
     but are words in other languages."""
 
-    tokens = prep_dictionary(FALSE_POS_SYLLABIC)
+    tokens: Set[str] = prep_dictionary(FALSE_POS_SYLLABIC)
 
 
 class FalsePosAlphabetic(MemberFilter):
     """A MemberFilter of words which would match Alphabetic, but are words in
     other languages."""
 
-    tokens = prep_dictionary(FALSE_POS_ALPHABETIC)
+    tokens: Set[str] = prep_dictionary(FALSE_POS_ALPHABETIC)
 
 
 class ProperName(Filter):
@@ -231,8 +231,9 @@ class PuName(Filter):
         # this will errantly match.
 
 
+@deprecated("Use `sonatoki.Filters.Len` with min=2 instead.")
 class LongProperName(Len, ProperName):
-    minlen = 2  # reject "names" of length 1
+    minlen: int = 2  # reject "names" of length 1
 
 
 class NimiLinkuByUsage:
@@ -244,7 +245,7 @@ class NimiLinkuByUsage:
         words = words_by_usage(usage, date)
 
         class AnonLinkuMemberFilter(MemberFilter):
-            tokens = prep_dictionary(words)
+            tokens: Set[str] = prep_dictionary(words)
 
         return AnonLinkuMemberFilter
 
@@ -258,7 +259,7 @@ class NimiLinkuByTag:
         words = words_by_tag(tag, category)
 
         class AnonLinkuMemberFilter(MemberFilter):
-            tokens = prep_dictionary(words)
+            tokens: Set[str] = prep_dictionary(words)
 
         return AnonLinkuMemberFilter
 
@@ -274,11 +275,11 @@ NimiLinkuSandbox = NimiLinkuByTag("usage_category", "sandbox")
 
 
 class NimiPuSynonyms(MemberFilter):
-    tokens = prep_dictionary(NIMI_PU_SYNONYMS)
+    tokens: Set[str] = prep_dictionary(NIMI_PU_SYNONYMS)
 
 
 class NimiUCSUR(MemberFilter):
-    tokens = prep_dictionary(NIMI_UCSUR)
+    tokens: Set[str] = prep_dictionary(NIMI_UCSUR)
 
 
 class Phonotactic(RegexFilter):
@@ -292,7 +293,7 @@ class Phonotactic(RegexFilter):
     "nn" cannot be found.
     """
 
-    pattern = re.compile(
+    pattern: "re.Pattern[str]" = re.compile(
         rf"^((^[{VOWELS}]|[klmnps][{VOWELS}]|[jt][aeou]|[w][aei])(n(?![mn]))?)+$|^n$",
         # Can't split initial vowel group off like in Syllabics because of
         # consecutive nasal detection; it is costly to duplicate
@@ -300,8 +301,9 @@ class Phonotactic(RegexFilter):
     )
 
 
+@deprecated("Use `sonatoki.Filters.Len` with min=3 instead.")
 class LongPhonotactic(Len, Phonotactic):
-    minlen = 3
+    minlen: int = 3
 
 
 class Syllabic(RegexFilter):
@@ -313,26 +315,28 @@ class Syllabic(RegexFilter):
 
     # rf"^((^[{VOWELS}]|[{CONSONANTS}][{VOWELS}])n?)+$|^n$"
     # Alterative I was exploring takes ~15% more steps
-    pattern = re.compile(
+    pattern: "re.Pattern[str]" = re.compile(
         rf"^(?:^[{VOWELS}]n?)?(?:[{CONSONANTS}][{VOWELS}]n?)*$|^n$",
         flags=re.IGNORECASE,
     )
 
 
+@deprecated("Use `sonatoki.Filters.Len` with min=3 instead.")
 class LongSyllabic(Len, Syllabic):
-    minlen = 3
+    minlen: int = 3
 
 
 class Alphabetic(SubsetFilter):
-    tokens = set(ALPHABET)
+    tokens: Set[str] = set(ALPHABET)
 
 
 class AlphabeticRe(RegexFilter):
-    pattern = re.compile(rf"[{ALPHABET}]+", flags=re.IGNORECASE)
+    pattern: "re.Pattern[str]" = re.compile(rf"[{ALPHABET}]+", flags=re.IGNORECASE)
 
 
+@deprecated("Use `sonatoki.Filters.Len` with min=3 instead.")
 class LongAlphabetic(Len, Alphabetic):
-    minlen = 3
+    minlen: int = 3
 
 
 class Numeric(Filter):
@@ -358,7 +362,7 @@ class Punctuation(SubsetFilter):
     Fastest implementation.
     """
 
-    tokens = set(ALL_PUNCT)
+    tokens: Set[str] = set(ALL_PUNCT)
 
 
 @deprecated(
@@ -370,7 +374,7 @@ class PunctuationRe(RegexFilter):
     Goes out of date compared to the `regex` library if UNICODE_PUNCT_RANGES is not updated.
     """
 
-    pattern = re.compile(rf"[{ALL_PUNCT_RANGES_STR}]+")
+    pattern: "re.Pattern[str]" = re.compile(rf"[{ALL_PUNCT_RANGES_STR}]+")
 
 
 @deprecated(
@@ -380,7 +384,7 @@ class PunctuationRe1(Regex1Filter):
     """Reference implementation for identifying tokens made entirely of
     punctuation."""
 
-    pattern = regex.compile(
+    pattern: "regex.Pattern[str]" = regex.compile(
         rf"[\p{{Punctuation}}\p{{posix_punct}}{NOT_IN_PUNCT_CLASS}{UCSUR_PUNCT_RANGES_STR}{EMOJI_VARIATION_SELECTOR_RANGES_STR}]+"
     )
 
@@ -426,7 +430,7 @@ class Or:
         all_tokens: Set[str] = set().union(*all_token_sets)
 
         class CombinedFilter(MemberFilter):
-            tokens = all_tokens
+            tokens: Set[str] = all_tokens
 
         return CombinedFilter
 
@@ -525,10 +529,6 @@ __all__ = [
     "And",
     "FalsePosSyllabic",
     "Len",
-    "LongAlphabetic",
-    "LongPhonotactic",
-    "LongProperName",
-    "LongSyllabic",
     "NimiLinkuCore",
     "NimiLinkuSandbox",
     "NimiPu",

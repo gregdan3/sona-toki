@@ -72,15 +72,15 @@ into its parts and checked as a token.
 class URLs(RegexPreprocessor):
     """Remove http(s) protocol URLs."""
 
-    pattern = re.compile(r"https?:\/\/\S+")
+    pattern: "re.Pattern[str]" = re.compile(r"https?:\/\/\S+")
 
 
 class MarkdownURLs(RegexPreprocessor):
     """Remove URLs in markdown format, replacing them with their corresponding
     text."""
 
-    pattern = re.compile(r"\[(.+?)\]\(https?:\/\/\S+\)")
-    replace = r"\1"
+    pattern: "re.Pattern[str]" = re.compile(r"\[(.+?)\]\(https?:\/\/\S+\)")
+    replace: str = r"\1"
 
 
 class Emails(RegexPreprocessor):
@@ -90,7 +90,7 @@ class Emails(RegexPreprocessor):
     https://www.regular-expressions.info/email.html
     """
 
-    pattern = re.compile(
+    pattern: "re.Pattern[str]" = re.compile(
         r"\b[a-zA-Z0-9._%+-]{2,}@[a-zA-Z0-9.-]{2,}\.[a-zA-Z]{2,24}\b",
         flags=re.IGNORECASE,
     )
@@ -103,31 +103,31 @@ class Reference(RegexPreprocessor):
     cards.
     """
 
-    pattern = re.compile(r"\[\[.+\]\]")
+    pattern: "re.Pattern[str]" = re.compile(r"\[\[.+\]\]")
 
 
 class DiscordEmotes(RegexPreprocessor):
     """Remove text-formatted Discord emotes `<flags:name:id>`"""
 
-    pattern = re.compile(r"<a?:[a-zA-Z0-9_]{2,}:[0-9]{2,}>")
+    pattern: "re.Pattern[str]" = re.compile(r"<a?:[a-zA-Z0-9_]{2,}:[0-9]{2,}>")
 
 
 class ColonEmotes(RegexPreprocessor):
     """Remove colon-marked emotes `:name:`"""
 
-    pattern = re.compile(r":[a-zA-Z0-9_]{2,}:")
+    pattern: "re.Pattern[str]" = re.compile(r":[a-zA-Z0-9_]{2,}:")
 
 
 class DiscordMentions(RegexPreprocessor):
-    pattern = re.compile(r"<@[\!\&]?[0-9]{2,}>")
+    pattern: "re.Pattern[str]" = re.compile(r"<@[\!\&]?[0-9]{2,}>")
 
 
 class DiscordChannels(RegexPreprocessor):
-    pattern = re.compile(r"<#[0-9]{2,}>")
+    pattern: "re.Pattern[str]" = re.compile(r"<#[0-9]{2,}>")
 
 
 class DiscordSpecial(RegexPreprocessor):
-    pattern = re.compile(r"<id:[a-zA-Z0-9_]{4,}>")
+    pattern: "re.Pattern[str]" = re.compile(r"<id:[a-zA-Z0-9_]{4,}>")
 
 
 class AngleBracketObject(RegexPreprocessor):
@@ -137,7 +137,7 @@ class AngleBracketObject(RegexPreprocessor):
     brackets.
     """
 
-    pattern = re.compile(r"<[^<>\s]+>")
+    pattern: "re.Pattern[str]" = re.compile(r"<[^<>\s]+>")
 
 
 """
@@ -152,17 +152,17 @@ would likely be using a language other than Toki Pona.
 
 
 class SingleQuotes(RegexPreprocessor):
-    pattern = re.compile(r"'[^']+'", flags=re.DOTALL)
+    pattern: "re.Pattern[str]" = re.compile(r"'[^']+'", flags=re.DOTALL)
 
 
 class DoubleQuotes(RegexPreprocessor):
-    pattern = re.compile(r'"[^"]+"', flags=re.DOTALL)
+    pattern: "re.Pattern[str]" = re.compile(r'"[^"]+"', flags=re.DOTALL)
 
 
 class Backticks(RegexPreprocessor):
     """Remove paired backticks and their contents `like this`"""
 
-    pattern = re.compile(r"`[^`]+`", flags=re.DOTALL)
+    pattern: "re.Pattern[str]" = re.compile(r"`[^`]+`", flags=re.DOTALL)
 
 
 class Codeblock(RegexPreprocessor):
@@ -171,7 +171,7 @@ class Codeblock(RegexPreprocessor):
     Subset of what would be removed by Backticks, but may be preferable.
     """
 
-    pattern = re.compile(
+    pattern: "re.Pattern[str]" = re.compile(
         r"```.+?```",
         flags=re.DOTALL,
     )
@@ -180,17 +180,17 @@ class Codeblock(RegexPreprocessor):
 class Spoilers(RegexPreprocessor):
     """Remove paired double bars and their contents `||like this||`"""
 
-    pattern = re.compile(r"\|\|(?:(?!\|\|).)+\|\|", flags=re.DOTALL)
+    pattern: "re.Pattern[str]" = re.compile(r"\|\|(?:(?!\|\|).)+\|\|", flags=re.DOTALL)
 
 
 class ArrowQuote(RegexPreprocessor):
     """Remove lines beginning with `> `"""
 
-    pattern = re.compile(r"^>\ .+$", re.MULTILINE)
+    pattern: "re.Pattern[str]" = re.compile(r"^>\ .+$", re.MULTILINE)
 
 
 class AllQuotes(RegexPreprocessor):
-    pattern = re.compile(
+    pattern: "re.Pattern[str]" = re.compile(
         "|".join(
             [
                 SingleQuotes.pattern.pattern,
@@ -228,7 +228,7 @@ class ZeroWidths(RegexPreprocessor):
     But in order to do this, emoji would have to be accurately distinguished from all other punctuation.
     """
 
-    pattern = re.compile("[\\U0000200C-\\U0000200D]")
+    pattern: "re.Pattern[str]" = re.compile("[\\U0000200C-\\U0000200D]")
 
 
 RECOMMENDED_PREPROCESSORS: List[Type[Preprocessor]] = [

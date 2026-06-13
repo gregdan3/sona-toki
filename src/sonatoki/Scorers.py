@@ -1,7 +1,8 @@
 # STL
 import math
 from abc import ABC, abstractmethod
-from typing import List, Type
+from typing import List, Type, Union, Optional
+from dataclasses import dataclass
 
 # PDM
 from typing_extensions import override
@@ -132,8 +133,8 @@ class Voting(Scaling):
 
     def __new__(cls, filter: Type[Filter], threshold_: int = 0) -> Type[Scorer]:
         class AnonVoting(Voting):
-            prereq = filter
-            threshold = threshold_
+            prereq: Type[Filter] = filter
+            threshold: int = threshold_
 
         return AnonVoting
 

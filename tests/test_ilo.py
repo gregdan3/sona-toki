@@ -76,6 +76,8 @@ IGNORABLES = [
     "nasa la mi ken pana e ni: <unrelated_words_that_are_illegal>",
     "o tawa [lipu ni](https://example.com) a",
     "mi pana e lipu ni: [[Borborygmos]]",
+    "o lukin: [[Borborygmos]]",
+    "pona :o",
 ]
 
 SYLLABIC_MATCHES = [
@@ -234,8 +236,9 @@ FALSE_NEGATIVES = [
     "mtue",
     "mi nasa B^)",  # emoticon
     "musi :P",  # emoticon
-    "lete li ike x.x",  # this is an emoticon but passes because 'x' is in Filters.Miscellaneous
+    "ala :x",
     "😃⃢👍",  # sincerely, no idea, but it came up and it should be omitted by emojis but isn't
+    "lete li ike x.x",  # works for corpus but not for lazy..
 ]
 
 FALSE_POSITIVES = [
