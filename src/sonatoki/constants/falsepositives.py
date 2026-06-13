@@ -11,9 +11,13 @@ ALPHABETICS = Path(__file__).resolve().parent / Path("alphabetic.txt")
 # with open(ALPHABETICS, "r", encoding="utf-8") as f:
 #     FALSE_POS_ALPHABETIC = {line.strip() for line in f}
 
-
 # NOTE: This is being tracked manually rather than fetched from syllabics.txt until I am convinced that solution is appropriate
 FALSE_POS_SYLLABIC = {
+    "aja",
+    "ajaja",
+    "ajajaja",
+    "ajajajaja",
+    "ajajajajaja",
     "alike",
     "alone",
     "amen",
@@ -32,9 +36,19 @@ FALSE_POS_SYLLABIC = {
     "asume",
     "ate",
     "atone",
+    "awa",
     "awake",
     "awaken",
+    "awawa",
+    "awawawa",
+    "awawawawa",
+    "awawawawawa",
     "awesome",
+    "eje",
+    "ejeje",
+    "ejejeje",
+    "ejejejeje",
+    "ejejejejeje",
     "eliminate",
     "elite",
     "elo",
@@ -58,6 +72,7 @@ FALSE_POS_SYLLABIC = {
     "into",
     "ipa",
     "isolate",
+    "ja",  # "yes" in some langs
     "jaja",
     "jajaja",
     "jajajaja",
@@ -65,17 +80,25 @@ FALSE_POS_SYLLABIC = {
     "japan",
     "japanese",
     "japon",
-    "ja",  # "yes" in some langs
+    "je",
+    "jeje",
+    "jejeje",
+    "jejejeje",
+    "jejejejeje",
     "joke",
     "june",
     "kale",
-    "ka",  # tuki tiki mostly
+    "kana",  # things in other langs that might get imported
+    "kanji",
     "kilo",
+    "lake",
     "lame",
     "late",
+    "latin",
     "latina",
     "latine",
     "latino",
+    "le",
     "lemon",
     "leson",
     "like",
@@ -94,20 +117,25 @@ FALSE_POS_SYLLABIC = {
     "meme",
     "men",
     "menu",
+    "mesa",  # unknown other language, not just eng
     "meta",
     "mile",
-    "min",  # borderline
+    "min",  # esperanto possessive
     "mine",
     "mini",
     "minute",
     "miso",
     "misuse",
+    "mojosa",  # esperanto "cool"
+    "mojose",  # esperanto 'youthful style'
+    "momento",
+    "momenton",
     "mon",
     "mono",
     "muse",
     "name",
     "nani",  # romanization of japanese "what"
-    "ne",  # "no" in some languages
+    "ne",  # no in some languages
     "nepali",
     "nine",
     "ninja",
@@ -115,6 +143,9 @@ FALSE_POS_SYLLABIC = {
     "non",
     "none",
     "nono",
+    "nonono",
+    "nononono",
+    "nonononono",
     "nonsense",
     "nope",
     "nose",
@@ -127,6 +158,8 @@ FALSE_POS_SYLLABIC = {
     "oposite",
     "owo",  # emoticon
     "pale",
+    "papa",  # spanish and english father
+    "pe",
     "pelo",  # spanish for hair
     "pen",  # borderline
     "pin",
@@ -136,32 +169,43 @@ FALSE_POS_SYLLABIC = {
     "potato",
     "puta",  # spanish 'bitch'
     "salami",
+    "salute",
     "saluton",
     "same",
+    "se",  # see
     "semen",
     "semi",
-    "sense",
     "sen",  # seen
-    "se",  # see
+    "sense",
+    "si",  # spanish yes
     "silo",
     "sine",
+    "site",
     "so",
+    "sole",
     "solo",
     "somali",
     "some",
     "sometime",
-    "son",  # sona typo, but also "son" and "soon"
+    "son",  # primarily "son" and "soon", a bit of sona typo/clipping...
     "sun",
+    "ta",
     "take",
     "taken",
     "tape",
     "ten",
     "tense",
+    "ti",
     "time",
+    "tin",
+    "titan",
     "to",
+    "toke",
     "ton",
     "tone",
     "tote",
+    "u",
+    "un",
     "une",
     "unite",
     "unlike",
@@ -177,44 +221,65 @@ FALSE_POS_SYLLABIC = {
     "win",
     "wine",
     "wise",
+    "wo",
     "woke",
     "woman",
     "women",
     "won",
+    # "aka" # in sandbox
     # tuki tiki
+    "i",
     "iku",
     "ilu",
+    "ka",  # tuki tiki mostly, but not entirely
     "kati",
+    "ki",
     "kiku",
     "lapi",
+    "lika",
+    "liti",
+    "muku",
+    "muti",
     "paka",
+    "puka",
     "pula",
     "taka",
+    "tama",
     "tiki",
+    "tiko",
     "tiku",
     "tila",
+    "tili",
     "tilu",
+    "time",
     "timi",
-    "muti",
+    "tipi",
+    "tipo",
     "titi",
     "tuki",
     "tula",
+    "tulu",
+    "tuti",
+    "uli",
     "upi",
-    # "aka" # in sandbox
-    # "papa",  # now in sandbox
 }
 
 FALSE_POS_ALPHABETIC: Set[str] = {
+    "al",  # all
     "also",
     "animal",
     "animals",
     "as",
+    "autism",
     "emotes",
+    "estas",
     "is",
     "isnt",
     "it",
     "its",
+    "j",
     "jam",
+    "jes",
     "jokes",
     "just",
     "kaj",
@@ -222,8 +287,10 @@ FALSE_POS_ALPHABETIC: Set[str] = {
     "litle",
     "lmao",
     "lol",
+    "m",
     "makes",
     "males",
+    "mas",
     "mates",
     "mean",
     "means",
@@ -235,12 +302,14 @@ FALSE_POS_ALPHABETIC: Set[str] = {
     "nopes",
     "not",
     "noun",
+    "ok",
     "os",  # some command prefix...
     "post",
     "simple",
     "sometimes",
     "spam",
     "t",
+    "tens",
     "unles",
     "uses",
     "wait",
@@ -249,7 +318,6 @@ FALSE_POS_ALPHABETIC: Set[str] = {
     "wow",
 }
 
-
 DICT_PHONOMATCHES = {
     # Sandbox words are removed from the CorpusConfig if they appear more frequently in languages other than Toki Pona by a factor of at least 3.
     # In this case, all of these appear more often in other languages by a factor of at least 10.
@@ -257,28 +325,29 @@ DICT_PHONOMATCHES = {
     "an",  # article
     "api",  # API
     "i",  # 1st person
-    "je",  # 1st person pronoun, french
     "ja",  # basically 'yes' in german
+    "je",  # 1st person pronoun, french
     "ka",  # tuki tiki 'being'
-    # "ke" # NOTE: this is here commented so i don't investigate again. it needs to stay.
     "kana",  # japanese script
-    "ki",  # mostly noise
+    "ki",  # mostly noise and tuki tiki
     "lu",  # preposition in tuki tiki
     "me",  # 1st person singular, english
-    "ne",  # "no" in several languages
+    "ne",  # no in several languages
     "nu",  # "new" in english, "now" in dutch
     "omen",  # ominous
     "pa",  # variety of non-tp languages
+    "papa",  # spanish father
     "se",  # spanish particle, english "see"
     "sole",  # singular, of shoe
+    "ta",  # french
     "take",  # acquire, perhaps forcefully or without permission
     "ten",  # 10
     "to",  # to, too
     "u",  # no u
     "we",  # 1st person plural, english
     "wi",  # wii and discussions of syllables
+    # "ke" # NOTE: this is here commented so i don't investigate again. it needs to stay.
+    # "lo",  # common typo of 'li' and 'lon' but not really a problem
     # unexplored candidates for removal
-    # "papa",  # father
-    # "lo",  # "lo" and "loo"
     # "ewe",  # sheep
 }
