@@ -20,6 +20,7 @@ from sonatoki.Filters import (
     NimiKuLili,
     NimiKuSuli,
     ProperName,
+    Phonotactic,
     Punctuation,
     LongSyllabic,
     Miscellaneous,
@@ -70,7 +71,7 @@ PrefConfig: IloConfig = {
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [
         Len(Or(NimiLinkuByUsage(30), NimiUCSUR), max=15),
-        Len(And(Syllabic, Not(FalsePosSyllabic)), min=3, max=24),
+        Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3, max=24),
         # NOTE: These are allowed to pass name and alphabetic below, because they *could* be wrong
         Len(ProperName, min=2, max=24),
         Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3, max=24),
@@ -95,7 +96,7 @@ CorpusConfig: IloConfig = {
             ),
             max=19,
         ),
-        Len(And(Syllabic, Not(FalsePosSyllabic)), min=3, max=24),
+        Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3, max=24),
         Len(ProperName, min=2, max=24),
         Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3, max=24),
     ],
