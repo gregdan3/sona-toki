@@ -74,7 +74,11 @@ PrefConfig: IloConfig = {
         Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3, max=24),
         # NOTE: These are allowed to pass name and alphabetic below, because they *could* be wrong
         Len(ProperName, min=2, max=24),
-        Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3, max=24),
+        Len(
+            And(Alphabetic, Not(Or(FalsePosSyllabic, FalsePosAlphabetic))),
+            min=3,
+            max=24,
+        ),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
@@ -98,7 +102,11 @@ CorpusConfig: IloConfig = {
         ),
         Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3, max=24),
         Len(ProperName, min=2, max=24),
-        Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3, max=24),
+        Len(
+            And(Alphabetic, Not(Or(FalsePosSyllabic, FalsePosAlphabetic))),
+            min=3,
+            max=24,
+        ),
     ],
     "scorer": SoftScaling,
     "passing_score": 0.8,
