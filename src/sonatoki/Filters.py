@@ -341,18 +341,20 @@ class LongAlphabetic(Len, Alphabetic):
 
 class Numeric(Filter):
     """Determine if a given token is entirely numeric. Covers all numeric
-    symbols in Unicode.
+    symbols in Unicode, plus arbitrarily placed `.,-` characters.
 
-    This will fail to find numeric tokens such as "1.111" or "-42",
-    but if used with the aggressive tokenizer designed for `tok`, these will be
-    split into `["1", ".", "111"]` and `["-", "42"]` respectively. As such, the
-    numeric tokens will be split from their punctuation.
+    If used with the aggressive tokenizer designed for `tok`, numeric tokens
+    will be split into multiple tokens unless their separators are between
+    digits rather than leading or following.
     """
+
+    __separators = str.maketrans({".": "", ",": "", "-": ""})
 
     @classmethod
     @override
     @cache(maxsize=None)
     def filter(cls, msg: str) -> bool:
+        msg = msg.translate(cls.__separators)
         return msg.isnumeric()
 
 
