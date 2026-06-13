@@ -7,6 +7,8 @@ ALPHABET = VOWELS + CONSONANTS
 external token."""
 ALLOWABLES = {
     "anusem",  # clipping of anu seme
+    "ansem",  # clipping of anu seme
+    "anse",  # clipping of anu seme
     "kxk",  # ken ala ken
     "kx",  # ken ala
     "msa",  # mi sona ala
