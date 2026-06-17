@@ -25,3 +25,34 @@ ALLOWABLES = {
     "stpn",  # sitelen pona
     "tptpt",  # tenpo pi toki pona taso
 }
+JUNKABLES = {
+    # Strings which don't obviously belong to any specific language,
+    # or which are frequently involved in non-language sequences.
+    # Single letters ordered by frequency in ilo Muni as of 2025-10-20.
+    # "e",
+    # "a",
+    # "o",
+    # "n",
+    # "i"
+    "x",  # ala, emoticons
+    "p",  # mi, emoticons
+    # "s",
+    # "j",
+    # "u",
+    "y",  # seme, rare emoticons
+    # "b",
+    # "c",
+    # "m",
+    # "w",
+    "d",  # emoticons
+    # "r",
+    # "l",
+    "k",  # ken
+    # "h"
+    # "t",
+    # "v",
+    # "f",
+    # "z",
+    # "g",
+    # "q",
+}
