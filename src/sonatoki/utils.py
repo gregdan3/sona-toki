@@ -1,6 +1,6 @@
 # STL
 import itertools
-from typing import Set, List, Tuple, TypeVar, Iterable
+from typing import Set, List, Tuple, TypeVar, Iterable, Optional
 
 # LOCAL
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
@@ -10,7 +10,7 @@ TO_ESCAPE = ["\\", "^", "[", "]", "-"]
 T = TypeVar("T")
 
 
-def prep_dictionary(words: Iterable[str]) -> Set[str]:
+def clean_dict_entries(words: Iterable[str]):
     out: Set[str] = set()
     cleaners = [Lowercase, ConsecutiveDuplicates]
     for word in words:
@@ -18,6 +18,15 @@ def prep_dictionary(words: Iterable[str]) -> Set[str]:
             word = c.clean(word)
         out.add(word)
     return out
+
+
+def prep_dictionary(
+    words: Iterable[str],
+    omissions: Optional[Iterable[str]] = None,
+) -> Set[str]:
+    to_omit = clean_dict_entries(omissions) if omissions else set()
+    dictionary = clean_dict_entries(words)
+    return dictionary - to_omit
 
 
 def regex_escape(s: str) -> str:
