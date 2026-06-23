@@ -1,8 +1,8 @@
 # STL
 import math
 from abc import ABC, abstractmethod
-from typing import List, Type, Union, Optional
-from dataclasses import dataclass
+from typing import List, Type, Callable
+from functools import lru_cache as cache  # cache comes in 3.9
 
 # PDM
 from typing_extensions import override
@@ -15,10 +15,58 @@ from sonatoki.Filters import Pass, Filter
 class Scorer(ABC):
     @classmethod
     @abstractmethod
+    def score_token(cls, token: str, filters: List[Type[Filter]]) -> Number:
+        """Score a given token using the given `Filter`s, returning a
+        `Number` between 0 and 1 inclusive."""
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
     def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
         """Score a list of tokens using the given `Filter`s, returning a
         `Number` between 0 and 1 inclusive."""
         raise NotImplementedError
+
+
+class Weighted(Scorer):
+    @classmethod
+    @cache(maxsize=0)
+    def weight(cls, i: int, n: int) -> Number:
+        raise NotImplementedError
+
+    @classmethod
+    @override
+    def score_token(cls, token: str, filters: List[Type[Filter]]) -> Number:
+        n = len(filters)
+        for i, f in enumerate(filters):
+            if f.filter(token):
+                return cls.weight(i, n)
+        return 0
+
+    @classmethod
+    @override
+    def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
+        if not tokens:
+            return 1
+
+        total_score = 0
+        len_tokens = len(tokens)
+        for token in tokens:
+            total_score += cls.score_token(token, filters)
+
+        score = total_score / len_tokens
+        score = max(0, min(score, 1))
+        return score
+
+    def __new__(cls, fn: Callable[[int, int], Number]) -> Type["Weighted"]:
+        class WeightedScorer(Weighted):
+            @classmethod
+            @override
+            @cache(maxsize=0)
+            def weight(cls, i: int, n: int) -> Number:
+                return fn(i, n)
+
+        return WeightedScorer
 
 
 class Soften(Scorer):
@@ -33,6 +81,7 @@ class Soften(Scorer):
     """
 
     @staticmethod
+    @cache(maxsize=None)
     def sigmoid(n: int) -> Number:
         return 1 / (1 + math.exp(-(0.30 * (n - 1))))
         # n-1 makes sigmoid(1) == 0.5
@@ -41,45 +90,38 @@ class Soften(Scorer):
 
     @classmethod
     @override
+    def score_token(cls, token: str, filters: List[Type[Filter]]) -> Number:
+        return super().score_token(  # pyright: ignore[reportAbstractUsage]
+            token, filters
+        )
+
+    @classmethod
+    @override
     def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
-        percentage = super().score(tokens, filters)  # type: ignore [abstractmethod]
+        percentage = super().score(  # pyright: ignore[reportAbstractUsage]
+            tokens, filters
+        )
         len_tokens = len(tokens)
         percentage **= cls.sigmoid(len_tokens)
         return percentage
 
-    def __new__(cls, scorer: Type[Scorer]) -> Type[Scorer]:
+    def __new__(cls, scorer: Type[Scorer]) -> Type["Soften"]:
         class SoftenedScorer(Soften, scorer): ...
 
         return SoftenedScorer
 
 
-class PassFail(Scorer):
-    """If a token matches any filter, it scores 1.
-
-    Otherwise, it scores 0.
-    """
-
-    @classmethod
-    def score_token(cls, token: str, filters: List[Type[Filter]]) -> Number:
-        for f in filters:
-            if f.filter(token):
-                return 1
-        return 0
+class PassFail(Weighted):
+    """If a token matches any filter, it scores 1. Otherwise, it scores 0."""
 
     @classmethod
     @override
-    def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
-        if not tokens:
-            return 1
-
-        total_score = 0
-        len_tokens = len(tokens)
-        for token in tokens:
-            total_score += cls.score_token(token, filters)
-        return total_score / len_tokens if len_tokens else 0
+    @cache(maxsize=0)
+    def weight(cls, i: int, n: int) -> Number:
+        return 1
 
 
-class Scaling(Scorer):
+class Scaling(Weighted):
     """Tokens score 1 for matching the first filter, and a linearly reduced
     amount for matching later filters based on how many filters there are.
 
@@ -93,24 +135,10 @@ class Scaling(Scorer):
     """
 
     @classmethod
-    def score_token(cls, token: str, filters: List[Type[Filter]], scale: int):
-        for i, f in enumerate(filters):
-            if f.filter(token):
-                return scale - i
-        return 0
-
-    @classmethod
     @override
-    def score(cls, tokens: List[str], filters: List[Type[Filter]]) -> Number:
-        if not tokens:
-            return 1
-
-        total_score = 0
-        len_filters = len(filters)
-        max_score = len(tokens) * len_filters
-        for token in tokens:
-            total_score += cls.score_token(token, filters, len_filters)
-        return total_score / max_score if max_score else 0
+    @cache(maxsize=0)
+    def weight(cls, i: int, n: int) -> Number:
+        return (n - i) / n
 
 
 class Voting(Scaling):
@@ -155,7 +183,7 @@ class Voting(Scaling):
         # it doesn't really matter as long as no score exceeds len_filters
         scores: List[Number] = []
         for token in tokens:
-            score = cls.score_token(token, filters, len_filters)
+            score = cls.score_token(token, filters)
             scores.append(score)
 
         # only consider scores from before voting
@@ -247,6 +275,10 @@ class SentWeightedAvg(SentenceScorer):
 
 
 __all__ = [
+    "Scorer",
+    "Weighted",
+    "Soften",
+    #
     "PassFail",
     "Scaling",
     "SoftPassFail",
