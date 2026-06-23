@@ -203,7 +203,6 @@ class PuName(Filter):
         # this will errantly match.
 
 
-@deprecated("Use `sonatoki.Filters.Len` with min=2 instead.")
 class LongProperName(Len, ProperName):
     minlen: int = 2  # reject "names" of length 1
 
@@ -273,7 +272,6 @@ class Phonotactic(RegexFilter):
     )
 
 
-@deprecated("Use `sonatoki.Filters.Len` with min=3 instead.")
 class LongPhonotactic(Len, Phonotactic):
     minlen: int = 3
 
@@ -293,7 +291,6 @@ class Syllabic(RegexFilter):
     )
 
 
-@deprecated("Use `sonatoki.Filters.Len` with min=3 instead.")
 class LongSyllabic(Len, Syllabic):
     minlen: int = 3
 
@@ -306,7 +303,6 @@ class AlphabeticRe(RegexFilter):
     pattern: "re.Pattern[str]" = re.compile(rf"[{ALPHABET}]+", flags=re.IGNORECASE)
 
 
-@deprecated("Use `sonatoki.Filters.Len` with min=3 instead.")
 class LongAlphabetic(Len, Alphabetic):
     minlen: int = 3
 
