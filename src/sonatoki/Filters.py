@@ -42,34 +42,6 @@ class Filter(ABC):
         raise NotImplementedError
 
 
-@deprecated("Use `sonatoki.Filters.Len` instead")
-class MinLen(Filter):
-    """
-    Meta filter meant to be inherited by another filter to add a length requirement.
-    Multiple-inherit with `MinLen` as the first argument so `super()` resolves correctly.
-    You may also construct any other filter with a minimum length filter like so:
-
-    ```
-    MinLen(Alphabetic, 3)
-    ```
-    """
-
-    length: int = 0
-
-    @classmethod
-    @cache(maxsize=None)
-    def filter(cls, token: str) -> bool:
-        if len(token) < cls.length:
-            return False
-        return super().filter(token)
-
-    def __new__(cls, filter: Type[Filter], length_: int) -> Type[Filter]:
-        class MinLenFilter(MinLen, filter):
-            length: int = length_
-
-        return MinLenFilter
-
-
 class Len(Filter):
     """Meta filter to be inherited by another filter to add any length
     requirement. A bound will only be considered if it is non-zero, so you may
