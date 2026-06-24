@@ -30,6 +30,8 @@ from sonatoki.constants import (
     words_by_tag,
     words_by_usage,
 )
+from sonatoki.constants.writing import JUNKABLES
+from sonatoki.constants.stopwords import ENG_STOPWORDS, FRA_STOPWORDS, SPA_STOPWORDS
 
 regex.DEFAULT_VERSION = regex.VERSION1
 
@@ -144,6 +146,10 @@ class Miscellaneous(MemberFilter):
 
 class Emoticon(MemberFilter):
     tokens: Set[str] = prep_dictionary(EMOTICONS)
+
+
+class Junk(MemberFilter):
+    tokens: Set[str] = prep_dictionary(JUNKABLES)
 
 
 class FalsePosSyllabic(MemberFilter):
@@ -305,6 +311,18 @@ class AlphabeticRe(RegexFilter):
 
 class LongAlphabetic(Len, Alphabetic):
     minlen: int = 3
+
+
+class EnglishStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(ENG_STOPWORDS, words_by_usage(0))
+
+
+class SpanishStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(SPA_STOPWORDS, words_by_usage(0))
+
+
+class FrenchStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(FRA_STOPWORDS, words_by_usage(0))
 
 
 class Numeric(Filter):
@@ -491,6 +509,7 @@ RECOMMENDED_IGNORING_FILTERS: List[Type[Filter]] = [
     Numeric,
     Punctuation,
     Emoticon,
+    # Junk,
 ]
 
 
