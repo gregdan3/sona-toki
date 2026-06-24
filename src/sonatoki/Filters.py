@@ -423,8 +423,10 @@ class Or:
         return CombinedFilter
 
     def __new__(cls, *filters: Type[Filter]) -> Type[Filter]:
-        if not len(filters) >= 2:
-            raise ValueError("Provide at least two Filters to OrFilter.")
+        if len(filters) == 0:
+            raise ValueError("No filters provided to OrFilter.")
+        if len(filters) == 1:
+            return filters[0]
 
         member_filters = [f for f in filters if issubclass(f, MemberFilter)]
         other_filters = [f for f in filters if not issubclass(f, MemberFilter)]
