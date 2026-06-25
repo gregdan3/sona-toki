@@ -31,7 +31,16 @@ from sonatoki.constants import (
     words_by_usage,
 )
 from sonatoki.constants.writing import JUNKABLES
-from sonatoki.constants.stopwords import ENG_STOPWORDS, FRA_STOPWORDS, SPA_STOPWORDS
+from sonatoki.constants.stopwords import (
+    DEU_STOPWORDS,
+    ENG_STOPWORDS,
+    EPO_STOPWORDS,
+    FRA_STOPWORDS,
+    IND_STOPWORDS,
+    ITA_STOPWORDS,
+    NLD_STOPWORDS,
+    SPA_STOPWORDS,
+)
 
 regex.DEFAULT_VERSION = regex.VERSION1
 
@@ -325,6 +334,26 @@ class FrenchStopwords(MemberFilter):
     tokens: Set[str] = prep_dictionary(FRA_STOPWORDS, words_by_usage(0))
 
 
+class ItalianStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(ITA_STOPWORDS, words_by_usage(0))
+
+
+class GermanStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(DEU_STOPWORDS, words_by_usage(0))
+
+
+class DutchStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(NLD_STOPWORDS, words_by_usage(0))
+
+
+class IndonesianStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(IND_STOPWORDS, words_by_usage(0))
+
+
+class EsperantoStopwords(MemberFilter):
+    tokens: Set[str] = prep_dictionary(EPO_STOPWORDS, words_by_usage(0))
+
+
 class Numeric(Filter):
     """Determine if a given token is entirely numeric. Covers all numeric
     symbols in Unicode, plus arbitrarily placed `.,-` characters.
@@ -505,6 +534,18 @@ class Pass(Filter):
 
 
 class Fail(Not, Pass): ...
+
+
+AllStopwords = Or(
+    EnglishStopwords,
+    SpanishStopwords,
+    FrenchStopwords,
+    ItalianStopwords,
+    GermanStopwords,
+    DutchStopwords,
+    IndonesianStopwords,
+    EsperantoStopwords,
+)
 
 
 RECOMMENDED_IGNORING_FILTERS: List[Type[Filter]] = [
