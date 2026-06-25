@@ -22,7 +22,10 @@ from sonatoki.Filters import (
     ProperName,
     Phonotactic,
     Punctuation,
+    AllStopwords,
     Miscellaneous,
+    NimiLinkuCore,
+    NimiLinkuCommon,
     FalsePosSyllabic,
     NimiLinkuByUsage,
     NimiLinkuObscure,
@@ -30,7 +33,14 @@ from sonatoki.Filters import (
     NimiLinkuUncommon,
     FalsePosAlphabetic,
 )
-from sonatoki.Scorers import Scorer, PassFail, SoftScaling, SoftPassFail
+from sonatoki.Scorers import (
+    Scorer,
+    Soften,
+    PassFail,
+    Weighted,
+    SoftScaling,
+    SoftPassFail,
+)
 from sonatoki.Cleaners import RECOMMENDED_CLEANERS, Cleaner, ConsecutiveDuplicates
 from sonatoki.constants import DICT_PHONOMATCHES
 from sonatoki.Tokenizers import Tokenizer, WordTokenizerRe
@@ -106,16 +116,53 @@ CorpusConfig: IloConfig = {
     "scorer": SoftScaling,
     "passing_score": 0.8,
 }
+
+ExperimentalConfig: IloConfig = {
+    "preprocessors": RECOMMENDED_PREPROCESSORS,
+    "cleaners": RECOMMENDED_CLEANERS,
+    "ignoring_filters": RECOMMENDED_IGNORING_FILTERS,
+    "scoring_filters": [
+        Len(Or(NimiLinkuCore, NimiLinkuCommon, NimiLinkuUncommon, NimiUCSUR), max=19),
+        Len(Or(NimiLinkuObscure(sub=DICT_PHONOMATCHES)), min=2, max=24),
+        Len(Or(NimiLinkuSandbox(sub=DICT_PHONOMATCHES), Miscellaneous), min=2, max=24),
+        Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3, max=24),
+        Len(ProperName, min=2, max=24),
+        Len(AllStopwords, max=24),
+        Len(
+            And(Alphabetic, Not(Or(FalsePosSyllabic, FalsePosAlphabetic))),
+            min=3,
+            max=24,
+        ),
+    ],
+    "scorer": Soften(
+        Weighted(
+            lambda i, n: (
+                1,
+                0.9,
+                0.8,
+                0.75,
+                0.5,
+                -0.15,  # small penalty, but can't be certain
+                0.25,
+            )[i]
+        )
+    ),
+    "passing_score": 0.8,
+}
+
+
 """Mimics the previous implementation of ilo pi toki pona taso."""
 LazyConfig: IloConfig = {
     "preprocessors": RECOMMENDED_PREPROCESSORS,
     "cleaners": [ConsecutiveDuplicates],
     "ignoring_filters": [Numeric, Punctuation],
     "scoring_filters": [Alphabetic, NimiUCSUR, PuName, Miscellaneous],
-    "scorer": SoftPassFail,
+    "scorer": PassFail,
     "passing_score": 0.8,
     "word_tokenizer": WordTokenizerRe,  # mimics old tokenizer
 }
+
+
 """This is extremely silly."""
 IsipinEpikuConfig: IloConfig = {
     "preprocessors": RECOMMENDED_PREPROCESSORS,
@@ -129,7 +176,19 @@ IsipinEpikuConfig: IloConfig = {
             NimiLinkuObscure,
             NimiLinkuSandbox,
         ),
-        Len(And(Phonotactic, Not(FalsePosSyllabic)), min=3),
+        Len(
+            And(
+                Phonotactic,
+                Not(
+                    Or(
+                        FalsePosSyllabic,
+                        NimiLinkuCore,
+                        NimiLinkuCommon,
+                    )
+                ),
+            ),
+            min=3,
+        ),
         Len(ProperName, min=2),
         Len(And(Alphabetic, Not(FalsePosAlphabetic)), min=3),
     ],
