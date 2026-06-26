@@ -28,9 +28,7 @@ from sonatoki.Scorers import (
     SoftScaling,
     SoftPassFail,
 )
-
-# FILESYSTEM
-from .test_utils import token_strategy
+from tests.test_utils import token_strategy
 
 FILTERS = [
     NimiPu,

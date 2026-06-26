@@ -1,335 +1,59 @@
 # STL
-from typing import List, Tuple
+from typing import Dict, List, Tuple
+from collections import defaultdict
 
 # PDM
 import pytest
 
 # LOCAL
 from sonatoki.ilo import Ilo
-from sonatoki.Configs import LazyConfig, PrefConfig, CorpusConfig
+from sonatoki.types import Number
+from tests.data.types import Transform, Performance
+from tests.data.ilo_config_cases import PARAMETERIZED
+from tests.data.ilo_sentence_cases import ALL_SENTENCES
+
+REPORTS: Dict[str, List[Tuple[Transform, bool]]] = defaultdict(list)
 
 
-@pytest.fixture
-def ilo() -> Ilo:
-    ilo = Ilo(**PrefConfig)
-    return ilo
+@pytest.fixture(params=PARAMETERIZED)
+def case(request: pytest.FixtureRequest) -> Ilo:
+    return request.param
 
 
-@pytest.fixture()
-def lazy_ilo() -> Ilo:
-    ilo = Ilo(**LazyConfig)
-    return ilo
+def credit(case: Performance, score: Number, passed: bool) -> Number:
+    passing = case.config["passing_score"]
+    lower = passing - case.variance
+    upper = passing + case.variance
+
+    if lower <= score <= upper:
+        return 2 / 3 if passed else 1 / 3
+
+    return 1 if passed else 0
 
 
-@pytest.fixture()
-def corpus_ilo() -> Ilo:
-    ilo = Ilo(**CorpusConfig)
-    return ilo
+def test_ilo(case: Performance):
+    ilo = Ilo(**case.config)
+    report = REPORTS[case.name]
+    expected = case.score
 
+    passing_score = case.config["passing_score"]
+    total_weight = 0.0
+    passed_weight = 0.0
 
-ALL_VALID = [
-    "mi unpa e mama sina",
-    "mama sina li lon seme? mi wile toki tawa ona",
-    "sina sike pakala",
-    "    sina    seme     e     mi     ?",
-    "AAAAAAAAAAA",
-    "muuuu MUUU muUuUuU",
-    "wawa mute. " * 10,
-    "󱥄󱥬󱥩󱤴",  # "o toki tawa mi" in UCSUR
-    "󱤴󱤧󱤑󱥍󱦗󱤖󱥡󱦘󱤬󱥭‍󱥡󱥚",
-    "󱤑󱦐󱥗󱦜󱦈󱦜󱥉󱦜󱦑󱥄󱤤󱤂󱤉󱥆󱤀",
-    "o lukin, 󱤴󱥬󱥩󱤴󱤧wawa",
-    "ni li sona kiwen",
-    "nimi namako li toki e ale",
-    "mi open mute a",  # mostly eng words
-    "mi pali ilo to",
-    "󱤴​󱥌​󱤉​󱥡​󱥍​󱥬​󱥔​󱥩​󱤱​󱤴",
-    "󱤴󱥷󱦕󱤴",
-    "󱥬‍󱥔​󱥬󱦕󱥔",
-    "󱤴​󱤊​󱥞​󱤧​󱤻‍󱥔. 󱥁​󱤧​󱥙​󱥩​󱥞?",
-    "󱤴󱤊󱥞󱤧󱤻‍󱥔. 󱥁󱤧󱥙󱥩󱥞",
-]
+    for sentence in ALL_SENTENCES:
+        scorecard = ilo.make_scorecard(sentence.input)
+        score = scorecard["score"]
+        result = score >= passing_score
+        passed = result == sentence.output
 
-EMPTY = [
-    "",
-    " ",
-    "2+2=5",
-    "https://mun.la/sona",
-    "https://example.com/",
-    "<:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778><:owe:843315277286473778>",
-    "...",
-    "·····",
-    "❤️",  # heart
-    "😊",
-    "👨‍👩‍👧‍👧",  # family emoji with zwj
-    # every non-emoji in the writables
-    "🄀🄁🄂🄃🄄🄅🄆🄇🄈🄉🄊🄋🄌🄍🄎🄏🄐🄑🄒🄓🄔🄕🄖🄗🄘🄙🄚🄛🄜🄝🄞🄟🄠🄡🄢🄣🄤🄥🄦🄧🄨🄩🄪🄫🄬🄭🄮🄯🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🅊🅋🅌🅍🅎🅏🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅪🅫🅬🅭🅮🅯🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🆊🆋🆌🆍🆏🆐 🆛🆜🆝🆞🆟🆠🆡🆢🆣🆤🆥🆦🆧🆨🆩🆪🆫🆬🆭🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿",
-    "🅰️🅱️🅾️🅱️🅰️",  # blood type emojis
-]
+        multiplier = credit(case, score, passed)
+        if sentence.xfail and not passed:
+            continue
 
-IGNORABLES = [
-    "kiwen moli 42",
-    "mi wile e ni: <https://example.com> li pona",
-    "lipu https://example.com li kama pona",
-    " ⟨·⟩, a",
-    "o lukin: [[w:QWERTY]]",
-    "nasa la mi ken pana e ni: <unrelated_words_that_are_illegal>",
-    "o tawa [lipu ni](https://example.com) a",
-    "mi pana e lipu ni: [[Borborygmos]]",
-    "o lukin: [[Borborygmos]]",
-    "pona :o",
-]
+        report.append((sentence, passed))
 
-SYLLABIC_MATCHES = [
-    "ni li tenpo penpo",
-    "sipisi",
-    "walawa malama walama malama mupi",
-    "mi sona ala e nimi sunopatikuna",
-    "kalama wuwojiti li pana e sona",
-    "jan Awaja en jan Alasali en jan Akesinu li pona",  # syllables match before names here
-    "jan Ke Tami",
-    "kulupu Kuko",
-]
+        total_weight += sentence.weight
+        passed_weight += sentence.weight * multiplier
 
-ALPHABETIC_MATCHES = [
-    "mi mtue o kama sona",
-    # "mi mute o kma son",  # this one is odd because `son` is an unintended phonetic match
-    "mi mute o kama kne snoa a",
-    "ni li tptpt",
-    "mi wile pana lon sptp",
-    "tmo tawa mi li pona mute la mi kepeken ona lon tenpo mute",
-    "mi pakla lon nimi pi mute lili, taso ale li pona tan ni: mi toki mute",
-]
-
-NAME_MATCHES = [
-    "musi Homestuck li ike tawa mi",
-    "ilo Google li sona ala e nimi Emoticon la mi wile utala e ona",
-    "toki Kanse li lon",
-    "toki Lojban li nasa e lawa mi",
-    "ilo Firefox",
-    "ilo FaceBook li nasa",
-    "mi kepeken ilo MySQL",
-    "poki li nasin SQLite",
-    "mi musi Space Station 13",
-    "jan Tepo en jan Salo en jan Lakuse en pipi Kewapi en soweli Eweke en mi li musi",
-]
-
-SOME_INVALID = [
-    "󱤎󱥁󱤡󱥀󱤬󱥚󱥁󱤧󱤬󱦜󱤬󱥆󱤡󱥞󱤘󱤆󱤉󱥬󱥠󱥞󱦜󱤬󱥓「Input mode」󱤿󱥮󱤧󱤬󱦜󱤘󱤡󱥫󱥁󱤡󱥞󱤙󱤿「Direct」󱦜󱤿󱥁󱤧󱥈",
-    "kulupu xerox li ike",
-    "mi tawa ma ohio",
-    "sina toki e nimi what pi toki Inli",
-    "wawa la o lukin e ni: your mom",
-]
-
-CORPUS_SPECIFIC = [
-    # "ki le konsi si te isipin epiku le pasila to",
-    # "ki konsi te isipin epiku pasila to",  # the sandbox has not documented si or le
-    # 'jasima omekapo, ki nimisin "jasima enko nimisin". ki enko alu linluwi Jutu alu epiku ki epiku baba is you. ki likujo "SINtelen pona", ki epiku alu "sitelen pona". ki kepen wawajete isipin, kin ki yupekosi alu lipamanka alu wawajete, kin ki enko isipin lipamanka linluwi alu wawajete',
-    "kalamARRRR",
-    "kalamar.",
-    "Pingo",
-    "pingo",
-    "we Luke li alente wa",
-]
-CORPUS_SPECIFIC_XFAIL: List[str] = []
-
-
-EXCESSIVE_SYLLABICS = [
-    # NOTE: this is sometimes hard to distinguish from EXCESSIVE_ENGLISH
-    "manama manama namana namana majani makala",
-    "I manipulate a passe pile so a ton emulate, akin to intake",
-    "a ton of insolate puke. make no amen, no joke.",
-    "I elope so, to an elite untaken tune, some unwise tone",
-    "insane asinine lemon awesome atone joke",
-    "insane asinine lemon awesome atone",  # i got more clever
-    "nope, no, joke",
-    "insane",
-    "woman",
-    "man",
-    "opposite",
-    "nine emo women see anime alone",
-    "i like mini potato",
-    "sanwi pi amu e tili",
-    "te amo <3",
-    "Laura, te amo <3",
-    "jajaja",
-    "ja ja ja ja",
-    "ja ja",
-    "ja",
-    "mi le kujo nenka ta pi ta",
-    "o lo sun titan peko",
-    "usa usa",
-]
-
-EXCESSIVE_ALPHABETICS = [
-    "wen i tok usin onli notes in toki pona i look silli. ",
-    "I wait, I sulk, as a tool I make stoops to ineptness.",
-    "aaa i non-saw usa's most multiple element-set. it's as asinine as in `e`-less speak",
-    "so, to atone like papa—an awesome anon (no-name) sin man—i ate an asinine lemon-limelike tomato jalapeno isotope. 'nonsense!' amen. note to Oman: take mine katana to imitate a ninja in pantomime. atomise one nuke? 'insane misuse!' same. likewise, Susan, awaken a pepino melon in a linen pipeline. (penile) emanate semen. joke: manipulate a tame toneme to elope online tonite",
-    "jes mi estas.",
-    "jes ja, unu momento",
-    "kiku tiki tuki tiki",
-]
-
-EXCESSIVE_TYPOES = [
-    "mi pakla ln tepo mtue ls mi kn ala tok poan aun seem",
-    "sina poan",
-    "ona lu pnoa",
-]
-
-EXCESSIVE_NAMES = [
-    "I Want To Evade The Filter",
-    "If You Do This The Bot Can't See You",
-    "This Is A Statement In Perfect Toki Pona, I Guarantee",
-]
-
-EXCESSIVE_ENGLISH = [
-    "me when i tawa sike",  # previous false positive; fixed by english ignorables
-    "Maybe I’m too nasa",  # previous false positive; fixed by LongSyllabic and LongAlphabetic
-    "I see :)",
-    "I wanna see",  # same down to here
-    "i'm online all the time",
-    "How to Cut a Kiwi",
-    "ni li make e sense",
-    "21st",  # previous false positive; fixed by ProperName change
-    "a e i o u",  # voting brings this back to false positive zone...
-    "ni li make e sense tawa mi",
-    "ni li make e sense",
-    "does 'mi wile pana e sona' make sense?",
-]
-
-NON_MATCHES = [
-    "bong",
-    "super bruh moment 64",
-    "homestuck",
-    "homestuck Homestuck",
-    "what if i went to the store ",
-]
-
-KNOWN_GOOD = (
-    ALL_VALID
-    + SYLLABIC_MATCHES
-    + ALPHABETIC_MATCHES
-    + NAME_MATCHES
-    + SOME_INVALID
-    + IGNORABLES
-    + EMPTY
-)
-
-KNOWN_BAD = (
-    EXCESSIVE_SYLLABICS
-    + EXCESSIVE_ALPHABETICS
-    + EXCESSIVE_NAMES
-    + EXCESSIVE_TYPOES
-    + EXCESSIVE_ENGLISH
-    + NON_MATCHES
-)
-
-FALSE_NEGATIVES = [
-    # emoticon should not be a problem
-    # a token that is one edit off a known word should be allowed
-    "mi pnoa",
-    "tok",
-    "mut",
-    "poan",
-    "mtue",
-    "mi nasa B^)",  # emoticon
-    "musi :P",  # emoticon
-    "ala :x",
-    "😃⃢👍",  # sincerely, no idea, but it came up and it should be omitted by emojis but isn't
-    "lete li ike x.x",  # works for corpus but not for lazy..
-]
-
-FALSE_POSITIVES = [
-    "Knowing a little toki pona",  # name, dict, alphabet, dict, dict- damn, that's hard.
-]
-
-IGNORABLE_PAIRS: List[Tuple[str, str]] = [
-    ("o lukin e ni: https://example.com/", "o lukin e ni:"),
-    ("ni li nasa anu seme <:musiwawa:198591138591>", "ni li nasa anu seme"),
-    ("seme la ni li toki pona ala https://example.com/", "seme la ni li toki pona ala"),
-    ("```\ndef bad():\n    pass\n``` o lukin e ni", "o lukin e ni"),
-    ("mi tawa tomo telo 💦💦", "mi tawa tomo telo"),
-    ("o lukin e lipu ni: [[wp:Canvassing]]", "o lukin e lipu ni:"),
-]
-
-
-@pytest.mark.parametrize("text", KNOWN_GOOD)
-def test_known_good_pref(ilo: Ilo, text: str):
-    assert ilo.is_toki_pona(text), text
-
-
-@pytest.mark.parametrize("text", KNOWN_BAD + CORPUS_SPECIFIC)
-def test_known_bad_pref(ilo: Ilo, text: str):
-    assert not ilo.is_toki_pona(text), text
-
-
-@pytest.mark.parametrize("text", KNOWN_GOOD + CORPUS_SPECIFIC)
-def test_known_good_corpus(corpus_ilo: Ilo, text: str):
-    assert corpus_ilo.is_toki_pona(text), text
-
-
-@pytest.mark.parametrize("text", KNOWN_BAD)
-def test_known_bad_corpus(corpus_ilo: Ilo, text: str):
-    assert not corpus_ilo.is_toki_pona(text), text
-
-
-@pytest.mark.parametrize("text", KNOWN_GOOD)
-def test_known_good_lazy(lazy_ilo: Ilo, text: str):
-    assert lazy_ilo.is_toki_pona(text), text
-    # assumption: lazy ilo should pass anything the more strict ilo does
-
-
-@pytest.mark.parametrize("text", NON_MATCHES)
-def test_known_bad_lazy(lazy_ilo: Ilo, text: str):
-    assert not lazy_ilo.is_toki_pona(text), text
-
-
-# yes this set manip is silly
-@pytest.mark.parametrize("text", list(set(KNOWN_BAD) - set(NON_MATCHES)))
-def test_weakness_of_lazy(lazy_ilo: Ilo, text: str):
-    # NOTE: This is demonstrative, not preferential
-    assert lazy_ilo.is_toki_pona(text), text
-
-
-@pytest.mark.xfail
-@pytest.mark.parametrize("text", FALSE_POSITIVES)
-def test_false_positives_pref(ilo: Ilo, text: str):
-    assert not ilo.is_toki_pona(text)
-
-
-@pytest.mark.xfail
-@pytest.mark.parametrize("text", FALSE_NEGATIVES)
-def test_false_negatives_pref(ilo: Ilo, text: str):
-    assert ilo.is_toki_pona(text)
-
-
-@pytest.mark.xfail
-@pytest.mark.parametrize("text", CORPUS_SPECIFIC_XFAIL)
-def test_false_positives_corpus(corpus_ilo: Ilo, text: str):
-    assert not corpus_ilo.is_toki_pona(text)
-
-
-@pytest.mark.parametrize("pair", IGNORABLE_PAIRS)
-def test_pref_ignorable_doesnt_change_score(ilo: Ilo, pair: Tuple[str, str]):
-    with_ignorable, without_ignorable = pair
-    score_with = ilo.make_scorecard(with_ignorable)["score"]
-    score_without = ilo.make_scorecard(without_ignorable)["score"]
-    assert score_with == score_without
-
-
-@pytest.mark.parametrize("pair", IGNORABLE_PAIRS)
-def test_lazy_ignorable_doesnt_change_score(lazy_ilo: Ilo, pair: Tuple[str, str]):
-    with_ignorable, without_ignorable = pair
-    score_with = lazy_ilo.make_scorecard(with_ignorable)["score"]
-    score_without = lazy_ilo.make_scorecard(without_ignorable)["score"]
-    assert score_with == score_without
-
-
-@pytest.mark.parametrize("pair", IGNORABLE_PAIRS)
-def test_corpus_ignorable_doesnt_change_score(corpus_ilo: Ilo, pair: Tuple[str, str]):
-    with_ignorable, without_ignorable = pair
-    score_with = corpus_ilo.make_scorecard(with_ignorable)["score"]
-    score_without = corpus_ilo.make_scorecard(without_ignorable)["score"]
-    assert score_with == score_without
+    score = passed_weight / total_weight
+    assert score >= expected

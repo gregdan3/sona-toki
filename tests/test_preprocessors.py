@@ -33,8 +33,8 @@ def extract_bracket_content(markdown_text: str) -> Optional[str]:
     if start == -1:
         return None
 
-    end = markdown_text.rfind("](")
-    if end == -1 or end <= start:
+    end = markdown_text.rfind("](", start)
+    if end == -1:
         return None
 
     return markdown_text[start + 1 : end]

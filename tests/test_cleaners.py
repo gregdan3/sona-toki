@@ -1,15 +1,23 @@
-# STL
-
 # PDM
+import pytest
 import hypothesis.strategies as st
 from hypothesis import given, assume, example
 
 # LOCAL
 from sonatoki.utils import overlapping_ntuples
-from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates, ConsecutiveDuplicatesRe
+from tests.test_utils import PROPER_NAME_RE
+from sonatoki.Cleaners import (
+    Cleaner,
+    Lowercase,
+    ConsecutiveDuplicates,
+    ConsecutiveDuplicatesRe,
+)
 
-# FILESYSTEM
-from .test_utils import PROPER_NAME_RE
+CLEANERS = [
+    Lowercase,
+    ConsecutiveDuplicates,
+    ConsecutiveDuplicatesRe,
+]
 
 
 @given(st.from_regex(ConsecutiveDuplicatesRe.pattern))
@@ -41,3 +49,11 @@ def test_ConsecutiveDuplicates(s: str):
 def test_Lowercase(s: str):
     cleaned = Lowercase.clean(s)
     assert cleaned == s.lower()  # yeah really
+
+
+@pytest.mark.parametrize("cleaner", CLEANERS)
+@given(st.from_regex(".*"))
+def test_cleaner_idempotent(cleaner: Cleaner, s: str):
+    cleaned = cleaner.clean(s)
+    cleaned_twice = cleaner.clean(cleaned)
+    assert cleaned == cleaned_twice

@@ -35,11 +35,9 @@ from sonatoki.Filters import (
     NimiLinkuSandbox,
     NimiLinkuUncommon,
 )
+from tests.test_utils import PROPER_NAME_RE
 from sonatoki.Cleaners import Lowercase, ConsecutiveDuplicates
 from sonatoki.constants import FALSE_POS_SYLLABIC, words_by_tag
-
-# FILESYSTEM
-from .test_utils import PROPER_NAME_RE
 
 
 @given(st.sampled_from(list(words_by_tag("book", "pu"))))

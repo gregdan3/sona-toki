@@ -1,11 +1,8 @@
-# STL
-from typing import List, TypedDict
-
 # PDM
-import yaml
 import pytest
 
 # LOCAL
+from tests.data.types import Transform
 from sonatoki.Tokenizers import (
     SentTokenizer,
     WordTokenizer,
@@ -14,84 +11,48 @@ from sonatoki.Tokenizers import (
     SentTokenizerRe1,
     WordTokenizerRe1,
 )
+from tests.data.word_tokenizer_cases import CASES as WORD_CASES
+from tests.data.sentence_tokenizer_cases import CASES as SENT_CASES
 
 
-class TokenizerTest(TypedDict):
-    name: str
-    input: str
-    output: List[str]
-    should_be_equal: bool
-    xfail: bool
+@pytest.mark.parametrize("case", SENT_CASES)
+def test_SentTokenizer(case: Transform, request):
+    if case.xfail:
+        request.node.add_marker(pytest.mark.xfail())
 
-
-def load_params_from_yaml(json_path: str) -> List[TokenizerTest]:
-    with open(json_path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-
-def load_tokenizer_tests(json_path: str) -> List[TokenizerTest]:
-    tests = load_params_from_yaml(json_path)
-    formatted_tests: List[TokenizerTest] = []
-    for test in tests:
-        formatted_tests.append(
-            TokenizerTest(
-                xfail=test.get("xfail", False),
-                name=test.get("name", ""),
-                input=test["input"],
-                output=test.get("output", []),
-                should_be_equal=test.get("should_be_equal", True),
-            )
-        )
-
-    return formatted_tests
-
-
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
-)
-def test_SentTokenizer(test: TokenizerTest):
-    if test["xfail"]:
-        pytest.xfail()
-
-    fn_tokenized = SentTokenizer.tokenize(test["input"])
-    # re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
-    assert fn_tokenized == test["output"], test["name"]
+    fn_tokenized = SentTokenizer.tokenize(case.input)
+    assert fn_tokenized == case.output, case.name
 
 
 @pytest.mark.skip("Deprecated")
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
-)
-def test_SentTokenizerRe(test: TokenizerTest):
-    if test["xfail"]:
-        pytest.xfail()
+@pytest.mark.parametrize("case", SENT_CASES)
+def test_SentTokenizerRe(case: Transform, request):
+    if case.xfail:
+        request.node.add_marker(pytest.mark.xfail())
 
-    re_tokenized = SentTokenizerRe.tokenize(test["input"])
-    assert re_tokenized == test["output"], test["name"]
-
-
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
-)
-def test_SentTokenizerReCompare(test: TokenizerTest):
-    if test["xfail"]:
-        pytest.xfail()
-
-    re_tokenized = SentTokenizerRe.tokenize(test["input"])
-    re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
-    assert re_tokenized == re1_tokenized, test["name"]
+    re_tokenized = SentTokenizerRe.tokenize(case.input)
+    assert re_tokenized == case.output, case.name
 
 
 @pytest.mark.skip("Deprecated")
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_sentences_tok.yml")
-)
-def test_SentTokenizerRe1(test: TokenizerTest):
-    if test["xfail"]:
-        pytest.xfail()
+@pytest.mark.parametrize("case", SENT_CASES)
+def test_SentTokenizerReCompare(case: Transform, request):
+    if case.xfail:
+        request.node.add_marker(pytest.mark.xfail())
 
-    re1_tokenized = SentTokenizerRe1.tokenize(test["input"])
-    assert re1_tokenized == test["output"], test["name"]
+    re_tokenized = SentTokenizerRe.tokenize(case.input)
+    re1_tokenized = SentTokenizerRe1.tokenize(case.input)
+    assert re_tokenized == re1_tokenized, case.name
+
+
+@pytest.mark.skip("Deprecated")
+@pytest.mark.parametrize("case", SENT_CASES)
+def test_SentTokenizerRe1(case: Transform, request):
+    if case.xfail:
+        request.node.add_marker(pytest.mark.xfail())
+
+    re1_tokenized = SentTokenizerRe1.tokenize(case.input)
+    assert re1_tokenized == case.output, case.name
 
 
 ###################
@@ -99,39 +60,33 @@ def test_SentTokenizerRe1(test: TokenizerTest):
 ###################
 
 
-@pytest.mark.parametrize(
-    "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
-)
-def test_WordTokenizer(test: TokenizerTest):
-    if test["xfail"]:
-        pytest.xfail()
+@pytest.mark.parametrize("case", WORD_CASES)
+def test_WordTokenizer(case: Transform, request):
+    if case.xfail:
+        request.node.add_marker(pytest.mark.xfail())
 
-    fn_tokenized = WordTokenizer.tokenize(test["input"])
-    # re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
-    # assert fn_tokenized == re1_tokenized, test["name"]
-    assert fn_tokenized == test["output"], test["name"]
+    fn_tokenized = WordTokenizer.tokenize(case.input)
+    assert fn_tokenized == case.output, case.name
 
 
-# @pytest.mark.parametrize(
-#     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
-# )
-# def test_WordTokenizerRe(test: TokenizerTest):
-#     if test["xfail"]:
-#         pytest.xfail()
-#
-#     re_tokenized = WordTokenizerRe.tokenize(test["input"])
-#     re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
-#     assert re_tokenized == re1_tokenized, test["name"]
-#
-#
-# @pytest.mark.parametrize(
-#     "test", load_tokenizer_tests("tests/tokenize_cases/tokenize_words_tok.yml")
-# )
-# def test_WordTokenizerRe1(test: TokenizerTest):
-#     """This implementation will always exhibit the correct behavior, so long as `regex` is up to date
-#     Thus, it is used as a reference implementation for all other tests"""
-#     if test["xfail"]:
-#         pytest.xfail()
-#
-#     re1_tokenized = WordTokenizerRe1.tokenize(test["input"])
-#     assert re1_tokenized == test["output"], test["name"]
+@pytest.mark.skip("Deprecated")
+@pytest.mark.parametrize("case", WORD_CASES)
+def test_WordTokenizerRe(case: Transform, request):
+    if case.xfail:
+        request.node.add_marker(pytest.mark.xfail())
+
+    re_tokenized = WordTokenizerRe.tokenize(case.input)
+    re1_tokenized = WordTokenizerRe1.tokenize(case.input)
+    assert re_tokenized == re1_tokenized, case.name
+
+
+@pytest.mark.skip("Deprecated")
+@pytest.mark.parametrize("case", WORD_CASES)
+def test_WordTokenizerRe1(case: Transform, request):
+    """This implementation will always exhibit the correct behavior, so long as `regex` is up to date
+    Thus, it is used as a reference implementation for all other tests"""
+    if case.xfail:
+        request.node.add_marker(pytest.mark.xfail())
+
+    re1_tokenized = WordTokenizerRe1.tokenize(case.input)
+    assert re1_tokenized == case.output, case.name
